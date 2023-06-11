@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">주차 차량 관리 시스템</string>
+
+    <string name="carnumberreg_bt">차량 번호 등록</string>
+</resources>
