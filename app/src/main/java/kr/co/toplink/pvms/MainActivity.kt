@@ -9,7 +9,7 @@ import kr.co.toplink.pvms.model.ActivityClassModel
 import java.util.ArrayList
 import kr.co.toplink.pvms.R
 
-class MainActivity : AppCompatActivity(), BaseAdapter.OnRecyclerViewItemClickListener {
+class MainActivity : AppCompatActivity() {
 
     private val activityClassModels = ArrayList<ActivityClassModel>()
 
@@ -21,27 +21,24 @@ class MainActivity : AppCompatActivity(), BaseAdapter.OnRecyclerViewItemClickLis
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        addChapters()
+        addActivity()
 
-        binding.carnumberregBt.apply {
-
+        binding.carnumberregBt.setOnClickListener {
+            activitygo(0)
         }
     }
 
-    private fun addChapters() {
-
-        // Add Activities to list to be displayed on RecyclerView
+    private fun addActivity() {
         activityClassModels.add(
             ActivityClassModel(
                 CarNumberRegActivity::class.java,
                 getString(R.string.carnumberreg_bt)
             )
         )
-
     }
 
-    @Override
-    override fun onItemClicked(view: View, position: Int) {
+    /* 엑티비티 바로가기 */
+    fun activitygo(position: Int) {
         Intent(this, activityClassModels[position].clazz).also {
             startActivity(it)
         }
