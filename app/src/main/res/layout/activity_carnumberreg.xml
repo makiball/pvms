@@ -40,13 +40,11 @@
         android:elevation="18dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/back_bt"
-        >
-
-    </com.google.android.material.internal.BaselineLayout>
+        app:layout_constraintTop_toBottomOf="@id/back_bt"/>
 
     <!-- 서브 타이틀 -->
     <com.google.android.material.textview.MaterialTextView
+        android:id = "@+id/subtitle1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text = "파일 등록"
@@ -60,5 +58,29 @@
         app:layout_constraintTop_toBottomOf="@id/linelayout"
         />
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id = "@+id/file_upload_progressbar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/file_upload_text"
+        app:layout_constraintTop_toBottomOf="@id/subtitle1"
+        />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id = "@+id/file_upload_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:text = "0"
+
+        app:layout_constraintTop_toTopOf="@id/file_upload_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
