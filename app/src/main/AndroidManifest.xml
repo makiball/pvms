@@ -26,6 +26,7 @@
                 android:value="" />
         </activity>
         <activity android:name=".CarNumberRegActivity" />
+        <activity android:name=".CarNumberSearchActivity" />
     </application>
 
 </manifest>

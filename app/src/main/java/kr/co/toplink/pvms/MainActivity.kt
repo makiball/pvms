@@ -26,6 +26,11 @@ class MainActivity : AppCompatActivity() {
         binding.carnumberregBt.setOnClickListener {
             activitygo(0)
         }
+
+        binding.carnumbersearchBt.setOnClickListener {
+            activitygo(1)
+        }
+
     }
 
     private fun addActivity() {
@@ -35,6 +40,14 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.carnumberreg_bt)
             )
         )
+
+        activityClassModels.add(
+            ActivityClassModel(
+                CarNumberSearchActivity::class.java,
+                getString(R.string.carnumberreg_bt)
+            )
+        )
+
     }
 
     /* 엑티비티 바로가기 */
