@@ -110,40 +110,55 @@
         app:layout_constraintStart_toEndOf="@id/search_inpt"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:collapseColumns="0"
-        app:layout_constraintTop_toBottomOf="@id/search_bt"
+        android:layout_marginTop = "20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:collapseColumns="3"
+        android:stretchColumns="*"
+        app:layout_constraintTop_toBottomOf="@id/search_inpt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        >
         <!-- collapse the first column of the table row-->
-
 
         <!-- first row of the table layout-->
         <TableRow
             android:id="@+id/simpleTableLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/textlines"
+            >
 
-            <!-- first element of the row that is the part of table but it is invisible-->
+            <TextView
+                style = "@style/Theme.AppCompat.Light.DarkActionBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="차량번호"
+                android:gravity="center"
+                android:textColor="#A1A1A1"
+                android:textSize="18dp"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#b0b0b0"
-                android:padding="18dip"
-                android:text="Columns 1"
-                android:textColor="#000"
+                android:padding="10dp"
+                android:text="휴대폰번호"
+                android:gravity="center"
+                android:textColor="#A1A1A1"
                 android:textSize="18dp" />
 
-            <!-- second element of the row that is shown in the screenshot-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#b0b0b0"
-                android:padding="18dip"
-                android:text="Columns 2"
-                android:textColor="#000"
+                android:padding="10dp"
+                android:text="비고"
+                android:gravity="center"
+                android:textColor="#A1A1A1"
                 android:textSize="18dp" />
         </TableRow>
     </TableLayout>
