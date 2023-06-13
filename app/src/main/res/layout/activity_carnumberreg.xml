@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,10 +24,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:cornerRadius="5dp"/>
+
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "타이틀"
+        android:text = "차량 번호 등록"
         android:textColor = "#000000"
         android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/back_bt"
@@ -49,25 +51,38 @@
         android:layout_height="wrap_content"
         android:text = "파일 등록"
         android:layout_marginTop = "16dp"
-        android:layout_marginLeft = "8dp"
+        android:layout_marginStart="8dp"
         android:textColor = "#000000"
         android:textSize = "24sp"
         android:lineSpacingExtra="-1sp"
-        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linelayout"
+        />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id = "@+id/subtitle1_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "차량번호, 휴대폰 번호, 기타  순으로 나열"
+        android:layout_marginTop = "4dp"
+        android:layout_marginStart="8dp"
+        android:textColor = "#818181"
+        android:textSize = "16sp"
+        android:lineSpacingExtra="-1sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle1"
         />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id = "@+id/file_upload_progressbar"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/file_upload_text"
-        app:layout_constraintTop_toBottomOf="@id/subtitle1"
+        app:layout_constraintTop_toBottomOf="@id/subtitle1_1"
         />
 
     <com.google.android.material.textview.MaterialTextView
@@ -75,12 +90,144 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="30dp"
         android:layout_marginRight="10dp"
         android:text = "0"
-
-        app:layout_constraintTop_toTopOf="@id/file_upload_text"
+        app:layout_constraintBaseline_toBottomOf="@id/file_upload_progressbar"
+        app:layout_constraintStart_toEndOf="@id/file_upload_progressbar"
         app:layout_constraintEnd_toEndOf="parent"
         />
+
+    <com.google.android.material.button.MaterialButton
+        android:id = "@+id/file_upload_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#009688"
+        android:text = "엑셀파일찾기"
+        app:layout_constraintTop_toBottomOf="@id/file_upload_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.internal.BaselineLayout
+        android:id = "@+id/linelayout2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="#E0E0E0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/file_upload_bt"/>
+
+    <!-- 서브 타이틀 -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id = "@+id/subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "직접 등록"
+        android:layout_marginTop = "32dp"
+        android:layout_marginStart="8dp"
+        android:textColor = "#000000"
+        android:textSize = "24sp"
+        android:lineSpacingExtra="-1sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linelayout2"
+        />
+
+    <com.google.android.material.circularreveal.CircularRevealLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#80C5DCFA"
+        android:layout_margin = "8dp"
+        android:paddingTop = "12dp"
+        android:paddingBottom = "12dp"
+        android:paddingStart = "16dp"
+        android:paddingEnd = "16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle2"
+        app:cornerRadius="50dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="차량번호"
+            android:textSize = "20sp"
+            android:letterSpacing="0.03"
+            android:lineSpacingExtra="-1sp"
+            />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id = "@+id/carnum_inpt"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#ffffff"
+            android:padding = "3sp"
+            android:maxLines="1"
+            android:hint="123허 456"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:nextFocusDown="@id/phone_inpt"
+            app:cornerRadius="50dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="휴대폰 번호"
+            android:textSize = "20sp"
+            android:letterSpacing="0.03"
+            android:lineSpacingExtra="-1sp"
+            />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id = "@+id/phone_inpt"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#ffffff"
+            android:padding = "3sp"
+            android:maxLines="1"
+            android:hint="010-1234-1234"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:nextFocusDown="@id/etc_inpt"
+            app:cornerRadius="50dp"/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="기타"
+            android:textSize = "20sp"
+            android:letterSpacing="0.03"
+            android:lineSpacingExtra="-1sp"
+            />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id = "@+id/etc_inpt"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#ffffff"
+            android:padding = "3sp"
+            android:maxLines="1"
+            android:hint="예) 입주민, 방문자"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            app:cornerRadius="50dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#009688"
+            android:layout_gravity="center"
+            android:text = "등록" />
+
+    </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
