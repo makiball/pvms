@@ -2,9 +2,8 @@ package kr.co.toplink.pvms
 
 
 import android.app.Activity
-import android.content.ContentResolver
-import android.content.Context
-import android.content.Intent
+import android.app.DownloadManager
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -16,6 +15,8 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.toplink.pvms.adapter.ListItemAdapter
@@ -89,10 +90,12 @@ class CarNumberRegActivity : AppCompatActivity() {
             }
         }
 
+        attachObserver()
         System.setProperty(
             "org.apache.poi.javax.xml.stream.XMLInputFactory",
             "com.fasterxml.aalto.stax.InputFactoryImpl"
         );
+
         System.setProperty(
             "org.apache.poi.javax.xml.stream.XMLOutputFactory",
             "com.fasterxml.aalto.stax.OutputFactoryImpl"
@@ -101,7 +104,6 @@ class CarNumberRegActivity : AppCompatActivity() {
             "org.apache.poi.javax.xml.stream.XMLEventFactory",
             "com.fasterxml.aalto.stax.EventFactoryImpl"
         );
-
 
         setUpAdapter()
     }
@@ -244,8 +246,7 @@ class CarNumberRegActivity : AppCompatActivity() {
         viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
             it.apply {
                 checkForNoData()
-                hideProgress()
-                binding.llNoDataFound.tvNoDataFound.text = this.orEmpty()
+                binding.tvNoDataFound.text = this.orEmpty()
             }
         })
         viewModel.excelDataListLiveData.observe(this, androidx.lifecycle.Observer {
@@ -253,8 +254,20 @@ class CarNumberRegActivity : AppCompatActivity() {
                 adapter?.clear()
                 adapter?.setData(this)
                 checkForNoData()
-                hideProgress()
+
+                Log.d(TAG," ======>   $this")
+
             }
         })
     }
+
+    /* 값 유무 체크 */
+    private fun checkForNoData() {
+        if (adapter?.itemCount ?: 0 == 0) {
+            binding.tvNoDataFound.isVisible
+        } else {
+            binding.tvNoDataFound.isInvisible
+        }
+    }
+
 }
