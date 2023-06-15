@@ -1,13 +1,12 @@
 package kr.co.toplink.pvms
 
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import kr.co.toplink.pvms.databinding.ActivityMainBinding
 import kr.co.toplink.pvms.model.ActivityClassModel
-import java.util.ArrayList
-import kr.co.toplink.pvms.R
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         binding.carnumbersearchBt.setOnClickListener {
             activitygo(1)
         }
-
     }
 
     private fun addActivity() {
@@ -56,4 +54,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(it)
         }
     }
+
+
 }

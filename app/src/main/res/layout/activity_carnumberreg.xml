@@ -119,6 +119,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/file_upload_bt"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        tools:listitem="@layout/custom_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/file_upload_bt"/>
+
     <!-- 서브 타이틀 -->
     <com.google.android.material.textview.MaterialTextView
         android:id = "@+id/subtitle2"
@@ -231,5 +243,7 @@
             android:text = "등록" />
 
     </com.google.android.material.circularreveal.CircularRevealLinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

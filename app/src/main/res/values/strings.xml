@@ -6,4 +6,9 @@
     <string name="camsearch">카메라 주차 검색</string>
     <string name="smsreg">알림문자 등록 / 조회</string>
     <string name="parkresult">주차 보고서</string>
+
+    <string name="line_1">line 1</string>
+    <string name="line_2">line 2</string>
+
+    <string name="password">password</string>
 </resources>
