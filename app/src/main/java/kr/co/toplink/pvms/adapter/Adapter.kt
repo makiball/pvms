@@ -54,7 +54,7 @@ class Adapter(
                 val bcs = BackgroundColorSpan(Color.DKGRAY)
                 sb.setSpan(bcs, match.start(), match.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             }
-            holder.binding.textView2.setText(sb)
+            holder.binding.textView2.text = sb
         } else {
             holder.binding.textView2.text = currentItem.value
         }

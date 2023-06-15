@@ -35,8 +35,6 @@ class ExcellReaderViewModel  : BaseViewModel() {
         list.clear()
         file = File(filePath)
 
-
-
         try {
             if (!file.exists() || file.length() == 0L) {
                 excelExceptionListData.postValue("Invalid File")
@@ -114,6 +112,7 @@ class ExcellReaderViewModel  : BaseViewModel() {
                 }
                 excelDataListLiveData.postValue(list)
                 excellFirstRowData.postValue(firstRow)
+
             }
         } catch (e: Exception) {
             e.printStackTrace()
