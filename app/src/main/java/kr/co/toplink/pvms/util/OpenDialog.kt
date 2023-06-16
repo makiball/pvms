@@ -63,7 +63,6 @@ class OpenDialog(private val context : AppCompatActivity) {
         }
     }
 
-
     interface MyDialogOKClickedListener {
         fun onOKClicked(content : String)
     }

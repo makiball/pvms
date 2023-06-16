@@ -10,5 +10,7 @@
     <string name="line_1">line 1</string>
     <string name="line_2">line 2</string>
 
+    <string name="no_data_found">no_data_found</string>
+
     <string name="password">password</string>
 </resources>
