@@ -5,20 +5,20 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "carinfo",
-    indices = [Index(value = ["car_number"], unique = true)]
+    indices = [Index(value = ["carnumber"], unique = true)]
 )
 data class CarInfo(
     @PrimaryKey(autoGenerate =true)         val id: Int = 0,
-    @ColumnInfo(name = "car_number")        val carNumber: String?,      //차량 번호 풀번호
-    @ColumnInfo(name = "car_number_4d")     val carNumber4d: String?,    //차량 번호 뒷 4자리
-    @ColumnInfo(name = "car_number_only")   val carNumberOnly: String?,  //차량 번호 숫자만
+    @ColumnInfo(name = "carnumber")         val carnumber: String?,      //차량 번호 풀번호
+    @ColumnInfo(name = "carnumber4d")       val carnumber4d: String?,    //차량 번호 뒷 4자리
+    @ColumnInfo(name = "carnumberonly")     val carnumberonly: String?,  //차량 번호 숫자만
     @ColumnInfo(name = "phone")             val phone: String?,
     @ColumnInfo(name = "date")              val date: String?,
-    @ColumnInfo(name = "etc")              val etc: String?
+    @ColumnInfo(name = "etc")               val etc: String?
  )
 
 @Entity(
-    tableName = "car-search"
+    tableName = "carsearch"
 )
 data class CarSearch(
     @ColumnInfo(name = "carInfoId")         var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
@@ -33,7 +33,7 @@ data class CarSearch(
 }
 
 @Entity(
-    tableName = "sms-msg"
+    tableName = "smsmsg"
 )
 data class SmsMsg(
     @PrimaryKey(autoGenerate =true)         var id: Int = 0,
@@ -42,7 +42,7 @@ data class SmsMsg(
 )
 
 @Entity(
-    tableName = "sms-send-log"
+    tableName = "smssendlog"
 )
 data class SmsSendLog(
     @PrimaryKey(autoGenerate =true)         var id: Int = 0,

@@ -1,26 +1,20 @@
 package kr.co.toplink.pvms.util
 
 import android.app.Dialog
-import android.util.Log
 import android.view.Window
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import kr.co.toplink.pvms.AppConstant
-import kr.co.toplink.pvms.databinding.LayoutDialogBinding
-import kr.co.toplink.pvms.model.ExcellReaderViewModel
-import java.io.File
+import kr.co.toplink.pvms.databinding.DeleteDialogBinding
 
-class OpenDialog(private val context : AppCompatActivity) {
+class DeleteDialog(private val context : AppCompatActivity) {
 
-    private lateinit var binding : LayoutDialogBinding
+    private lateinit var binding : DeleteDialogBinding
     private val dlg = Dialog(context)   //부모 액티비티의 context 가 들어감
 
     private lateinit var listener : MyDialogOKClickedListener
 
     fun show(content : String) {
-        binding = LayoutDialogBinding.inflate(context.layoutInflater)
+        binding = DeleteDialogBinding.inflate(context.layoutInflater)
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE)   //타이틀바 제거
         //dlg.setTitle("패스워드 입력")
 
@@ -31,13 +25,8 @@ class OpenDialog(private val context : AppCompatActivity) {
 
         //ok 버튼 동작
         binding.ok.setOnClickListener {
-            val password = binding.editPassword.text.toString()
-            if(password.isEmpty()) {
-                Toast.makeText(context, "패스워드를 입력해주세요.", Toast.LENGTH_SHORT).show()
-            } else {
-                listener.onOKClicked(password)
-                dlg.dismiss()
-            }
+            listener.onOKClicked("ok")
+            dlg.dismiss()
         }
         //cancel 버튼 동작
         binding.cancel.setOnClickListener {
@@ -45,8 +34,7 @@ class OpenDialog(private val context : AppCompatActivity) {
         }
 
         dlg.show()
-        dlg.window?.setLayout(700, 600)
-
+        dlg.window?.setLayout(700, 400)
     }
 
     fun setOnOKClickedListener(listener: (String) -> Unit) {

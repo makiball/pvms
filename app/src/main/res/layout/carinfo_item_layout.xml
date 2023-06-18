@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="kr.co.toplink.pvms.R"/>
+        <variable
+            name="carinfolist"
+            type="kr.co.toplink.pvms.data.CarInfoList" />
+        <variable
+            name="carinfolistListener"
+            type="kr.co.toplink.pvms.adapter.CarInfoAdapter.CarInfoAdapterListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:onClick="@{(view) -> carinfolistListener.onCarInfoListClicked(view, carinfolist)}"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id = "@+id/carnum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding = "3dp"
+            android:text = "@{carinfolist.carnumber}"
+            tools:text="차량번호"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/phone"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id = "@+id/phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding = "3dp"
+            android:text = "@{carinfolist.phone}"
+            tools:text="휴대폰번호"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/carnum"
+            app:layout_constraintEnd_toStartOf="@id/etc"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id = "@+id/etc"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding = "3dp"
+            android:text = "@{carinfolist.etc}"
+            tools:text="기타"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@id/phone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

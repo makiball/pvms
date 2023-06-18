@@ -112,7 +112,7 @@ class CarNumberRegActivity : AppCompatActivity() {
             }
 
             insertDatabase(carnuminput, phoneinput, etcinpt)
-            //private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
+            Toast.makeText(this, "입력 성공 차량 번호 조회 가능!", Toast.LENGTH_SHORT).show()
         }
 
         init()
@@ -268,9 +268,9 @@ class CarNumberRegActivity : AppCompatActivity() {
                     var phone = ""
                     var etc = ""
 
-                    it.singleRowList.get(0).value?.let { it1 ->  carnum = it1 }
+                    it.singleRowList.get(0).value?.let { it1 ->  carnum = inputcheck.blankDelte(it1) }
                     it.singleRowList.get(1).value?.let { it2 ->  phone = it2  }
-                    it.singleRowList.get(3).value?.let { it3 ->  etc = it3  }
+                    it.singleRowList.get(2).value?.let { it3 ->  etc = it3  }
 
                     if(inputcheck.getIsNumber(carnum)) {
                         insertDatabase(
@@ -281,7 +281,7 @@ class CarNumberRegActivity : AppCompatActivity() {
                         total += 1
                     }
 
-                    Log.d(TAG, "carnum -> $carnum")
+                  //  Log.d(TAG, "carnum -> $carnum")
                 }
                 progress(total)
             }
@@ -331,29 +331,29 @@ class CarNumberRegActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             db.CarInfoDao().CarInfoInsert(CarInfo(
-                carNumber = carnuminput,
-                carNumber4d = carnumber4d,
-                carNumberOnly = carnumberdigit,
+                carnumber = carnuminput,
+                carnumber4d = carnumber4d,
+                carnumberonly = carnumberdigit,
                 phone = phoneinput,
                 date = datepatterned,
                 etc = etcinpt
             ))
         }
 
-
+/*
         var carinfoList = "자동차 정보들 \n"
         CoroutineScope(Dispatchers.Main).launch {
             val carinfos = CoroutineScope(Dispatchers.IO).async {
-                db.CarInfoDao().CarInfoGetAll()
+                db.CarInfoDao().CarInfoAll()
             }.await()
 
-            /*
             for(carinfo in carinfos){
-                carinfoList += "${carinfo.carNumber} ${carinfo.date}  \n"
+                carinfoList += "${carinfo.carNumber} ${carinfo.phone}  ${carinfo.date}  \n"
             }
-            */
-            //Log.d(TAG, "=====> $carinfos")
+
+            Log.d(TAG, "=====> $carinfoList")
         }
+ */
         //Log.d(TAG, "$carnuminput $carnumber4d $carnumberdigit  $phoneinput $datepatterned $etcinpt")
     }
 }

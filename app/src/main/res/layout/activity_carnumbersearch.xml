@@ -41,21 +41,22 @@
         android:background="@drawable/header_shape"
         android:elevation="18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/alldelte"
         app:layout_constraintTop_toBottomOf="@id/back_bt"/>
 
     <RadioGroup
         android:id = "@+id/search_rdg"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop = "10dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/alldelte"
         app:layout_constraintTop_toBottomOf="@id/back_bt"
         >
 
         <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/check_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "차량번호"
@@ -63,6 +64,7 @@
             />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/check_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "휴대폰번호"
@@ -70,6 +72,7 @@
             />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/check_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text = "비고"
@@ -78,9 +81,21 @@
 
     </RadioGroup>
 
+    <com.google.android.material.button.MaterialButton
+        android:id = "@+id/alldelte"
+        android:layout_width="90dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#E91E63"
+        android:layout_marginEnd = "8dp"
+        android:layout_marginTop = "10dp"
+        android:text = "전부삭제"
+        app:layout_constraintTop_toBottomOf="@id/linelayout"
+        app:layout_constraintStart_toEndOf="@id/search_rdg"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id = "@+id/search_inpt"
-        android:hint="검 색"
+        android:hint="차량번호"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin = "8dp"
@@ -92,6 +107,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id = "@+id/search_inpt_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -111,14 +127,34 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id = "@+id/tablelayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:collapseColumns="0"
+        android:collapseColumns="3"
+        android:layout_margin = "8dp"
+        android:layout_marginTop = "10dp"
+        android:stretchColumns="*"
         app:layout_constraintTop_toBottomOf="@id/search_bt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <!-- collapse the first column of the table row-->
 
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- first element of the row that is the part of table but it is invisible-->
+            <TextView
+                android:id="@+id/totalreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="총 수량 : 0대"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+        </TableRow>
 
         <!-- first row of the table layout-->
         <TableRow
@@ -130,22 +166,49 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#b0b0b0"
-                android:padding="18dip"
-                android:text="Columns 1"
+                android:background="#C6C6C6"
+                android:text=" 차량번호"
+                android:gravity="center"
                 android:textColor="#000"
-                android:textSize="18dp" />
+                android:padding = "5dp"
+                android:textSize="16sp" />
 
             <!-- second element of the row that is shown in the screenshot-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#b0b0b0"
-                android:padding="18dip"
-                android:text="Columns 2"
+                android:background="#C6C6C6"
+                android:text="휴대폰번호"
+                android:gravity="center"
                 android:textColor="#000"
-                android:textSize="18dp" />
+                android:padding = "5dp"
+                android:textSize="16sp" />
+
+            <!-- second element of the row that is shown in the screenshot-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#C6C6C6"
+                android:text="기 타"
+                android:gravity="center"
+                android:textColor="#000"
+                android:padding = "5dp"
+                android:textSize="16sp" />
         </TableRow>
     </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:transitionGroup="true"
+        android:layout_margin = "8dp"
+        android:layout_marginTop = "10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@id/tablelayout"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
