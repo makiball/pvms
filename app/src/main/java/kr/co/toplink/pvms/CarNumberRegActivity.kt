@@ -1,9 +1,9 @@
 package kr.co.toplink.pvms
 
-
 import android.app.Activity
-import android.app.DownloadManager
-import android.content.*
+import android.content.ContentResolver
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -11,32 +11,46 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import kr.co.toplink.pvms.adapter.ListItemAdapter
-
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kr.co.toplink.pvms.database.CarInfo
+import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.databinding.ActivityCarnumberregBinding
 import kr.co.toplink.pvms.model.ExcellReaderViewModel
 import kr.co.toplink.pvms.model.ListItems
+import kr.co.toplink.pvms.util.InputCheck
 import kr.co.toplink.pvms.util.OpenDialog
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.Math.ceil
+import java.lang.Math.floor
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class CarNumberRegActivity : AppCompatActivity() {
 
+    private var document :Uri? = null
+
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumberregBinding
+
+    private lateinit var db: CarInfoDatabase
+
     private lateinit var viewModel: ExcellReaderViewModel
     private var file: File? = null
     private var fileUri: Uri? = null
     private var url: String? = null
-    private var adapter: ListItemAdapter? = null
+
+    private var inputcheck = InputCheck()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,129 +58,77 @@ class CarNumberRegActivity : AppCompatActivity() {
         binding = ActivityCarnumberregBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        db = CarInfoDatabase.getInstance(this)!!
+
+
         // 뒤로가기시 현재 엑티비티 닫기
         val callback = object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 finish()
             }
         }
-
         onBackPressedDispatcher.addCallback(this, callback)
-
-        binding.backBt.setOnClickListener{
-            finish()
-        }
-
-        init()
-
+        binding.backBt.setOnClickListener{  finish()  }
         binding.fileUploadBt.setOnClickListener {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                type = "*/*"
-                flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 addCategory(Intent.CATEGORY_OPENABLE)
-                // mime types for MS Word documents
                 val mimetypes = arrayOf(
                     "application/vnd.ms-excel",
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
+                type = "*/*"
                 putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
             }
-            activityResultLauncher.launch(intent)
+            resultLauncher.launch(intent)
         }
-    }
 
-    private fun init() {
 
-        viewModel = ViewModelProvider(this).get(ExcellReaderViewModel::class.java)
-        viewModel.fileDir = File(this.filesDir, AppConstant.doc)
-        if (intent.extras?.containsKey("excellPath") == true) {
-            val filePath = intent.extras?.getString("excellPath").orEmpty()
-            if (viewModel.isEncrypt(filePath)) {
-                Log.e(TAG, "Document encrypted")
-                openDialog(filePath)
-            } else {
-                Log.e(TAG, "Document not encrypted")
-                viewModel.readExcelFileFromAssets(filePath)
+        /* 등록처리 */
+        binding.regBt.setOnClickListener {
+
+            val carnuminput = binding.carnumInpt.text.toString()
+            val phoneinput = binding.phoneInpt.text.toString().replace("\\s+".toRegex(), "")
+            val etcinpt = binding.etcInpt.text.toString()
+
+            if(carnuminput.isEmpty() == true) {
+                Toast.makeText(this, "차량 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-        }
 
-        attachObserver()
-        System.setProperty(
-            "org.apache.poi.javax.xml.stream.XMLInputFactory",
-            "com.fasterxml.aalto.stax.InputFactoryImpl"
-        );
-
-        System.setProperty(
-            "org.apache.poi.javax.xml.stream.XMLOutputFactory",
-            "com.fasterxml.aalto.stax.OutputFactoryImpl"
-        );
-        System.setProperty(
-            "org.apache.poi.javax.xml.stream.XMLEventFactory",
-            "com.fasterxml.aalto.stax.EventFactoryImpl"
-        );
-
-        setUpAdapter()
-    }
-
-    private fun openDialog(path: String) {
-        val dlg = OpenDialog(this)
-        dlg.setOnOKClickedListener{ password ->
-            val result: Boolean = viewModel.checkPassword(password, path)
-            if (!result) {
-                Log.e(TAG, "Password is incorrect")
-                Toast.makeText(this, "Password is incorrect.", Toast.LENGTH_SHORT).show()
-                openDialog(path)
-                //dialog.dismiss()
-                //hideProgress()
-            } else {
-                Log.e(TAG, "Password is correct")
-                Toast.makeText(this, "Password is Correct.", Toast.LENGTH_SHORT).show()
-                viewModel.readExcelFileFromAssets(path, password)
+            /* 차량 번호 정규식 */
+            val carnumcheck = inputcheck.getIsNumber(carnuminput)
+            if(!carnumcheck) {
+                Toast.makeText(this, "조회 할수 없는 차량 번호입니다.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
-        }
-        dlg.show("엑셀 파일이 잠겨 있습니다. 패스워드를 입력해주세요!")
-    }
 
-    /* 학장자 반환 */
-    fun Uri.getExtention(context: Context): String? {
-        var extension: String? = ""
-        extension = if (this.scheme == ContentResolver.SCHEME_CONTENT) {
-            val mime = MimeTypeMap.getSingleton()
-            mime.getExtensionFromMimeType(context.getContentResolver().getType(this))
-        } else {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                MimeTypeMap.getFileExtensionFromUrl(
-                    FileProvider.getUriForFile(
-                        context,
-                        context.packageName + ".provider",
-                        File(this.path)
-                    )
-                        .toString()
-                )
-            } else {
-                MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(File(this.path)).toString())
+            /* 휴대폰 번호 정규식 */
+            if(phoneinput.isNotEmpty() == true) {
+                val phoneinput = inputcheck.getIsPhone(phoneinput)
+                if(!phoneinput) {
+                    Toast.makeText(this, "휴대폰번호를 정확하게 입력해주세요.", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
             }
+
+            insertDatabase(carnuminput, phoneinput, etcinpt)
+            //private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
         }
-        return extension
+
+        init()
     }
 
-
-    //파일 첨주 결과 받기
-    private val activityResultLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ){ data ->
-        if(data.resultCode == RESULT_OK) {
-            var mimeTypeExtension: String? = ""
-            data?.data?.also { result  ->
-
-                Log.e(TAG, "ApachPOI Selected file Uri : " + result.data)
-                val uri = result.data
-                mimeTypeExtension = uri?.getExtention(this)
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.also { Uri ->
+                val uri = Uri.data!!
+                Log.e(TAG, "ApachPOI Selected file Uri : " + uri)
+                val mimeTypeExtension = uri.getExtention(this)
                 Log.e(TAG, "ApachPOI Selected file mimeTypeExtension : " + mimeTypeExtension)
-                if (mimeTypeExtension != null && mimeTypeExtension?.isNotEmpty() == true) {
+                if (mimeTypeExtension != null && mimeTypeExtension.isNotEmpty() == true) {
 
-                    if (mimeTypeExtension?.contentEquals("xlsx") == true
-                        || mimeTypeExtension?.contentEquals("xls") == true
+                    if (mimeTypeExtension.contentEquals("xlsx") == true
+                        || mimeTypeExtension.contentEquals("xls") == true
                     ) {
                         Log.e(
                             TAG,
@@ -176,17 +138,18 @@ class CarNumberRegActivity : AppCompatActivity() {
                         Toast.makeText(this, "invalid file selected", Toast.LENGTH_SHORT).show()
                         return@also
                     }
-                    copyFileAndExtract(uri!!, mimeTypeExtension.orEmpty())
                 }
+                //copyFileAndExtract(uri, mimeTypeExtension.orEmpty())
+                copyFileAndExtract(uri)
             }
         }
     }
 
-    /* 엑셀 실행 */
-    private fun copyFileAndExtract(uri: Uri, extension: String) {
+    private fun copyFileAndExtract(uri: Uri) {
+
         val dir = File(this.filesDir, "doc")
         dir.mkdirs()
-        val fileName = getFileName(uri)
+        val fileName = getFileName(uri).toString()
         file = File(dir, fileName)
         file?.createNewFile()
         val fout = FileOutputStream(file)
@@ -216,7 +179,6 @@ class CarNumberRegActivity : AppCompatActivity() {
         }
     }
 
-    /* 파일명 반환 */
     fun getFileName(uri: Uri): String? = when (uri.scheme) {
         ContentResolver.SCHEME_CONTENT -> getContentFileName(uri)
         else -> uri.path?.let(::File)?.name
@@ -230,44 +192,168 @@ class CarNumberRegActivity : AppCompatActivity() {
         }
     }.getOrNull()
 
+    fun Uri.getExtention(context: Context): String? {
+        val extension = if (this.scheme == ContentResolver.SCHEME_CONTENT) {
+            val mime = MimeTypeMap.getSingleton()
+            mime.getExtensionFromMimeType(context.getContentResolver().getType(this))
+        } else {
+            MimeTypeMap.getFileExtensionFromUrl(
+                FileProvider.getUriForFile(
+                    context,
+                    context.packageName + ".provider",
+                    File(this.path.toString())
+                )
+                    .toString()
+            )
+        }
+        return extension
+    }
 
-    private fun setUpAdapter() {
-        adapter = ListItemAdapter(arrayListOf(), object : ExcelRowClickListener {
-            override fun onRowClick(position: Int) {
-                viewModel.setPositionCompleted(position)
+    private fun init() {
+        viewModel = ViewModelProvider(this).get(ExcellReaderViewModel::class.java)
+        viewModel.fileDir = File(this.filesDir, AppConstant.doc)
+        if (intent.extras?.containsKey("excellPath") == true) {
+            val filePath = intent.extras?.getString("excellPath").orEmpty()
+            if (viewModel.isEncrypt(filePath)) {
+                Log.e(TAG, "Document encrypted")
+                openDialog(filePath)
+            } else {
+                Log.e(TAG, "Document not encrypted")
+                viewModel.readExcelFileFromAssets(filePath)
             }
-        })
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.setHasFixedSize(true)
+        }
+
+        attachObserver()
+        System.setProperty(
+            "org.apache.poi.javax.xml.stream.XMLInputFactory",
+            "com.fasterxml.aalto.stax.InputFactoryImpl"
+        );
+        System.setProperty(
+            "org.apache.poi.javax.xml.stream.XMLOutputFactory",
+            "com.fasterxml.aalto.stax.OutputFactoryImpl"
+        );
+        System.setProperty(
+            "org.apache.poi.javax.xml.stream.XMLEventFactory",
+            "com.fasterxml.aalto.stax.EventFactoryImpl"
+        );
+    }
+
+    private fun openDialog(path: String) {
+        val dlg = OpenDialog(this)
+        dlg.setOnOKClickedListener{ password ->
+
+            // text.text = content
+            viewModel.readExcelFileFromAssets(path, password)
+        }
+        dlg.show("패스워드를 입력하세요.")
     }
 
     private fun attachObserver() {
         viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
             it.apply {
-                checkForNoData()
-                binding.tvNoDataFound.text = this.orEmpty()
+                /* 엑셀 읽는것 실패 */
+                checkForNoData(this.isEmpty())
             }
         })
         viewModel.excelDataListLiveData.observe(this, androidx.lifecycle.Observer {
             it?.apply {
-                adapter?.clear()
-                adapter?.setData(this)
-                checkForNoData()
 
-                Log.d(TAG," ======>   $this")
+                var total = 0
 
+                /* 엑셀 읽는것 성공 */
+                this.forEach{
+//                    Log.d(TAG,"=====> ${it.singleRowList.get(0).name} ${it.singleRowList.get(1).name} ${it.singleRowList.get(2).name}");
+
+                    var carnum = ""
+                    var phone = ""
+                    var etc = ""
+
+                    it.singleRowList.get(0).value?.let { it1 ->  carnum = it1 }
+                    it.singleRowList.get(1).value?.let { it2 ->  phone = it2  }
+                    it.singleRowList.get(3).value?.let { it3 ->  etc = it3  }
+
+                    if(inputcheck.getIsNumber(carnum)) {
+                        insertDatabase(
+                            carnum,
+                            phone,
+                            etc
+                        )
+                        total += 1
+                    }
+
+                    Log.d(TAG, "carnum -> $carnum")
+                }
+                progress(total)
             }
         })
     }
 
-    /* 값 유무 체크 */
-    private fun checkForNoData() {
-        if (adapter?.itemCount ?: 0 == 0) {
-            binding.tvNoDataFound.isVisible
-        } else {
-            binding.tvNoDataFound.isInvisible
+    private fun checkForNoData(check: Boolean) {
+        if(check == false) {
+            Toast.makeText(this, "엑셀값이 비어있습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun progress(total: Int) {
+        var progress = 0
+        var progress_size = 0.00
+        var div =  (total.toDouble() / 100)
+
+        Thread(Runnable {
+            while (progress < 100) {
+                progress += 1
+                progress_size += div
+
+                /** Update UI */
+                runOnUiThread {
+                    //Log.d(TAG, "number ---> $progress, $progress_size, $div, $total")
+
+                    binding.fileUploadProgressbar.progress = progress
+                    binding.fileUploadText.text = floor(progress_size).toInt().toString()
+                }
+                Thread.sleep(50)
+            }
+        }).start()
+    }
+
+    // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.
+    private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
+
+
+        //우측 4개 번호판을 자르기
+        val carnumber4d = inputcheck.getCarNumber4d(carnuminput)
+        val carnumberdigit = inputcheck.getCarNumberDigit(carnuminput)
+
+        val currentTime = LocalDateTime.now()
+        val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val datepatterned: String = currentTime.format(datepattern)
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            db.CarInfoDao().CarInfoInsert(CarInfo(
+                carNumber = carnuminput,
+                carNumber4d = carnumber4d,
+                carNumberOnly = carnumberdigit,
+                phone = phoneinput,
+                date = datepatterned,
+                etc = etcinpt
+            ))
+        }
+
+
+        var carinfoList = "자동차 정보들 \n"
+        CoroutineScope(Dispatchers.Main).launch {
+            val carinfos = CoroutineScope(Dispatchers.IO).async {
+                db.CarInfoDao().CarInfoGetAll()
+            }.await()
+
+            /*
+            for(carinfo in carinfos){
+                carinfoList += "${carinfo.carNumber} ${carinfo.date}  \n"
+            }
+            */
+            //Log.d(TAG, "=====> $carinfos")
+        }
+        //Log.d(TAG, "$carnuminput $carnumber4d $carnumberdigit  $phoneinput $datepatterned $etcinpt")
+    }
 }
