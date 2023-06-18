@@ -8,8 +8,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.database.CarInfoDatabase
-import org.apache.poi.ss.usermodel.Workbook
-import java.io.File
 
 class CarNumberSearchViewModel : BaseViewModel() {
 
@@ -136,8 +134,6 @@ class CarNumberSearchViewModel : BaseViewModel() {
             }
             carinfoList.postValue(list)
         }
-
-
     }
 
 

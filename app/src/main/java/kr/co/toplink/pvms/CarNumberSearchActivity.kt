@@ -13,7 +13,6 @@ import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.CarInfoDetailDialog
 import kr.co.toplink.pvms.util.DeleteDialog
-
 class CarNumberSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapterListener {
 
     private val TAG = this.javaClass.simpleName

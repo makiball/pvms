@@ -18,6 +18,20 @@ data class CarInfo(
  )
 
 @Entity(
+    tableName = "carsearchtoday",
+    indices = [Index(value = ["carnumber","date"], unique = true)]
+)
+data class CarSearchToday(
+    @ColumnInfo(name = "carnumber")         var carnumber: String,              //차량번호
+    @ColumnInfo(name = "carnumberreg")      var carnumberreg: Int = 0,          //등록미등록표시
+    @ColumnInfo(name = "phone")             var phone: String?,                 //연락처
+    @ColumnInfo(name = "date")              var date: String?,                  //등록일
+    @ColumnInfo(name = "time")              var time: String?,                  //등록시간
+    @ColumnInfo(name = "etc")               var etc: String?                    //기타
+)
+
+
+@Entity(
     tableName = "carsearch"
 )
 data class CarSearch(
@@ -48,7 +62,7 @@ data class SmsSendLog(
     @PrimaryKey(autoGenerate =true)         var id: Int = 0,
     @ColumnInfo(name = "carInfoId")         var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
     @ColumnInfo(name = "carnumber")         var carnumber: String,
-    @ColumnInfo(name = "type")              var type: Int,     //없으면 외부차량, 있으면 등록 차량
+    @ColumnInfo(name = "type")              var type: Int,          //없으면 외부차량, 있으면 등록 차량
     @ColumnInfo(name = "msg")               var msg: String,
     @ColumnInfo(name = "date")              var date: String
 )
