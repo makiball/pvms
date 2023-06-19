@@ -10,11 +10,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import kr.co.toplink.pvms.mlkit.vision.VisionType
 
-import github.hongbeomi.macgyver.mlkit.vision.barcode_scan.BarcodeScannerProcessor
-import github.hongbeomi.macgyver.mlkit.vision.face_detection.FaceContourDetectionProcessor
-import github.hongbeomi.macgyver.mlkit.vision.object_detection.ObjectDetectionProcessor
-import github.hongbeomi.macgyver.mlkit.vision.text_recognition.TextRecognitionProcessor
+import kr.co.toplink.pvms.mlkit.vision.text_recognition.TextRecognitionProcessor
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.math.abs
@@ -34,7 +32,7 @@ class CameraManager(
     private var imageAnalyzer: ImageAnalysis? = null
 
     // default barcode scanner
-    private var analyzerVisionType: VisionType = VisionType.Barcode
+    private var analyzerVisionType: VisionType = VisionType.OCR
 
     lateinit var cameraExecutor: ExecutorService
     lateinit var imageCapture: ImageCapture
@@ -52,12 +50,15 @@ class CameraManager(
     }
 
     private fun selectAnalyzer(): ImageAnalysis.Analyzer {
+        return TextRecognitionProcessor(graphicOverlay)
+        /*
         return when (analyzerVisionType) {
             VisionType.Object -> ObjectDetectionProcessor(graphicOverlay)
             VisionType.OCR -> TextRecognitionProcessor(graphicOverlay)
             VisionType.Face -> FaceContourDetectionProcessor(graphicOverlay)
             VisionType.Barcode -> BarcodeScannerProcessor(graphicOverlay)
         }
+        */
     }
 
     private fun setCameraConfig(
