@@ -63,8 +63,12 @@ dependencies {
 
     implementation "androidx.room:room-common:2.5.1"
     implementation "androidx.room:room-runtime:2.5.1"
+    implementation 'androidx.camera:camera-core:1.2.3'
+    implementation 'com.google.android.gms:play-services-tasks:18.0.2'
+    implementation 'com.google.mlkit:vision-common:17.3.0'
+    implementation 'androidx.camera:camera-lifecycle:1.2.3'
+    implementation 'androidx.camera:camera-view:1.2.3'
     annotationProcessor("androidx.room:room-compiler:2.5.1")
-
 
     // To use Kotlin Symbol Processing (KSP)
     ksp("androidx.room:room-compiler:2.5.1")

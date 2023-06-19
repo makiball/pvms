@@ -1,9 +1,15 @@
 package kr.co.toplink.pvms
 
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import kr.co.toplink.pvms.databinding.ActivityMainBinding
 import kr.co.toplink.pvms.model.ActivityClassModel
 
@@ -12,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     private val activityClassModels = ArrayList<ActivityClassModel>()
 
-    private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +34,56 @@ class MainActivity : AppCompatActivity() {
         binding.carnumbersearchBt.setOnClickListener {
             activitygo(1)
         }
+
+        binding.camsearchBt.setOnClickListener {
+            activitygo(2)
+        }
+
+
+        if (!allRuntimePermissionsGranted()) {
+            getRuntimePermissions()
+        }
+    }
+
+    private fun allRuntimePermissionsGranted(): Boolean {
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+
+    private fun getRuntimePermissions() {
+        val permissionsToRequest = java.util.ArrayList<String>()
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUESTS
+            )
+        }
+    }
+
+    private fun isPermissionGranted(context: Context, permission: String): Boolean {
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i(TAG, "Permission granted: $permission")
+            return true
+        }
+        Log.i(TAG, "Permission NOT granted: $permission")
+        return false
     }
 
     private fun addActivity() {
@@ -46,6 +101,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
+        activityClassModels.add(
+            ActivityClassModel(
+                CamCarSearchActivity::class.java,
+                getString(R.string.camsearch_bt)
+            )
+        )
+
     }
 
     /* 엑티비티 바로가기 */
@@ -55,5 +117,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    companion object {
+        private val TAG = this.javaClass.simpleName
+        private const val PERMISSION_REQUESTS = 1
+
+        private val REQUIRED_RUNTIME_PERMISSIONS =
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+    }
 
 }
