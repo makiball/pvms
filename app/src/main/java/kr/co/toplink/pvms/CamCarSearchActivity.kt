@@ -1,6 +1,5 @@
 package kr.co.toplink.pvms
 
-<<<<<<< HEAD
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
@@ -118,9 +117,4 @@ class CamCarSearchActivity: AppCompatActivity() {
         }
         orientationEventListener.enable()
     }
-
-
-=======
-class CamCarSearchActivity {
->>>>>>> origin/master
 }
