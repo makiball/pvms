@@ -1,23 +1,31 @@
 package kr.co.toplink.pvms
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
+import android.icu.text.SimpleDateFormat
 import android.media.Image
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.OrientationEventListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
 import kr.co.toplink.pvms.camerax.CameraManager
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
 import kr.co.toplink.pvms.model.CamCarSearchViewModel
 import kr.co.toplink.pvms.util.*
+import java.util.*
 
 @ExperimentalGetImage
 class CamCarSearchActivity: AppCompatActivity() {
@@ -68,7 +76,6 @@ class CamCarSearchActivity: AppCompatActivity() {
         cameraManager.imageCapture.takePicture(
             cameraManager.cameraExecutor,
             object : ImageCapture.OnImageCapturedCallback() {
-                @SuppressLint("UnsafeExperimentalUsageError", "RestrictedApi")
                 override fun onCaptureSuccess(image: ImageProxy) {
                     image.image?.let {
                         imageToBitmapSaveGallery(it)

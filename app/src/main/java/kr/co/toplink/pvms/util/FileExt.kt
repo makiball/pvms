@@ -4,9 +4,6 @@ import android.content.Context
 import android.os.Environment
 import java.io.File
 
-fun makeTempFile(context: Context): File = File.createTempFile("${System.currentTimeMillis()}.png", null, context.cacheDir)
-
-/*
 val rootFolder =
     File(
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
@@ -17,5 +14,3 @@ val rootFolder =
     }
 
 fun makeTempFile(): File = File.createTempFile("${System.currentTimeMillis()}", ".png", rootFolder)
-
- */
