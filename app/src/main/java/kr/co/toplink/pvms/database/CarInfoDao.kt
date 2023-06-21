@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import kr.co.toplink.pvms.data.CarInfoList
+import kr.co.toplink.pvms.data.CarInfoRow
 
 @Dao
 interface CarInfoDao {
@@ -27,6 +28,10 @@ interface CarInfoDao {
     /* 차랑번호 검색 */
     @Query("SELECT id, carnumber, phone, etc FROM CarInfo WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
     fun CarInfoSearchLikeCarnumber(searchText: String?) : List<CarInfo>
+
+    /* 번호판 검색 */
+    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumberonly = :searchText limit 1")
+    fun CarInfoSearchByCarnumber(searchText: String?) : List<CarInfoRow>
 
     /* 휴대폽번호 검색 */
     @Query("SELECT id, carnumber, phone, etc FROM CarInfo WHERE phone LIKE '%' || :searchText || '%' ORDER BY id DESC")
