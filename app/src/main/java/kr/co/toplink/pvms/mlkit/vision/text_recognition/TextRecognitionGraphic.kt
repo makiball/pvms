@@ -33,7 +33,7 @@ class TextRecognitionGraphic(
     }
 
     companion object {
-        private const val TEXT_COLOR = Color.WHITE
+        private const val TEXT_COLOR = Color.RED
         private const val TEXT_SIZE = 54.0f
         private const val ROUND_RECT_CORNER = 8F
     }
