@@ -18,7 +18,6 @@ import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import java.io.IOException
-import java.util.regex.Pattern
 
 
 @ExperimentalGetImage
@@ -27,8 +26,14 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
     private val recognizer = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
     override val graphicOverlay: GraphicOverlay
         get() = view
-    // val regex =  Regex("\\d{2,3}[가-힣]{1}\\d{4}")
-    val regex =  Regex("\\d{2,3}[^\\d]+\\d{4}")
+
+    val regex =  Regex("\\d{2,3}[가-힣]\\d{4}")  //완전한 번호판
+    //val regex =  Regex("\\d{2,3}[^\\d]+\\d{4}")
+    var regex01 =  Regex("\\d{2,3}.\\d{4}")     //불완전 번호판
+    var regex02 =  Regex("^\\d{4}$")               //옛날 번호판을 위해 4자리 숫자만 가져오기
+    var regex03 =  Regex("^\\d{2,3}[가-힣]")        //옛날 번호판을 위해 앞자리 가져오기
+    var oldCarNum : String = ""
+
     private var db: CarInfoDatabase
     init {
         db = CarInfoDatabase.getInstance(view.context)!!
@@ -53,9 +58,45 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
         rect: Rect
     ) {
         graphicOverlay.clear()
+
         results.textBlocks.forEach {
             val textGraphic = TextRecognitionGraphic(graphicOverlay, it, rect)
+            var carnum = it.text.replace("\\s+".toRegex(), "")
+            var carnum_prefect = ""
+            var carnum_imperfection = ""
 
+            //옛날번호판 저장
+            if(regex03.matches(carnum)) {
+                oldCarNum = carnum
+            }
+
+            if(regex02.matches(carnum)) {
+//                Log.d(TAG, "=====> $oldCarNum $carnum")
+                carnum = "$oldCarNum $carnum"
+                oldCarNum = ""
+            }
+
+            //완전한 번호판
+            if(regex.matches(carnum)) {
+                //searchDataBase(carnum)
+                carnum_prefect = extractCarNumber(carnum, regex)
+
+                graphicOverlay.add(textGraphic)
+            }
+
+            //불완전한 번호판
+            if(regex01.matches(carnum)) {
+                carnum_imperfection = extractCarNumber(carnum, regex01)
+                carnum_imperfection = carnum_imperfection.substring(0, carnum_imperfection.length - 5) + " " + carnum_imperfection.substring(carnum_imperfection.length - 4)
+
+                graphicOverlay.add(textGraphic)
+            }
+
+
+
+            //graphicOverlay.add(textGraphic)
+
+            /*
             val textcarnum = it.text.replace("\\s+".toRegex(), "")
             var carnum = ""
             if(regex.matches(textcarnum)) {
@@ -67,24 +108,24 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                     graphicOverlay.add(textGraphic)
                 }
 
-                /*
+
                 isStart = 1
                 matches.forEach {
                     carnum = it.toString()
-
-
                 }
-                 */
+
             }
+            */
         }
         graphicOverlay.postInvalidate()
     }
 
     /* 자동차 번호 추출하기 */
-    fun extractCarNumber(text: String): String {
+    fun extractCarNumber(text: String, regex : Regex): String {
         val matches = regex.findAll(text)
-        var carnum = matches.map { it.value }.joinToString("")
-        carnum = Regex("[\\D]+").replace(carnum, " ")
+        val carnum = matches.map { it.value }.joinToString("")
+        //carnum = carnum.replace("\\s+".toRegex(), "")
+        //carnum = Regex("[\\D]+").replace(carnum, " ")
         return carnum
     }
 
