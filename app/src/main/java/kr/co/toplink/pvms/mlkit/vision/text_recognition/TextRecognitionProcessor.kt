@@ -1,21 +1,52 @@
 package kr.co.toplink.pvms.mlkit.vision.text_recognition
 
 import android.graphics.Rect
+import android.media.AudioManager
+import android.media.ToneGenerator
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import androidx.camera.core.ExperimentalGetImage
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
+import kr.co.toplink.pvms.database.CarInfo
+import kr.co.toplink.pvms.database.CarInfoDatabase
+import kr.co.toplink.pvms.database.CarSearchToday
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+
+@ExperimentalGetImage
 class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnalyzer<Text>() {
 
     private val recognizer = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
     override val graphicOverlay: GraphicOverlay
         get() = view
+
+    val regex =  Regex("\\d{2,3}[가-힣]\\d{4}")  //완전한 번호판
+    //val regex =  Regex("\\d{2,3}[^\\d]+\\d{4}")
+    var regex01 =  Regex("\\d{2,3}.\\d{4}")     //불완전 번호판
+    var regex02 =  Regex("^\\d{4}$")               //옛날 번호판을 위해 4자리 숫자만 가져오기
+    var regex03 =  Regex("^\\d{2,3}[가-힣]")        //옛날 번호판을 위해 앞자리 가져오기
+    var oldCarNum : String = ""
+
+    val tone = ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME)
+
+    private var db: CarInfoDatabase
+    init {
+        db = CarInfoDatabase.getInstance(view.context)!!
+    }
+    private var isStart = 0
 
     override fun detectInImage(image: InputImage): Task<Text> {
         return recognizer.process(image)
@@ -29,17 +60,147 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSuccess(
         results: Text,
         graphicOverlay: GraphicOverlay,
         rect: Rect
     ) {
         graphicOverlay.clear()
+
         results.textBlocks.forEach {
             val textGraphic = TextRecognitionGraphic(graphicOverlay, it, rect)
-            graphicOverlay.add(textGraphic)
+            var carnum = it.text.replace("\\s+".toRegex(), "")
+            var carnum_prefect = ""
+            var carnum_imperfection = ""
+
+            //옛날번호판 저장
+            if(regex03.matches(carnum)) {
+                oldCarNum = carnum
+            }
+
+            if(regex02.matches(carnum)) {
+//                Log.d(TAG, "=====> $oldCarNum $carnum")
+                carnum = "$oldCarNum$carnum"
+                oldCarNum = ""
+            }
+
+            //완전한 번호판
+            if(regex.matches(carnum)) {
+
+                carnum_prefect = extractCarNumber(carnum, regex)
+                searchDataBase(carnum_prefect, 0)
+                graphicOverlay.add(textGraphic)
+            }
+
+            //불완전한 번호판
+            if(regex01.matches(carnum)) {
+                carnum_imperfection = extractCarNumber(carnum, regex01)
+                carnum_imperfection = carnum_imperfection.substring(0, carnum_imperfection.length - 5) + " " + carnum_imperfection.substring(carnum_imperfection.length - 4)
+                searchDataBase(carnum_imperfection, 1)
+                graphicOverlay.add(textGraphic)
+            }
+
+
+            //graphicOverlay.add(textGraphic)
+
+            /*
+            val textcarnum = it.text.replace("\\s+".toRegex(), "")
+            var carnum = ""
+            if(regex.matches(textcarnum)) {
+
+                carnum = extractCarNumber(textcarnum)
+                if (carnum != "") {
+                    Log.d(TAG, "=====> $carnum ")
+                    searchDataBase(carnum)
+                    graphicOverlay.add(textGraphic)
+                }
+
+
+                isStart = 1
+                matches.forEach {
+                    carnum = it.toString()
+                }
+
+            }
+            */
         }
         graphicOverlay.postInvalidate()
+    }
+
+    /* 자동차 번호 추출하기 */
+    fun extractCarNumber(text: String, regex : Regex): String {
+        val matches = regex.findAll(text)
+        val carnum = matches.map { it.value }.joinToString("")
+        //carnum = carnum.replace("\\s+".toRegex(), "")
+        //carnum = Regex("[\\D]+").replace(carnum, " ")
+        return carnum
+    }
+
+    /* 등록 차량 조회 */
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun searchDataBase(textcarnum: String, type : Int) {
+
+        val currentTime = LocalDateTime.now()
+        val date = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val time = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+
+        //완전번호판
+        if(type == 0) {
+            CoroutineScope(Dispatchers.Main).launch {
+                val carinfos = CoroutineScope(Dispatchers.IO).async {
+                    db.CarInfoDao().CarInfoSearchByCarnumberOnly(textcarnum)
+                }.await()
+                carinfos.forEach {
+                    if (it.carnumber != "") {
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            db.CarInfoDao().CarInfoInsertToday(
+                                CarSearchToday(
+                                    carnumber = it.carnumber,
+                                    phone = it.phone,
+                                    date = date,
+                                    time = time,
+                                    etc = it.etc,
+                                    type = 0
+                                )
+                            )
+                        }
+
+                        tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
+                    }
+                }
+            }
+        }
+
+        //불완전번호판
+        if(type == 1) {
+            CoroutineScope(Dispatchers.Main).launch {
+                val carinfos = CoroutineScope(Dispatchers.IO).async {
+                    db.CarInfoDao().CarInfoSearchByCarnumber(textcarnum)
+                }.await()
+                carinfos.forEach {
+                    if (it.carnumber != "") {
+
+                        CoroutineScope(Dispatchers.IO).launch {
+                            db.CarInfoDao().CarInfoInsertToday(
+                                CarSearchToday(
+                                    carnumber = it.carnumber,
+                                    phone = it.phone,
+                                    date = date,
+                                    time = time,
+                                    etc = it.etc,
+                                    type = 0
+                                )
+                            )
+                        }
+
+                        tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
+                    }
+                }
+            }
+        }
+
     }
 
     override fun onFailure(e: Exception) {

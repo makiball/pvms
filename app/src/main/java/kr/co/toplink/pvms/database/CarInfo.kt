@@ -15,19 +15,20 @@ data class CarInfo(
     @ColumnInfo(name = "phone")             val phone: String?,
     @ColumnInfo(name = "date")              val date: String?,
     @ColumnInfo(name = "etc")               val etc: String?
- )
+)
 
 @Entity(
     tableName = "carsearchtoday",
     indices = [Index(value = ["carnumber","date"], unique = true)]
 )
 data class CarSearchToday(
-    @ColumnInfo(name = "carnumber")         var carnumber: String,              //차량번호
-    @ColumnInfo(name = "carnumberreg")      var carnumberreg: Int = 0,          //등록미등록표시
-    @ColumnInfo(name = "phone")             var phone: String?,                 //연락처
-    @ColumnInfo(name = "date")              var date: String?,                  //등록일
-    @ColumnInfo(name = "time")              var time: String?,                  //등록시간
-    @ColumnInfo(name = "etc")               var etc: String?                    //기타
+    @PrimaryKey(autoGenerate =true)         val id: Int = 0,
+    @ColumnInfo(name = "carnumber")         val carnumber: String?,      //차량 번호 풀번호
+    @ColumnInfo(name = "carnumber4d")       val carnumber4d: String?,    //차량 번호 뒷 4자리
+    @ColumnInfo(name = "carnumberonly")     val carnumberonly: String?,  //차량 번호 숫자만
+    @ColumnInfo(name = "phone")             val phone: String?,
+    @ColumnInfo(name = "date")              val date: String?,
+    @ColumnInfo(name = "etc")               val etc: String?
 )
 
 

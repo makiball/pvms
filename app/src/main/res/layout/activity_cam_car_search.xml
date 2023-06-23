@@ -50,6 +50,19 @@
         android:backgroundTint="@android:color/transparent" />
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:transitionGroup="true"
+        android:layout_margin = "8dp"
+        android:layout_marginTop = "10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@id/imageButton_shutter"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

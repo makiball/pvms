@@ -107,6 +107,7 @@ class CarNumberSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapte
         viewModel.searchCarnum(this@CarNumberSearchActivity, "")
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun attachObserver() {
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
             it?.apply {

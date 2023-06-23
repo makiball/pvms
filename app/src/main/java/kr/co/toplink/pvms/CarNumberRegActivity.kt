@@ -5,6 +5,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
@@ -13,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
@@ -52,6 +54,7 @@ class CarNumberRegActivity : AppCompatActivity() {
 
     private var inputcheck = InputCheck()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -317,6 +320,7 @@ class CarNumberRegActivity : AppCompatActivity() {
     }
 
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
 
 
@@ -327,7 +331,6 @@ class CarNumberRegActivity : AppCompatActivity() {
         val currentTime = LocalDateTime.now()
         val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val datepatterned: String = currentTime.format(datepattern)
-
 
         CoroutineScope(Dispatchers.IO).launch {
             db.CarInfoDao().CarInfoInsert(CarInfo(

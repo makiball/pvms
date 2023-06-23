@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import kr.co.toplink.pvms.data.CarInfoList
+import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.data.CarInfoRow
 
 @Dao
@@ -15,8 +16,15 @@ interface CarInfoDao {
     @Query("SELECT id, carnumber, phone, etc FROM CarInfo ORDER BY id DESC")
     fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
 
+    @Query("SELECT carnumber, phone, date, time, etc, type FROM CarSearchToday")
+    fun CarInfoGetTdoday(): LiveData<MutableList<CarInfoListToday>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsert(carinfo: CarInfo)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun CarInfoInsertToday(carsearchToday: CarSearchToday)
+
 
     @Query("DELETE FROM CarInfo")
     fun CarInfoDelete()
@@ -30,8 +38,13 @@ interface CarInfoDao {
     fun CarInfoSearchLikeCarnumber(searchText: String?) : List<CarInfo>
 
     /* 번호판 검색 */
-    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumberonly = :searchText limit 1")
+    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumberonly = :searchText")
+    fun CarInfoSearchByCarnumberOnly(searchText: String?) : List<CarInfoRow>
+
+    /* 번호판 검색 */
+    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumber = :searchText limit 1")
     fun CarInfoSearchByCarnumber(searchText: String?) : List<CarInfoRow>
+
 
     /* 휴대폽번호 검색 */
     @Query("SELECT id, carnumber, phone, etc FROM CarInfo WHERE phone LIKE '%' || :searchText || '%' ORDER BY id DESC")

@@ -75,7 +75,7 @@ class CameraManager(
                 imageAnalyzer
             )
             preview?.setSurfaceProvider(
-                finderView.createSurfaceProvider()
+                finderView.surfaceProvider
             )
         } catch (e: Exception) {
             Log.e(TAG, "Use case binding failed", e)

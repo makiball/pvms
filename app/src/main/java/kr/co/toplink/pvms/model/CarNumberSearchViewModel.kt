@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.data.CarInfoList
+import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.database.CarInfoDatabase
 
 class CarNumberSearchViewModel : BaseViewModel() {
@@ -16,6 +17,8 @@ class CarNumberSearchViewModel : BaseViewModel() {
     private lateinit var db: CarInfoDatabase
 
     var carinfoList: MutableLiveData<List<CarInfoList>> = MutableLiveData()
+    var carinfoListToday: MutableLiveData<List<CarInfoListToday>> = MutableLiveData()
+
     var carMsgData: MutableLiveData<String> = MutableLiveData()
     private val list = ArrayList<CarInfoList>()
 
@@ -26,6 +29,12 @@ class CarNumberSearchViewModel : BaseViewModel() {
             db.CarInfoDao().CarInfoDelete()
         }
         carinfoList.postValue(list)
+    }
+
+    /* 금일차량검색 */
+    fun searchCarnumToday(context: Context, searchtext: String) {
+        db = CarInfoDatabase.getInstance(context)!!
+        val carinfos = db.CarInfoDao().CarInfoAll()
     }
 
     /* 차량번호 검색 */
