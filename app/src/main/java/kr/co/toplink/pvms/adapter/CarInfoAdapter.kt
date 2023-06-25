@@ -5,9 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import kr.co.toplink.pvms.data.CarInfoList
-import kr.co.toplink.pvms.data.CarInfoListDiffCallback
+//import kr.co.toplink.pvms.data.CarInfoListDiffCallback
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 
+class CarInfoAdapter () {
+
+}
+
+/*
 class CarInfoAdapter (
     private val listener : CarInfoAdapterListener
 ) : ListAdapter<CarInfoList, CarInfoViewHolder>(CarInfoListDiffCallback) {
@@ -32,3 +37,5 @@ class CarInfoAdapter (
     }
 
 }
+
+ */

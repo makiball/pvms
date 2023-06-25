@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import kr.co.toplink.pvms.camerax.GraphicOverlay
 
-@Database(entities = [CarInfo::class], version = 1)
+@Database(entities = [CarInfo::class, CarInfoToday::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class CarInfoDatabase: RoomDatabase() {
     abstract fun CarInfoDao(): CarInfoDao

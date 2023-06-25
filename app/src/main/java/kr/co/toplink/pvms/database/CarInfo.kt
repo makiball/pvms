@@ -2,68 +2,65 @@ package kr.co.toplink.pvms.database
 
 import androidx.room.*
 import androidx.room.Entity
+import java.util.Date
 
 @Entity(
-    tableName = "carinfo",
     indices = [Index(value = ["carnumber"], unique = true)]
 )
 data class CarInfo(
-    @PrimaryKey(autoGenerate =true)         val id: Int = 0,
-    @ColumnInfo(name = "carnumber")         val carnumber: String?,      //차량 번호 풀번호
-    @ColumnInfo(name = "carnumber4d")       val carnumber4d: String?,    //차량 번호 뒷 4자리
-    @ColumnInfo(name = "carnumberonly")     val carnumberonly: String?,  //차량 번호 숫자만
-    @ColumnInfo(name = "phone")             val phone: String?,
-    @ColumnInfo(name = "date")              val date: String?,
-    @ColumnInfo(name = "etc")               val etc: String?
+    @PrimaryKey(autoGenerate =true)
+    val id: Int = 0,
+    val carnumber: String?,      //차량 번호 풀번호
+    val carnumber4d: String?,    //차량 번호 뒷 4자리
+    val carnumberonly: String?,  //차량 번호 숫자만
+    val phone: String?,
+    val date: Date,
+    val etc: String?
 )
 
 @Entity(
-    tableName = "carsearchtoday",
     indices = [Index(value = ["carnumber","date"], unique = true)]
 )
-data class CarSearchToday(
-    @PrimaryKey(autoGenerate =true)         val id: Int = 0,
-    @ColumnInfo(name = "carnumber")         val carnumber: String?,      //차량 번호 풀번호
-    @ColumnInfo(name = "carnumber4d")       val carnumber4d: String?,    //차량 번호 뒷 4자리
-    @ColumnInfo(name = "carnumberonly")     val carnumberonly: String?,  //차량 번호 숫자만
-    @ColumnInfo(name = "phone")             val phone: String?,
-    @ColumnInfo(name = "date")              val date: String?,
-    @ColumnInfo(name = "etc")               val etc: String?
+data class CarInfoToday(
+    @PrimaryKey(autoGenerate =true)
+    val id: Int = 0,
+    val carnumber: String?,      //차량 번호 풀번호
+    val phone: String?,
+    val date: String?,
+    val time: String?,
+    val etc: String?,
+    val type: Int?
 )
 
 
-@Entity(
-    tableName = "carsearch"
-)
+@Entity
 data class CarSearch(
-    @ColumnInfo(name = "carInfoId")         var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
-    @ColumnInfo(name = "carnumber")         var carnumber: String,
-    @ColumnInfo(name = "carnumber4d")       var carnumber4d: String,
-    @ColumnInfo(name = "carnumberOnly")     var carnumberOnly: String,
-    @ColumnInfo(name = "phone")             var phone: String,
-    @ColumnInfo(name = "date")              var date: String,
-    @Ignore var etc: String
-) {
-    @PrimaryKey(autoGenerate =true)         var id: Int = 0
-}
-
-@Entity(
-    tableName = "smsmsg"
+    @PrimaryKey(autoGenerate =true)
+    var id: Int = 0,
+    var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
+    var carnumber: String,
+    var carnumber4d: String,
+    var carnumberOnly: String,
+    var phone: String,
+    var date: String,
+    var etc: String
 )
+
+@Entity
 data class SmsMsg(
-    @PrimaryKey(autoGenerate =true)         var id: Int = 0,
-    @ColumnInfo(name = "type")              var type: Int,     //없으면 외부차량, 있으면 등록 차량
-    @ColumnInfo(name = "msg")               var carnumber: String
+    @PrimaryKey(autoGenerate =true)
+    var id: Int = 0,
+    var type: Int,     //없으면 외부차량, 있으면 등록 차량
+    var carnumber: String
 )
 
-@Entity(
-    tableName = "smssendlog"
-)
+@Entity
 data class SmsSendLog(
-    @PrimaryKey(autoGenerate =true)         var id: Int = 0,
-    @ColumnInfo(name = "carInfoId")         var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
-    @ColumnInfo(name = "carnumber")         var carnumber: String,
-    @ColumnInfo(name = "type")              var type: Int,          //없으면 외부차량, 있으면 등록 차량
-    @ColumnInfo(name = "msg")               var msg: String,
-    @ColumnInfo(name = "date")              var date: String
+    @PrimaryKey(autoGenerate =true)
+    var id: Int = 0,
+    var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
+    var carnumber: String,
+    var type: Int,          //없으면 외부차량, 있으면 등록 차량
+    var msg: String,
+    var date: String
 )

@@ -20,7 +20,8 @@ import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoDatabase
-import kr.co.toplink.pvms.database.CarSearchToday
+import kr.co.toplink.pvms.database.CarInfoToday
+import org.joda.time.format.DateTimeFormat
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -138,12 +139,19 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
     }
 
     /* 등록 차량 조회 */
-    @RequiresApi(Build.VERSION_CODES.O)
     fun searchDataBase(textcarnum: String, type : Int) {
 
-        val currentTime = LocalDateTime.now()
-        val date = currentTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val time = currentTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
+        val datepatterned: String
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val currentTime =  LocalDateTime.now()
+            val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            datepatterned = currentTime.format(datepattern)
+        } else {
+            val date = org.joda.time.LocalDateTime.now()
+            val datepattern = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
+            val jodatime = datepattern.parseDateTime(date.toString())
+            datepatterned = datepattern.print(jodatime)
+        }
 
         //완전번호판
         if(type == 0) {
@@ -156,11 +164,12 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
 
                         CoroutineScope(Dispatchers.IO).launch {
                             db.CarInfoDao().CarInfoInsertToday(
-                                CarSearchToday(
+                                CarInfoToday(
+                                    id = it.id,
                                     carnumber = it.carnumber,
                                     phone = it.phone,
-                                    date = date,
-                                    time = time,
+                                    date = datepatterned,
+                                    time = datepatterned,
                                     etc = it.etc,
                                     type = 0
                                 )
@@ -184,11 +193,12 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
 
                         CoroutineScope(Dispatchers.IO).launch {
                             db.CarInfoDao().CarInfoInsertToday(
-                                CarSearchToday(
+                                CarInfoToday(
+                                    id = it.id,
                                     carnumber = it.carnumber,
                                     phone = it.phone,
-                                    date = date,
-                                    time = time,
+                                    date = datepatterned,
+                                    time = datepatterned,
                                     etc = it.etc,
                                     type = 0
                                 )

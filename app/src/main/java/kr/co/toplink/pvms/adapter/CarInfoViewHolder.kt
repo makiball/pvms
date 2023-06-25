@@ -4,6 +4,11 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 
+class CarInfoViewHolder () {
+
+}
+
+/*
 class CarInfoViewHolder (
     val binding : CarinfoItemLayoutBinding,
     val listener : CarInfoAdapter.CarInfoAdapterListener
@@ -16,3 +21,5 @@ class CarInfoViewHolder (
         }
     }
 }
+
+ */

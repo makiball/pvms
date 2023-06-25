@@ -25,37 +25,41 @@ import androidx.lifecycle.ViewModelProvider
 import kr.co.toplink.pvms.adapter.CarInfoAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
 import kr.co.toplink.pvms.data.CarInfoList
+import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
 import kr.co.toplink.pvms.model.CamCarSearchViewModel
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
+import kr.co.toplink.pvms.model.ExcellReaderViewModel
 import kr.co.toplink.pvms.util.*
 import java.util.*
 
 @ExperimentalGetImage
-class CamCarSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapterListener {
+class CamCarSearchActivity: AppCompatActivity(){
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCamCarSearchBinding
     private lateinit var cameraManager: CameraManager
 
     private lateinit var viewModel: CarNumberSearchViewModel
 
-    private val carinfoadapter = CarInfoAdapter(this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCamCarSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.recyclerView.apply {
-            adapter = carinfoadapter
-        }
-
         binding.imageButtonShutter.setOnClickListener {
             takePicture()
         }
 
+        //binding.recyclerText.text = db.CarInfoDao().CarInfoGetTdoday()
+
         createCameraManager()
         cameraManager.startCamera()
+
+        viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
+        viewModel.searchCarnumToday(this,"")
+        viewModel.carinfoListToday.observe(this, {
+            binding.recyclerText.text = it.toString()
+        })
     }
 
     /*
@@ -133,9 +137,5 @@ class CamCarSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapterLi
             }
         }
         orientationEventListener.enable()
-    }
-
-    override fun onCarInfoListClicked(carInfoView: View, carInfoList: CarInfoList) {
-        TODO("Not yet implemented")
     }
 }

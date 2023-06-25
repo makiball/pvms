@@ -13,17 +13,17 @@ interface CarInfoDao {
     @Query("SELECT * FROM CarInfo")
     fun CarInfoAll(): List<CarInfo>
 
-    @Query("SELECT id, carnumber, phone, etc FROM CarInfo ORDER BY id DESC")
+    @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo ORDER BY id DESC")
     fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
 
-    @Query("SELECT carnumber, phone, date, time, etc, type FROM CarSearchToday")
+    @Query("SELECT id, carnumber, phone, date, time, etc, type FROM CarInfoToday")
     fun CarInfoGetTdoday(): LiveData<MutableList<CarInfoListToday>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsert(carinfo: CarInfo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun CarInfoInsertToday(carsearchToday: CarSearchToday)
+    fun CarInfoInsertToday(carsearchToday: CarInfoToday)
 
 
     @Query("DELETE FROM CarInfo")
@@ -34,7 +34,7 @@ interface CarInfoDao {
     fun CarInfoDeletebyid(id: Int)
 
     /* 차랑번호 검색 */
-    @Query("SELECT id, carnumber, phone, etc FROM CarInfo WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
+    @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
     fun CarInfoSearchLikeCarnumber(searchText: String?) : List<CarInfo>
 
     /* 번호판 검색 */
@@ -47,11 +47,11 @@ interface CarInfoDao {
 
 
     /* 휴대폽번호 검색 */
-    @Query("SELECT id, carnumber, phone, etc FROM CarInfo WHERE phone LIKE '%' || :searchText || '%' ORDER BY id DESC")
+    @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo WHERE phone LIKE '%' || :searchText || '%' ORDER BY id DESC")
     fun CarInfoSearchLikePhone(searchText: String?) : List<CarInfo>
 
     /* 비고 검색 */
-    @Query("SELECT id, carnumber, phone, etc FROM CarInfo WHERE etc LIKE '%' || :searchText || '%' ORDER BY id DESC")
+    @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo WHERE etc LIKE '%' || :searchText || '%' ORDER BY id DESC")
     fun CarInfoSearchLikeEtc(searchText: String?) : List<CarInfo>
 
 }

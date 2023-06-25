@@ -7,20 +7,28 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.toplink.pvms.adapter.CarInfoAdapter
+import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.data.CarInfoList
+import kr.co.toplink.pvms.data.CarInfoListModel
+import kr.co.toplink.pvms.data.Option
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.CarInfoDetailDialog
 import kr.co.toplink.pvms.util.DeleteDialog
-class CarNumberSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapterListener {
+import kr.co.toplink.pvms.viewholder.ItemBinder
+import kr.co.toplink.pvms.viewholder.PostCardViewBinder
+import java.lang.Boolean.TRUE
+
+class CarNumberSearchActivity: AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumbersearchBinding
 
     private lateinit var viewModel: CarNumberSearchViewModel
 
-    private val carinfoadapter = CarInfoAdapter(this)
+    private lateinit var listAdapter: SingleViewBinderListAdapter
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,33 +49,41 @@ class CarNumberSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapte
             finish()
         }
 
+        val postCardViewBinder = PostCardViewBinder { binding, postCardModel ->
+            //gotoDetailWithTransition(postCardModel, binding)
+        }
+        listAdapter = SingleViewBinderListAdapter(postCardViewBinder as ItemBinder)
         binding.recyclerView.apply {
-            adapter = carinfoadapter
+            this.adapter = listAdapter
+            layoutManager = LinearLayoutManager(this@CarNumberSearchActivity)
         }
-        binding.recyclerView.adapter = carinfoadapter
 
-        var isChecked = 1
+        binding.check1.isChecked = true
 
-        binding.searchRdg.setOnCheckedChangeListener { radioGroup, i ->
-            Log.d(TAG, "=====> i")
-
-            var msg = "차량번호"
-
-            when (i) {
-                R.id.check_1 -> { msg = "차량번호"; isChecked = 1 }
-                R.id.check_2 -> { msg = "휴대폰번호" ; isChecked = 2 }
-                R.id.check_3 -> { msg = "비고"; isChecked = 3 }
-                else ->  { msg = "차량번호"; isChecked = 1 }
+        binding.searchRdg.setOnCheckedChangeListener { group, checkedId  ->
+            //var msg = "차량번호"
+            val selectedOption: Option = when (checkedId) {
+                R.id.check_1 -> Option.carnumber
+                R.id.check_2 -> Option.phone
+                R.id.check_3 -> Option.etc
+                else -> Option.carnumber // 기본값 설정
             }
-
-            binding.searchInpt.hint = msg
+            viewModel.setSelectedOption(selectedOption)
         }
+
+        /* 처음실행시 무조건체크 하기 */
+        //binding.check1.isChecked = true
 
         binding.searchBt.apply{
+
+            val selectedOption: Option
+
             setOnClickListener {
                 val searchtext = binding.searchInptText.text.toString()
 
+                Log.d(TAG,"=====> ${selectedOption.text}")
 
+/*
                 when(isChecked) {
                     1 -> {
                         viewModel.searchCarnum(this@CarNumberSearchActivity, searchtext)
@@ -82,9 +98,10 @@ class CarNumberSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapte
                         viewModel.searchCarnum(this@CarNumberSearchActivity, searchtext)
                     }
                 }
+ */
             }
-        }
 
+        }
 
        init()
 
@@ -102,37 +119,48 @@ class CarNumberSearchActivity: AppCompatActivity(), CarInfoAdapter.CarInfoAdapte
 
     private fun init() {
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
+        viewModel.searchCarnum(this, "")
         attachObserver()
-
-        viewModel.searchCarnum(this@CarNumberSearchActivity, "")
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun attachObserver() {
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
             it?.apply {
                 binding.totalreg.text = "총 수량 : ${this.size}대"
-                carinfoadapter.submitList(this)
-                carinfoadapter.notifyDataSetChanged();
+                listAdapter.submitList(generateMockCarinfo(this))
+                //listAdapter.submitList(this)
             }
         })
-    }
 
 
-    override fun onCarInfoListClicked(carNumView: View, carInfoList: CarInfoList) {
+        viewModel.selectedOption.observe(this) { selectedOption ->
+            // 선택된 옵션에 대한 처리 작업
+            /*
+            when (selectedOption) {
+                Option.carnumber -> {
+                    // Option 1 선택 시 처리할 작업
+                }
+                Option.phone -> {
+                    // Option 2 선택 시 처리할 작업
+                }
+                Option.etc -> {
+                    // Option 3 선택 시 처리할 작업
+                }
+            }*/
 
-        val msg = "차량 등록 상세 정보!"
-        val dlg = CarInfoDetailDialog(this)
-        dlg.setOnOKClickedListener{
-
-            viewModel.idDeteData(this@CarNumberSearchActivity, carInfoList.id)
-
-
-
+            binding.searchInpt.hint = selectedOption.text
         }
-        dlg.show(carInfoList)
 
-        Log.d(TAG,"=====> $carInfoList")
     }
 
+    private fun generateMockCarinfo(carInfo: List<CarInfoList>): List<CarInfoListModel> {
+        val carInfoList = ArrayList<CarInfoListModel>()
+
+        carInfo.forEach{
+            val carinfolist = CarInfoList(it.id, it.carnumber, it.phone, it.date, it.etc)
+            carInfoList.add(CarInfoListModel(carinfolist))
+        }
+
+        return carInfoList
+    }
 }

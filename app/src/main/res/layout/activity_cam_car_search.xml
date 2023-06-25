@@ -63,6 +63,15 @@
         app:layout_constraintTop_toBottomOf="@id/imageButton_shutter"
         />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id = "@+id/recycler_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "dsfsdfsdf"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycler_view"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

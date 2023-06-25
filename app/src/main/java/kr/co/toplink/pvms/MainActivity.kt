@@ -8,13 +8,14 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.ExperimentalGetImage
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kr.co.toplink.pvms.databinding.ActivityMainBinding
 import kr.co.toplink.pvms.model.ActivityClassModel
 
 
-class MainActivity : AppCompatActivity() {
+@ExperimentalGetImage class MainActivity : AppCompatActivity() {
 
     private val activityClassModels = ArrayList<ActivityClassModel>()
 

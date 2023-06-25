@@ -3,13 +3,13 @@ package kr.co.toplink.pvms.data
 import androidx.recyclerview.widget.DiffUtil
 
 data class CarInfoListToday(
-    val id: Int = 0,
+    val id: Int?,      //차량 번호 풀번호
     val carnumber: String?,      //차량 번호 풀번호
     val phone: String?,
     val date: String?,
     val time: String?,
     val etc: String?,
-    val type: Int?      //0 등록차량, 1미등록차량
+    val type: Int = 0      //0 등록차량, 1미등록차량
 )
 
 object CarInfoListTodayDiffCallback : DiffUtil.ItemCallback<CarInfoListToday>() {

@@ -1,6 +1,7 @@
 package kr.co.toplink.pvms.model
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -8,6 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListToday
+import kr.co.toplink.pvms.data.Option
 import kr.co.toplink.pvms.database.CarInfoDatabase
 
 class CarNumberSearchViewModel : BaseViewModel() {
@@ -17,10 +19,18 @@ class CarNumberSearchViewModel : BaseViewModel() {
     private lateinit var db: CarInfoDatabase
 
     var carinfoList: MutableLiveData<List<CarInfoList>> = MutableLiveData()
-    var carinfoListToday: MutableLiveData<List<CarInfoListToday>> = MutableLiveData()
+
+    var carinfoListToday: LiveData<MutableList<CarInfoListToday>> = MutableLiveData()
 
     var carMsgData: MutableLiveData<String> = MutableLiveData()
     private val list = ArrayList<CarInfoList>()
+
+    val selectedOption: MutableLiveData<Option> = MutableLiveData()
+
+    /* 체크박스 */
+    fun setSelectedOption(option: Option) {
+        selectedOption.value = option
+    }
 
     /* 차량번호 검색 */
     fun allDeteData(context: Context) {
@@ -34,7 +44,17 @@ class CarNumberSearchViewModel : BaseViewModel() {
     /* 금일차량검색 */
     fun searchCarnumToday(context: Context, searchtext: String) {
         db = CarInfoDatabase.getInstance(context)!!
-        val carinfos = db.CarInfoDao().CarInfoAll()
+        try {
+            launch {
+                val carinfos = CoroutineScope(Dispatchers.IO).async {
+                    db.CarInfoDao().CarInfoGetTdoday()
+                }.await()
+                carinfoListToday  = carinfos
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            carMsgData.postValue(e.message.orEmpty())
+        }
     }
 
     /* 차량번호 검색 */
@@ -52,8 +72,8 @@ class CarNumberSearchViewModel : BaseViewModel() {
                             carinfo.id,
                             carinfo.carnumber,
                             carinfo.phone,
-                            carinfo.etc,
-                            carinfo.date
+                            carinfo.date,
+                            carinfo.etc
                         )
                     )
                 }
@@ -80,8 +100,8 @@ class CarNumberSearchViewModel : BaseViewModel() {
                             carinfo.id,
                             carinfo.carnumber,
                             carinfo.phone,
+                            carinfo.date,
                             carinfo.etc,
-                            carinfo.date
                         )
                     )
                 }
@@ -108,8 +128,8 @@ class CarNumberSearchViewModel : BaseViewModel() {
                             carinfo.id,
                             carinfo.carnumber,
                             carinfo.phone,
-                            carinfo.etc,
-                            carinfo.date
+                            carinfo.date,
+                            carinfo.etc
                         )
                     )
                 }
@@ -136,8 +156,8 @@ class CarNumberSearchViewModel : BaseViewModel() {
                         carinfo.id,
                         carinfo.carnumber,
                         carinfo.phone,
-                        carinfo.etc,
-                        carinfo.date
+                        carinfo.date,
+                        carinfo.etc
                     )
                 )
             }

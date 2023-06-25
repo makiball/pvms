@@ -31,10 +31,13 @@ import kr.co.toplink.pvms.model.ExcellReaderViewModel
 import kr.co.toplink.pvms.model.ListItems
 import kr.co.toplink.pvms.util.InputCheck
 import kr.co.toplink.pvms.util.OpenDialog
+import org.joda.time.format.DateTimeFormat
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Math.ceil
 import java.lang.Math.floor
+import java.util.Date
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -54,7 +57,7 @@ class CarNumberRegActivity : AppCompatActivity() {
 
     private var inputcheck = InputCheck()
 
-    @RequiresApi(Build.VERSION_CODES.O)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -90,7 +93,7 @@ class CarNumberRegActivity : AppCompatActivity() {
         binding.regBt.setOnClickListener {
 
             val carnuminput = binding.carnumInpt.text.toString()
-            val phoneinput = binding.phoneInpt.text.toString().replace("\\s+".toRegex(), "")
+            var phoneinput = binding.phoneInpt.text.toString().replace("\\s+".toRegex(), "")
             val etcinpt = binding.etcInpt.text.toString()
 
             if(carnuminput.isEmpty() == true) {
@@ -107,11 +110,20 @@ class CarNumberRegActivity : AppCompatActivity() {
 
             /* 휴대폰 번호 정규식 */
             if(phoneinput.isNotEmpty() == true) {
+
+                if(Regex("^010.*").matches(phoneinput)) {
+                    phoneinput = "${phoneinput.substring(0, 3)}-${phoneinput.substring(3, 7)}-${phoneinput.substring(7)}"
+                } else {
+                    phoneinput = "${phoneinput.substring(0, 3)}-${phoneinput.substring(3, 6)}-${phoneinput.substring(6)}"
+                }
+
+                /*
                 val phoneinput = inputcheck.getIsPhone(phoneinput)
                 if(!phoneinput) {
                     Toast.makeText(this, "휴대폰번호를 정확하게 입력해주세요.", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
+                 */
             }
 
             insertDatabase(carnuminput, phoneinput, etcinpt)
@@ -320,17 +332,25 @@ class CarNumberRegActivity : AppCompatActivity() {
     }
 
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
-
 
         //우측 4개 번호판을 자르기
         val carnumber4d = inputcheck.getCarNumber4d(carnuminput)
         val carnumberdigit = inputcheck.getCarNumberDigit(carnuminput)
+        val datepatterned = Date()
 
-        val currentTime = LocalDateTime.now()
-        val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val datepatterned: String = currentTime.format(datepattern)
+            /*
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val currentTime =  LocalDateTime.now()
+                val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                datepatterned = currentTime.format(datepattern)
+            } else {
+                val date = org.joda.time.LocalDateTime.now()
+                val datepattern = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
+                val jodatime = datepattern.parseDateTime(date.toString())
+                datepatterned = datepattern.print(jodatime)
+            }
+             */
 
         CoroutineScope(Dispatchers.IO).launch {
             db.CarInfoDao().CarInfoInsert(CarInfo(

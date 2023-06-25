@@ -26,7 +26,7 @@ class CarInfoDetailDialog(private val context : AppCompatActivity) {
         binding.carnumInpt.setText(carInfoList.carnumber)
         binding.phoneInpt.setText(carInfoList.phone)
         binding.etcInpt.setText(carInfoList.etc)
-        binding.dateInpt.setText(carInfoList.date)
+        //binding.dateInpt.setText(carInfoList.date.toString())
 
         binding.ok.setOnClickListener {
             listener.onOKClicked("")
