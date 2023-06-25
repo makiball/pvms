@@ -30,12 +30,15 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
     private lateinit var listAdapter: SingleViewBinderListAdapter
 
+    private var selectedOption : Option = Option.carnumber
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityCarnumbersearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         // 뒤로가기시 현재 엑티비티 닫기
         val callback = object: OnBackPressedCallback(true) {
@@ -59,10 +62,9 @@ class CarNumberSearchActivity: AppCompatActivity() {
         }
 
         binding.check1.isChecked = true
-
         binding.searchRdg.setOnCheckedChangeListener { group, checkedId  ->
             //var msg = "차량번호"
-            val selectedOption: Option = when (checkedId) {
+            selectedOption = when (checkedId) {
                 R.id.check_1 -> Option.carnumber
                 R.id.check_2 -> Option.phone
                 R.id.check_3 -> Option.etc
@@ -71,34 +73,25 @@ class CarNumberSearchActivity: AppCompatActivity() {
             viewModel.setSelectedOption(selectedOption)
         }
 
-        /* 처음실행시 무조건체크 하기 */
-        //binding.check1.isChecked = true
-
         binding.searchBt.apply{
-
-            val selectedOption: Option
 
             setOnClickListener {
                 val searchtext = binding.searchInptText.text.toString()
 
-                Log.d(TAG,"=====> ${selectedOption.text}")
-
-/*
-                when(isChecked) {
-                    1 -> {
+                when(selectedOption) {
+                    Option.carnumber -> {
                         viewModel.searchCarnum(this@CarNumberSearchActivity, searchtext)
                     }
-                    2 -> {
+                    Option.phone -> {
                         viewModel.searchPhone(this@CarNumberSearchActivity, searchtext)
                     }
-                    3 -> {
+                    Option.etc -> {
                         viewModel.searchEtc(this@CarNumberSearchActivity, searchtext)
                     }
                     else -> {
                         viewModel.searchCarnum(this@CarNumberSearchActivity, searchtext)
                     }
                 }
- */
             }
 
         }
