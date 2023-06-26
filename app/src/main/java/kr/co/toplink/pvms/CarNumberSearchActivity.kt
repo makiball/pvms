@@ -1,8 +1,11 @@
 package kr.co.toplink.pvms
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Pair
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +17,7 @@ import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListModel
 import kr.co.toplink.pvms.data.Option
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchBinding
+import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.CarInfoDetailDialog
 import kr.co.toplink.pvms.util.DeleteDialog
@@ -21,15 +25,14 @@ import kr.co.toplink.pvms.viewholder.ItemBinder
 import kr.co.toplink.pvms.viewholder.PostCardViewBinder
 import java.lang.Boolean.TRUE
 
+const val KEY_CARINFOLIST_MODEL = "car-info-model"
+
 class CarNumberSearchActivity: AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumbersearchBinding
-
     private lateinit var viewModel: CarNumberSearchViewModel
-
     private lateinit var listAdapter: SingleViewBinderListAdapter
-
     private var selectedOption : Option = Option.carnumber
 
     @SuppressLint("SetTextI18n")
@@ -52,8 +55,8 @@ class CarNumberSearchActivity: AppCompatActivity() {
             finish()
         }
 
-        val postCardViewBinder = PostCardViewBinder { binding, postCardModel ->
-            //gotoDetailWithTransition(postCardModel, binding)
+        val postCardViewBinder = PostCardViewBinder { binding, CarInfoListModel ->
+            gotoDetailWithTransition(CarInfoListModel, binding)
         }
         listAdapter = SingleViewBinderListAdapter(postCardViewBinder as ItemBinder)
         binding.recyclerView.apply {
@@ -109,6 +112,26 @@ class CarNumberSearchActivity: AppCompatActivity() {
         }
     }
 
+    private fun gotoDetailWithTransition (
+        carInfoListModel: CarInfoListModel,
+        binding : CarinfoItemLayoutBinding
+    ) {
+        val intent =
+            Intent(this, CarNumberSearchDetailActivity::class.java)
+        intent.putExtra(KEY_CARINFOLIST_MODEL, carInfoListModel)
+
+        val pairIvCarnum = Pair<View, String>(binding.carnumberTxt, binding.carnumberTxt.transitionName)
+
+        val options = ActivityOptions
+            .makeSceneTransitionAnimation(
+                this,
+//                pairTvTitle,
+                pairIvCarnum
+            )
+
+        // start the new activity
+        startActivity(intent, options.toBundle())
+    }
 
     private fun init() {
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)

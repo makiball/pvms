@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="transition_carnumber">transition_carnumber</string>
+    <string name="transition_phone">transition_phone</string>
+    <string name="transition_etc">transition_etc</string>
+</resources>

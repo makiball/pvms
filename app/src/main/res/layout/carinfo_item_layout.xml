@@ -35,6 +35,7 @@
                 android:textColor="#038576"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                android:transitionName="@string/transition_carnumber"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

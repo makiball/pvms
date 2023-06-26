@@ -36,6 +36,7 @@
         </activity>
         <activity android:name=".CarNumberRegActivity" />
         <activity android:name=".CarNumberSearchActivity" />
+        <activity android:name=".CarNumberSearchDetailActivity" />
         <activity android:name=".CamCarSearchActivity" />
     </application>
 

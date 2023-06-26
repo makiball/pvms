@@ -57,9 +57,11 @@ class CamCarSearchActivity: AppCompatActivity(){
 
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
         viewModel.searchCarnumToday(this,"")
-        viewModel.carinfoListToday.observe(this, {
+        viewModel.carinfoListToday.observe(
+            this,
+        ) {
             binding.recyclerText.text = it.toString()
-        })
+        }
     }
 
     /*
