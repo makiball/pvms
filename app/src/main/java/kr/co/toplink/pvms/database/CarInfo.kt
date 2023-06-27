@@ -2,6 +2,7 @@ package kr.co.toplink.pvms.database
 
 import androidx.room.*
 import androidx.room.Entity
+import kr.co.toplink.pvms.data.Type
 import java.util.Date
 
 @Entity(
@@ -21,15 +22,14 @@ data class CarInfo(
 @Entity(
     indices = [Index(value = ["carnumber","date"], unique = true)]
 )
-data class CarInfoToday(
+data class CarInfoListToday(
     @PrimaryKey(autoGenerate =true)
     val id: Int = 0,
     val carnumber: String?,      //차량 번호 풀번호
     val phone: String?,
-    val date: String?,
-    val time: String?,
+    val date: Date,
     val etc: String?,
-    val type: Int?
+    val type: Int = 0
 )
 
 

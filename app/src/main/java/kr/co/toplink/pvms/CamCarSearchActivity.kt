@@ -1,8 +1,10 @@
 package kr.co.toplink.pvms
 
 import android.annotation.SuppressLint
+import android.app.ActivityOptions
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
@@ -12,25 +14,26 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.Pair
 import android.view.OrientationEventListener
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModelProvider
-import kr.co.toplink.pvms.adapter.CarInfoAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
-import kr.co.toplink.pvms.data.CarInfoList
-import kr.co.toplink.pvms.database.CarInfoDatabase
+import kr.co.toplink.pvms.data.CarInfoListTodayModel
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
-import kr.co.toplink.pvms.model.CamCarSearchViewModel
+import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
-import kr.co.toplink.pvms.model.ExcellReaderViewModel
 import kr.co.toplink.pvms.util.*
+import kr.co.toplink.pvms.viewholder.CarInfoListTodayViewBinder
+import kr.co.toplink.pvms.viewholder.ItemBinder
+import kr.co.toplink.pvms.viewholder.PostCardViewBinder
 import java.util.*
 
 @ExperimentalGetImage
@@ -38,7 +41,7 @@ class CamCarSearchActivity: AppCompatActivity(){
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCamCarSearchBinding
     private lateinit var cameraManager: CameraManager
-
+    private lateinit var listAdapter: SingleViewBinderListAdapter
     private lateinit var viewModel: CarNumberSearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +53,6 @@ class CamCarSearchActivity: AppCompatActivity(){
             takePicture()
         }
 
-        //binding.recyclerText.text = db.CarInfoDao().CarInfoGetTdoday()
-
         createCameraManager()
         cameraManager.startCamera()
 
@@ -62,18 +63,37 @@ class CamCarSearchActivity: AppCompatActivity(){
         ) {
             binding.recyclerText.text = it.toString()
         }
-    }
 
-    /*
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this).get(CamCarSearchViewModel::class.java)
-        binding.viewModel = viewModel
-
-        viewModel.onShutterButtonEvent.observe(this) {
-            it?.let { takePicture() }
+        val postCardViewBinder = CarInfoListTodayViewBinder { binding, CarInfoListTodayModel ->
+            gotoDetailWithTransition(CarInfoListTodayModel, binding)
+        }
+        listAdapter = SingleViewBinderListAdapter(postCardViewBinder as ItemBinder)
+        binding.recyclerView.apply {
+            this.adapter = listAdapter
+            layoutManager = LinearLayoutManager(this@CamCarSearchActivity)
         }
     }
-     */
+
+    private fun gotoDetailWithTransition (
+        carInfoListTodayModel: CarInfoListTodayModel,
+        binding : CarinfoItemLayoutBinding
+    ) {
+        val intent =
+            Intent(this, CarNumberSearchDetailActivity::class.java)
+        intent.putExtra(KEY_CARINFOLIST_MODEL, carInfoListTodayModel)
+
+        val pairIvCarnum = Pair<View, String>(binding.carnumberTxt, binding.carnumberTxt.transitionName)
+
+        val options = ActivityOptions
+            .makeSceneTransitionAnimation(
+                this,
+//                pairTvTitle,
+                pairIvCarnum
+            )
+
+        // start the new activity
+        startActivity(intent, options.toBundle())
+    }
 
     private fun createCameraManager() {
         cameraManager = CameraManager(

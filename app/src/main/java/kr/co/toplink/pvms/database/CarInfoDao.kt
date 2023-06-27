@@ -16,14 +16,14 @@ interface CarInfoDao {
     @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo ORDER BY id DESC")
     fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
 
-    @Query("SELECT id, carnumber, phone, date, time, etc, type FROM CarInfoToday")
+    @Query("SELECT id, carnumber, phone, date, etc, type FROM CarInfoToday  ORDER BY id DESC")
     fun CarInfoGetTdoday(): LiveData<MutableList<CarInfoListToday>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsert(carinfo: CarInfo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun CarInfoInsertToday(carsearchToday: CarInfoToday)
+    fun CarInfoInsertToday(carsearchToday: CarInfoListToday)
 
 
     @Query("DELETE FROM CarInfo")

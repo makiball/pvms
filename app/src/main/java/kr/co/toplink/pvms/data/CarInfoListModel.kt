@@ -5,3 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class CarInfoListModel(val carinfolist : CarInfoList) : Parcelable
+
+@Parcelize
+data class CarInfoListTodayModel(val carinfolisttoday : CarInfoListToday) : Parcelable

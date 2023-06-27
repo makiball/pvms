@@ -1,22 +1,17 @@
 package kr.co.toplink.pvms.data
 
+import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
+import kotlinx.android.parcel.Parcelize
+import org.joda.time.DateTime
+import java.util.*
 
+@Parcelize
 data class CarInfoListToday(
-    val id: Int?,      //차량 번호 풀번호
+    val id: Int,      //차량 번호 풀번호
     val carnumber: String?,      //차량 번호 풀번호
     val phone: String?,
-    val date: String?,
-    val time: String?,
+    val date: Date,
     val etc: String?,
-    val type: Int = 0      //0 등록차량, 1미등록차량
-)
-
-object CarInfoListTodayDiffCallback : DiffUtil.ItemCallback<CarInfoListToday>() {
-    override fun areItemsTheSame(oldItem: CarInfoListToday, newItem: CarInfoListToday) =
-        oldItem.date == newItem.date
-    override fun areContentsTheSame(oldItem: CarInfoListToday, newItem: CarInfoListToday) =
-        oldItem.carnumber == newItem.carnumber
-                && oldItem.phone == newItem.phone
-                && oldItem.etc == newItem.etc
-}
+    val type: Int = 0     //0 등록차량, 1미등록차량
+) : Parcelable

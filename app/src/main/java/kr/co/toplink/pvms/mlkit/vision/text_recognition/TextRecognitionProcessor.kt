@@ -18,13 +18,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
-import kr.co.toplink.pvms.database.CarInfo
+import kr.co.toplink.pvms.data.Type
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
-import org.joda.time.format.DateTimeFormat
 import java.io.IOException
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 @ExperimentalGetImage
@@ -141,17 +139,7 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
     /* 등록 차량 조회 */
     fun searchDataBase(textcarnum: String, type : Int) {
 
-        val datepatterned: String
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val currentTime =  LocalDateTime.now()
-            val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            datepatterned = currentTime.format(datepattern)
-        } else {
-            val date = org.joda.time.LocalDateTime.now()
-            val datepattern = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
-            val jodatime = datepattern.parseDateTime(date.toString())
-            datepatterned = datepattern.print(jodatime)
-        }
+        val datepatterned = Date()
 
         //완전번호판
         if(type == 0) {
@@ -169,13 +157,11 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                                     carnumber = it.carnumber,
                                     phone = it.phone,
                                     date = datepatterned,
-                                    time = datepatterned,
                                     etc = it.etc,
-                                    type = 0
+                                    type = Type.REG
                                 )
                             )
                         }
-
                         tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
                     }
                 }
@@ -190,7 +176,6 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                 }.await()
                 carinfos.forEach {
                     if (it.carnumber != "") {
-
                         CoroutineScope(Dispatchers.IO).launch {
                             db.CarInfoDao().CarInfoInsertToday(
                                 CarInfoToday(
@@ -198,13 +183,11 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                                     carnumber = it.carnumber,
                                     phone = it.phone,
                                     date = datepatterned,
-                                    time = datepatterned,
                                     etc = it.etc,
-                                    type = 0
+                                    type = Type.REG
                                 )
                             )
                         }
-
                         tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
                     }
                 }

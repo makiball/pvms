@@ -126,7 +126,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 
-    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TableLayout
         android:id = "@+id/tablelayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

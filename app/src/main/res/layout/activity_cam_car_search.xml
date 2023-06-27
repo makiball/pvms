@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-        <variable
-            name="viewModel"
-            type="kr.co.toplink.pvms.model.CamCarSearchViewModel" />
-    </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
@@ -49,6 +42,106 @@
         app:layout_constraintBottom_toBottomOf="@id/camera"
         android:backgroundTint="@android:color/transparent" />
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id = "@+id/is_reg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text = "미검색 차량 등록"
+        app:layout_constraintEnd_toEndOf = "parent"
+        app:layout_constraintTop_toBottomOf="@id/camera"
+        />
+
+    <TableLayout
+        android:id = "@+id/tablelayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:collapseColumns="3"
+        android:layout_margin = "8dp"
+        android:layout_marginTop = "10dp"
+        android:stretchColumns="*"
+        app:layout_constraintTop_toBottomOf="@id/is_reg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <!-- collapse the first column of the table row-->
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- first element of the row that is the part of table but it is invisible-->
+            <TextView
+                android:id="@+id/totalreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="등록차량 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/totalnotreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="미등록차량 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="총 차량 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+        </TableRow>
+
+        <!-- first row of the table layout-->
+        <TableRow
+            android:id="@+id/simpleTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- first element of the row that is the part of table but it is invisible-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#C6C6C6"
+                android:text=" 차량번호"
+                android:gravity="center"
+                android:textColor="#000"
+                android:padding = "5dp"
+                android:textSize="16sp" />
+
+            <!-- second element of the row that is shown in the screenshot-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#C6C6C6"
+                android:text="휴대폰번호"
+                android:gravity="center"
+                android:textColor="#000"
+                android:padding = "5dp"
+                android:textSize="16sp" />
+
+            <!-- second element of the row that is shown in the screenshot-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#C6C6C6"
+                android:text="기 타"
+                android:gravity="center"
+                android:textColor="#000"
+                android:padding = "5dp"
+                android:textSize="16sp" />
+        </TableRow>
+    </TableLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
@@ -60,7 +153,7 @@
         android:layout_marginTop = "10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toBottomOf="@id/imageButton_shutter"
+        app:layout_constraintTop_toBottomOf="@id/tablelayout"
         />
 
     <com.google.android.material.textview.MaterialTextView
@@ -73,6 +166,4 @@
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
 

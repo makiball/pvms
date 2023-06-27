@@ -7,3 +7,8 @@ enum class Option (val text: String) {
     phone("휴대폰번호"),
     etc("비고")
 }
+
+enum class  Type {
+    REG,
+    NOT,
+}
