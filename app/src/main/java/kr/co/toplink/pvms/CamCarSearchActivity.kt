@@ -1,18 +1,13 @@
 package kr.co.toplink.pvms
 
-import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.icu.text.SimpleDateFormat
 import android.media.Image
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.util.Pair
 import android.view.OrientationEventListener
@@ -26,14 +21,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
+import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.data.CarInfoListTodayModel
+import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
+import kr.co.toplink.pvms.model.CamCarSearchViewModel
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.*
 import kr.co.toplink.pvms.viewholder.CarInfoListTodayViewBinder
 import kr.co.toplink.pvms.viewholder.ItemBinder
-import kr.co.toplink.pvms.viewholder.PostCardViewBinder
 import java.util.*
 
 @ExperimentalGetImage
@@ -56,14 +53,6 @@ class CamCarSearchActivity: AppCompatActivity(){
         createCameraManager()
         cameraManager.startCamera()
 
-        viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
-        viewModel.searchCarnumToday(this,"")
-        viewModel.carinfoListToday.observe(
-            this,
-        ) {
-            binding.recyclerText.text = it.toString()
-        }
-
         val postCardViewBinder = CarInfoListTodayViewBinder { binding, CarInfoListTodayModel ->
             gotoDetailWithTransition(CarInfoListTodayModel, binding)
         }
@@ -72,7 +61,43 @@ class CamCarSearchActivity: AppCompatActivity(){
             this.adapter = listAdapter
             layoutManager = LinearLayoutManager(this@CamCarSearchActivity)
         }
+
+        init()
+
+        binding.alldelte.setOnClickListener {
+            val msg = "데이터를 삭제하시면 복구 하실수 없습니다. "
+            val dlg = DeleteDialog(this)
+            dlg.setOnOKClickedListener{
+                /* 모두 삭제 처리 */
+                viewModel.allTodayDeteData(this)
+            }
+            dlg.show(msg)
+        }
     }
+
+    private fun init() {
+        viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
+        viewModel.searchCarnumToday(this, "")
+        viewModel.carinfoListToday.observe(this, androidx.lifecycle.Observer {
+
+            Log.d(TAG,"=====> ")
+
+            it.apply {
+                binding.totalreg.text = "총 수량 : ${this.size}대"
+                listAdapter.submitList(generateMockCarinfo(this))
+            }
+        })
+    }
+
+    private fun generateMockCarinfo(carInfo: MutableList<CarInfoToday>): List<CarInfoListTodayModel> {
+        val carInfoList = ArrayList<CarInfoListTodayModel>()
+        carInfo.forEach{
+            val carinfolisttoday = CarInfoListToday(it.id, it.carnumber, it.phone, it.date, it.etc, it.type)
+            carInfoList.add(CarInfoListTodayModel(carinfolisttoday))
+        }
+        return carInfoList
+    }
+
 
     private fun gotoDetailWithTransition (
         carInfoListTodayModel: CarInfoListTodayModel,

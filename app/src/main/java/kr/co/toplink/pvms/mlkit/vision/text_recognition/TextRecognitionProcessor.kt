@@ -3,9 +3,7 @@ package kr.co.toplink.pvms.mlkit.vision.text_recognition
 import android.graphics.Rect
 import android.media.AudioManager
 import android.media.ToneGenerator
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.camera.core.ExperimentalGetImage
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
@@ -18,7 +16,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
-import kr.co.toplink.pvms.data.Type
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
 import java.io.IOException
@@ -59,7 +56,6 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSuccess(
         results: Text,
         graphicOverlay: GraphicOverlay,
@@ -99,30 +95,6 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                 searchDataBase(carnum_imperfection, 1)
                 graphicOverlay.add(textGraphic)
             }
-
-
-            //graphicOverlay.add(textGraphic)
-
-            /*
-            val textcarnum = it.text.replace("\\s+".toRegex(), "")
-            var carnum = ""
-            if(regex.matches(textcarnum)) {
-
-                carnum = extractCarNumber(textcarnum)
-                if (carnum != "") {
-                    Log.d(TAG, "=====> $carnum ")
-                    searchDataBase(carnum)
-                    graphicOverlay.add(textGraphic)
-                }
-
-
-                isStart = 1
-                matches.forEach {
-                    carnum = it.toString()
-                }
-
-            }
-            */
         }
         graphicOverlay.postInvalidate()
     }
@@ -143,33 +115,7 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
 
         //완전번호판
         if(type == 0) {
-            CoroutineScope(Dispatchers.Main).launch {
-                val carinfos = CoroutineScope(Dispatchers.IO).async {
-                    db.CarInfoDao().CarInfoSearchByCarnumberOnly(textcarnum)
-                }.await()
-                carinfos.forEach {
-                    if (it.carnumber != "") {
 
-                        CoroutineScope(Dispatchers.IO).launch {
-                            db.CarInfoDao().CarInfoInsertToday(
-                                CarInfoToday(
-                                    id = it.id,
-                                    carnumber = it.carnumber,
-                                    phone = it.phone,
-                                    date = datepatterned,
-                                    etc = it.etc,
-                                    type = Type.REG
-                                )
-                            )
-                        }
-                        tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
-                    }
-                }
-            }
-        }
-
-        //불완전번호판
-        if(type == 1) {
             CoroutineScope(Dispatchers.Main).launch {
                 val carinfos = CoroutineScope(Dispatchers.IO).async {
                     db.CarInfoDao().CarInfoSearchByCarnumber(textcarnum)
@@ -184,7 +130,33 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                                     phone = it.phone,
                                     date = datepatterned,
                                     etc = it.etc,
-                                    type = Type.REG
+                                    type = 0
+                                )
+                            )
+                        }
+                        tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
+                    }
+                }
+            }
+        }
+
+        //불완전번호판
+        if(type == 1) {
+            CoroutineScope(Dispatchers.Main).launch {
+                val carinfos = CoroutineScope(Dispatchers.IO).async {
+                    db.CarInfoDao().CarInfoSearchByCarnumberOnly(textcarnum)
+                }.await()
+                carinfos.forEach {
+                    if (it.carnumber != "") {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            db.CarInfoDao().CarInfoInsertToday(
+                                CarInfoToday(
+                                    id = it.id,
+                                    carnumber = it.carnumber,
+                                    phone = it.phone,
+                                    date = datepatterned,
+                                    etc = it.etc,
+                                    type = 0
                                 )
                             )
                         }

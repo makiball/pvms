@@ -3,7 +3,6 @@ package kr.co.toplink.pvms.data
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import kotlinx.android.parcel.Parcelize
-import org.joda.time.DateTime
 import java.util.*
 
 @Parcelize
@@ -13,5 +12,5 @@ data class CarInfoListToday(
     val phone: String?,
     val date: Date,
     val etc: String?,
-    val type: Int = 0     //0 등록차량, 1미등록차량
+    val type: Int?     //0 등록차량, 1미등록차량
 ) : Parcelable

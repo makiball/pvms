@@ -47,7 +47,7 @@ class Adapter(
             val sb = SpannableStringBuilder(currentItem.value)
             val word: Pattern =
                 Pattern.compile(ListItemAdapter.searchString!!.lowercase(Locale.ROOT))
-            val match: Matcher = word.matcher(currentItem.value?.lowercase(Locale.ROOT))
+            val match: Matcher = word.matcher(currentItem.value?.lowercase(Locale.ROOT)!!)
             while (match.find()) {
                 val fcs = ForegroundColorSpan(Color.WHITE)
                 sb.setSpan(fcs, match.start(), match.end(), Spannable.SPAN_INCLUSIVE_INCLUSIVE)

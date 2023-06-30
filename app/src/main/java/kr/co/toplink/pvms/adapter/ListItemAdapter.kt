@@ -1,5 +1,6 @@
 package kr.co.toplink.pvms.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
@@ -75,7 +76,7 @@ class ListItemAdapter(
     override fun onBindViewHolder(holder: ExampleViewHolder, position: Int) {
         val currentItem = exampleListFull[position]
         val adapter = Adapter(currentItem.singleRowList.orEmpty(), object : ExcelRowClickListener {
-            override fun onRowClick(position1: Int) {
+            override fun onRowClick(position: Int) {
                 listener.onRowClick(position)
                 val status = currentItem.singleRowList.last().value
                 if (status?.contentEquals(AppConstant.Completed) == true) {

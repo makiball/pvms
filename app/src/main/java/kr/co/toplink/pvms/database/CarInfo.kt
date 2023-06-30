@@ -20,18 +20,17 @@ data class CarInfo(
 )
 
 @Entity(
-    indices = [Index(value = ["carnumber","date"], unique = true)]
+    indices = [Index(value = ["carnumber"], unique = true)]
 )
-data class CarInfoListToday(
+data class CarInfoToday(
     @PrimaryKey(autoGenerate =true)
     val id: Int = 0,
     val carnumber: String?,      //차량 번호 풀번호
     val phone: String?,
     val date: Date,
     val etc: String?,
-    val type: Int = 0
+    val type: Int = 0     //0 등록차량, 1미등록차량
 )
-
 
 @Entity
 data class CarSearch(

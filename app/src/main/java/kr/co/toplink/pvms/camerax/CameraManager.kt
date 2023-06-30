@@ -19,6 +19,7 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
+@ExperimentalGetImage
 class CameraManager(
     private val context: Context,
     private val finderView: PreviewView,

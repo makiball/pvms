@@ -5,7 +5,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
@@ -14,32 +13,22 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.databinding.ActivityCarnumberregBinding
 import kr.co.toplink.pvms.model.ExcellReaderViewModel
-import kr.co.toplink.pvms.model.ListItems
 import kr.co.toplink.pvms.util.InputCheck
 import kr.co.toplink.pvms.util.OpenDialog
-import org.joda.time.format.DateTimeFormat
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Math.ceil
 import java.lang.Math.floor
 import java.util.Date
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class CarNumberRegActivity : AppCompatActivity() {
 

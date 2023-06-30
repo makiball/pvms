@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import kr.co.toplink.pvms.camerax.GraphicOverlay
+import javax.inject.Singleton
 
 @Database(entities = [CarInfo::class, CarInfoToday::class], version = 2)
 @TypeConverters(Converters::class)

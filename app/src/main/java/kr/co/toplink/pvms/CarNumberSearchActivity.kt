@@ -141,14 +141,15 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
     private fun attachObserver() {
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
+
+            Log.d(TAG,"=====> 쿠루틴 실행!!!")
+
             it?.apply {
                 binding.totalreg.text = "총 수량 : ${this.size}대"
                 listAdapter.submitList(generateMockCarinfo(this))
                 //listAdapter.submitList(this)
             }
         })
-
-
         viewModel.selectedOption.observe(this) { selectedOption ->
             // 선택된 옵션에 대한 처리 작업
             /*
@@ -166,7 +167,6 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
             binding.searchInpt.hint = selectedOption.text
         }
-
     }
 
     private fun generateMockCarinfo(carInfo: List<CarInfoList>): List<CarInfoListModel> {

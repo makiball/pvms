@@ -13,21 +13,28 @@ interface CarInfoDao {
     @Query("SELECT * FROM CarInfo")
     fun CarInfoAll(): List<CarInfo>
 
+    /* 처음 로딩을 위해서 */
+    @Query("SELECT  id, carnumber, phone, date, etc, type FROM CarInfoToday ORDER BY id DESC")
+    fun CarInfoTodayAll(): LiveData<MutableList<CarInfoToday>>
+
+    /* 데이터 변경을 위해서 */
     @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo ORDER BY id DESC")
     fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
 
-    @Query("SELECT id, carnumber, phone, date, etc, type FROM CarInfoToday  ORDER BY id DESC")
-    fun CarInfoGetTdoday(): LiveData<MutableList<CarInfoListToday>>
+    @Query("SELECT id, carnumber, phone, date, etc, type FROM CarInfoToday WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
+    fun CarInfoGetTdoday(searchText: String?): LiveData<MutableList<CarInfoToday>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsert(carinfo: CarInfo)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun CarInfoInsertToday(carsearchToday: CarInfoListToday)
-
+    fun CarInfoInsertToday(carinfotoday: CarInfoToday)
 
     @Query("DELETE FROM CarInfo")
     fun CarInfoDelete()
+
+    @Query("DELETE FROM CarInfoToday")
+    fun CarInfoTodayDelete()
 
 
     @Query("DELETE FROM CarInfo WHERE id = :id")
@@ -39,11 +46,11 @@ interface CarInfoDao {
 
     /* 번호판 검색 */
     @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumberonly = :searchText")
-    fun CarInfoSearchByCarnumberOnly(searchText: String?) : List<CarInfoRow>
+    fun CarInfoSearchByCarnumberOnly(searchText: String?) : List<CarInfo>
 
     /* 번호판 검색 */
     @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumber = :searchText limit 1")
-    fun CarInfoSearchByCarnumber(searchText: String?) : List<CarInfoRow>
+    fun CarInfoSearchByCarnumber(searchText: String?) : List<CarInfo>
 
 
     /* 휴대폽번호 검색 */

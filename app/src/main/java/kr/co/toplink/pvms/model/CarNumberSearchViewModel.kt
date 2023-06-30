@@ -1,5 +1,6 @@
 package kr.co.toplink.pvms.model
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,23 +8,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kr.co.toplink.pvms.CamCarSearchActivity
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.data.Option
 import kr.co.toplink.pvms.database.CarInfoDatabase
+import kr.co.toplink.pvms.database.CarInfoToday
 
-class CarNumberSearchViewModel : BaseViewModel() {
+class CarNumberSearchViewModel   : BaseViewModel() {
 
     private val TAG = this.javaClass.simpleName
-
     private lateinit var db: CarInfoDatabase
-
     var carinfoList: MutableLiveData<List<CarInfoList>> = MutableLiveData()
-
-    var carinfoListToday: LiveData<MutableList<CarInfoListToday>> = MutableLiveData()
-
+    var carinfoListToday: LiveData<MutableList<CarInfoToday>> = MutableLiveData()
     var carMsgData: MutableLiveData<String> = MutableLiveData()
+
     private val list = ArrayList<CarInfoList>()
+    private var listtoday = ArrayList<CarInfoListToday>()
 
     val selectedOption: MutableLiveData<Option> = MutableLiveData()
 
@@ -41,20 +42,20 @@ class CarNumberSearchViewModel : BaseViewModel() {
         carinfoList.postValue(list)
     }
 
+    /* 차량번호 검색 */
+    fun allTodayDeteData(context: Context) {
+        list.clear()
+        launch {
+            db.CarInfoDao().CarInfoTodayDelete()
+        }
+        carinfoList.postValue(list)
+    }
+
     /* 금일차량검색 */
     fun searchCarnumToday(context: Context, searchtext: String) {
         db = CarInfoDatabase.getInstance(context)!!
-        try {
-            launch {
-                val carinfos = CoroutineScope(Dispatchers.IO).async {
-                    db.CarInfoDao().CarInfoGetTdoday()
-                }.await()
-                carinfoListToday  = carinfos
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            carMsgData.postValue(e.message.orEmpty())
-        }
+        /* ROOM 실시간 라이브면 사용안해도됨 */
+        carinfoListToday = db.CarInfoDao().CarInfoGetTdoday("")
     }
 
     /* 차량번호 검색 */
@@ -165,6 +166,17 @@ class CarNumberSearchViewModel : BaseViewModel() {
         }
     }
 
+    /* 차량검색 전부 삭제 */
+    fun CarInfoTodayDelete() {
+        try {
+            launch {
+                db.CarInfoDao().CarInfoTodayDelete()
+            }
+        }catch (e: Exception) {
+            e.printStackTrace()
+            carMsgData.postValue(e.message.orEmpty())
+        }
+    }
 
 
     /* 전체 검색 */
