@@ -8,11 +8,11 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import android.util.Pair
 import android.view.OrientationEventListener
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
@@ -23,10 +23,11 @@ import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
 import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.data.CarInfoListTodayModel
+import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
-import kr.co.toplink.pvms.model.CamCarSearchViewModel
+import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.*
 import kr.co.toplink.pvms.viewholder.CarInfoListTodayViewBinder
@@ -46,6 +47,15 @@ class CamCarSearchActivity: AppCompatActivity(){
         binding = ActivityCamCarSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 뒤로가기시 현재 엑티비티 닫기
+        val callback = object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+        binding.backBt.setOnClickListener{  finish()  }
+
         binding.imageButtonShutter.setOnClickListener {
             takePicture()
         }
@@ -56,6 +66,7 @@ class CamCarSearchActivity: AppCompatActivity(){
         val postCardViewBinder = CarInfoListTodayViewBinder { binding, CarInfoListTodayModel ->
             gotoDetailWithTransition(CarInfoListTodayModel, binding)
         }
+
         listAdapter = SingleViewBinderListAdapter(postCardViewBinder as ItemBinder)
         binding.recyclerView.apply {
             this.adapter = listAdapter
@@ -73,18 +84,35 @@ class CamCarSearchActivity: AppCompatActivity(){
             }
             dlg.show(msg)
         }
+
+        /* 차량 등록 미등록 스위치 액션 */
+        binding.isReg.setOnCheckedChangeListener { _, isChecked ->
+
+            if (isChecked) {
+                RegSwitch.setSharedSwitch(regSwitch.ON)
+            } else {
+                RegSwitch.setSharedSwitch(regSwitch.OFF)
+                // SwitchMaterial이 OFF 상태일 때 동작
+                // 여기에 필요한 코드 작성
+            }
+        }
     }
 
     private fun init() {
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
         viewModel.searchCarnumToday(this, "")
         viewModel.carinfoListToday.observe(this, androidx.lifecycle.Observer {
-
-            Log.d(TAG,"=====> ")
-
             it.apply {
-                binding.totalreg.text = "총 수량 : ${this.size}대"
+                binding.totalreg.text = "총 차량 : ${this.size}"
                 listAdapter.submitList(generateMockCarinfo(this))
+
+                //미등록 갯수, 등록 갯수
+                val regSu = it.filter { it.type == 0 }.size
+                val regSuNo = it.filter { it.type == 1 }.size
+
+                binding.totalnotreg.text = "등록차량 : $regSu"
+                binding.total.text = "미등록 차량 : $regSuNo"
+
             }
         })
     }
@@ -131,7 +159,7 @@ class CamCarSearchActivity: AppCompatActivity(){
 
     private fun takePicture() {
         // shutter effect
-        Toast.makeText(this, "take a picture!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "캡처 화면 저장 !!!", Toast.LENGTH_SHORT).show()
         setOrientationEvent()
 
         cameraManager.imageCapture.takePicture(
@@ -184,5 +212,33 @@ class CamCarSearchActivity: AppCompatActivity(){
             }
         }
         orientationEventListener.enable()
+    }
+
+    /* 화면이 다시 돌아올대 닫는다. */
+
+}
+
+/* 미등록 스위치와 화면 등록 창 여부를 표시한다. */
+object RegSwitch {
+    private var regswitch: regSwitch = regSwitch.OFF
+    private var regactivytisopen: Int = 0
+
+    fun setSharedSwitch(regswitch: regSwitch) {
+        this.regswitch = regswitch
+    }
+    fun getSharedSwitch(): regSwitch {
+        return regswitch
+    }
+
+    fun setRegOpen() {
+        regactivytisopen = 1
+    }
+
+    fun setRegClose() {
+        regactivytisopen = 0
+    }
+
+    fun getRegIsOPen(): Int {
+        return regactivytisopen
     }
 }

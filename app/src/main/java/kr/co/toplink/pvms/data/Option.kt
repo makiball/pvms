@@ -12,3 +12,11 @@ enum class  Type {
     REG,
     NOT,
 }
+
+enum class regSwitch {
+    ON, OFF
+}
+
+enum class isOpen {
+    ON, OFF
+}

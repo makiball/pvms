@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.pvms.data.CarInfoListModel
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 import kr.co.toplink.pvms.R
+import kr.co.toplink.pvms.util.PhoneHidden
 
 class PostCardViewBinder(
     private val onItemClick: ((CarinfoItemLayoutBinding, CarInfoListModel) -> Unit)? = null
@@ -42,7 +43,7 @@ class PostCardViewHolder(
         val carinfo = model.carinfolist
 
         binding.carnumberTxt.text = carinfo.carnumber
-        binding.phoneTxt.text = carinfo.phone
+        binding.phoneTxt.text = carinfo.phone?.let { PhoneHidden(it) }
         binding.etcTxt.text = carinfo.etc
 
         binding.constraintLayout.setOnClickListener {

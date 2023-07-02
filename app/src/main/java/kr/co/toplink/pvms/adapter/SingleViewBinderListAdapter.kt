@@ -29,7 +29,6 @@ class SingleViewBinderListAdapter (
     }
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return viewBinder.createViewHolder(parent)
     }

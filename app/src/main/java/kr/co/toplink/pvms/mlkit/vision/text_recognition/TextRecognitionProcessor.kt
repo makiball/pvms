@@ -1,10 +1,12 @@
 package kr.co.toplink.pvms.mlkit.vision.text_recognition
 
+import android.content.Intent
 import android.graphics.Rect
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.util.Log
 import androidx.camera.core.ExperimentalGetImage
+import androidx.core.content.ContextCompat.startActivity
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
@@ -14,8 +16,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kr.co.toplink.pvms.CamCarInputActivity
+import kr.co.toplink.pvms.RegSwitch
 import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
+import kr.co.toplink.pvms.data.isOpen
+import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
 import java.io.IOException
@@ -28,6 +34,10 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
     private val recognizer = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
     override val graphicOverlay: GraphicOverlay
         get() = view
+
+    private lateinit var regswitch: RegSwitch
+
+    private var isOpen : isOpen    = kr.co.toplink.pvms.data.isOpen.OFF
 
     val regex =  Regex("\\d{2,3}[가-힣]\\d{4}")  //완전한 번호판
     //val regex =  Regex("\\d{2,3}[^\\d]+\\d{4}")
@@ -61,6 +71,7 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
         graphicOverlay: GraphicOverlay,
         rect: Rect
     ) {
+
         graphicOverlay.clear()
 
         results.textBlocks.forEach {
@@ -80,9 +91,18 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                 oldCarNum = ""
             }
 
+            val swtich = RegSwitch.getSharedSwitch()
+            val openReg = RegSwitch.getRegIsOPen()
+            //Log.d(TAG,"=====> $swtich ")
+            if((regex.matches(carnum) || regex01.matches(carnum)) && swtich == regSwitch.ON && openReg == 0) {
+                RegSwitch.setRegOpen()
+                val intent = Intent(view.context, CamCarInputActivity::class.java)
+                intent.putExtra("carnum", carnum)
+                view.context.startActivity(intent)
+            }
+
             //완전한 번호판
             if(regex.matches(carnum)) {
-
                 carnum_prefect = extractCarNumber(carnum, regex)
                 searchDataBase(carnum_prefect, 0)
                 graphicOverlay.add(textGraphic)

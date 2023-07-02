@@ -12,6 +12,7 @@ import kr.co.toplink.pvms.CamCarSearchActivity
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.data.Option
+import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
 
@@ -144,10 +145,20 @@ class CarNumberSearchViewModel   : BaseViewModel() {
 
     /* 하나 삭제 */
     fun idDeteData(context: Context, id: Int) {
-        list.clear()
-        launch {
-            db.CarInfoDao().CarInfoDeletebyid(id)
+        db = CarInfoDatabase.getInstance(context)!!
+        try {
+            launch {
+                //val dataToDelete = db.CarInfoDao().CarInfoDeletebyid(carinfo = CarInfo())
+                db.CarInfoDao().CarInfoDeletebyid(id)
+            }
 
+            carinfoList.postValue(list)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            carMsgData.postValue(e.message.orEmpty())
+        }
+/*
             val carinfos = CoroutineScope(Dispatchers.IO).async {
                 db.CarInfoDao().CarInfoSearchLikeCarnumber("")
             }.await()
@@ -162,8 +173,7 @@ class CarNumberSearchViewModel   : BaseViewModel() {
                     )
                 )
             }
-            carinfoList.postValue(list)
-        }
+ */
     }
 
     /* 차량검색 전부 삭제 */

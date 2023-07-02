@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.Pair
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kr.co.toplink.pvms.adapter.CarInfoAdapter
 import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListModel
@@ -19,11 +17,9 @@ import kr.co.toplink.pvms.data.Option
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchBinding
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
-import kr.co.toplink.pvms.util.CarInfoDetailDialog
 import kr.co.toplink.pvms.util.DeleteDialog
 import kr.co.toplink.pvms.viewholder.ItemBinder
 import kr.co.toplink.pvms.viewholder.PostCardViewBinder
-import java.lang.Boolean.TRUE
 
 const val KEY_CARINFOLIST_MODEL = "car-info-model"
 
@@ -133,6 +129,14 @@ class CarNumberSearchActivity: AppCompatActivity() {
         startActivity(intent, options.toBundle())
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        //Toast.makeText(this, " 화면활성화 ", Toast.LENGTH_SHORT).show()
+        init()
+    }
+
+
     private fun init() {
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
         viewModel.searchCarnum(this, "")
@@ -141,8 +145,6 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
     private fun attachObserver() {
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
-
-            Log.d(TAG,"=====> 쿠루틴 실행!!!")
 
             it?.apply {
                 binding.totalreg.text = "총 수량 : ${this.size}대"

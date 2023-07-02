@@ -7,6 +7,41 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/back_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="차량 검색"
+                android:imeOptions="flagNoExtractUi|actionSearch"
+                android:inputType="textNoSuggestions" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <View
+        android:id = "@+id/linelayout"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white"
+        android:backgroundTint="@color/material_on_surface_stroke"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_bt"/>
+
     <FrameLayout
         android:id="@+id/camera"
         android:layout_width="match_parent"
@@ -14,7 +49,7 @@
         app:layout_constraintDimensionRatio="4:3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linelayout"
         >
 
         <androidx.camera.view.PreviewView
@@ -41,11 +76,23 @@
         app:layout_constraintBottom_toBottomOf="@id/camera"
         android:backgroundTint="@android:color/transparent" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id = "@+id/make_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#009688"
+        android:text = "주차보고서등록"
+        app:layout_constraintTop_toBottomOf="@id/camera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/is_reg"/>
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id = "@+id/is_reg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "미검색 차량 등록"
+        android:text = "차량 등록"
         app:layout_constraintEnd_toStartOf = "@id/alldelte"
         app:layout_constraintTop_toBottomOf="@id/camera"
         />
@@ -84,7 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:text="등록차량 : 0"
+                android:text="총 차량 : 0"
                 android:gravity="left"
                 android:textColor="#000"
                 android:textSize="18sp" />
@@ -94,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:text="미등록차량 : 0"
+                android:text="등록차량 : 0"
                 android:gravity="left"
                 android:textColor="#000"
                 android:textSize="18sp" />
@@ -104,7 +151,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:text="총 차량 : 0"
+                android:text="미등록 차량 : 0"
                 android:gravity="left"
                 android:textColor="#000"
                 android:textSize="18sp" />
@@ -156,14 +203,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:clipToPadding="false"
         android:transitionGroup="true"
         android:layout_margin = "8dp"
         android:layout_marginTop = "10dp"
+        android:layout_marginBottom = "8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@id/tablelayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
