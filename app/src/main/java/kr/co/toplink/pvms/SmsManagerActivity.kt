@@ -61,7 +61,19 @@ class SmsManagerActivity : AppCompatActivity() {
     private fun init() {
         viewModel = ViewModelProvider(this).get(SmsManagerViewModel::class.java)
         viewModel.allListSms(this)
-        viewModel.smsManagerList
+        viewModel.smsManagerList.observe(this, androidx.lifecycle.Observer {
+            it.apply {
+                listAdapter.submitList(generateMockCarinfo(this))
+            }
+        })
+    }
 
+    private fun generateMockCarinfo(carInfo: MutableList<SmsManagerList>): List<SmsManagerViewModel> {
+        val smsMagList = ArrayList<SmsManagerViewModel>()
+        carInfo.forEach{
+            val smsMagList = SmsManagerList(it.id, it.smstitle, it.smscontent)
+            SmsManagerList.add(SmsManagerViewModel(smsMagList))
+        }
+        return smsMagList
     }
 }
