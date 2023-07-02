@@ -46,6 +46,7 @@ class PostCardViewHolder(
         binding.phoneTxt.text = carinfo.phone?.let { PhoneHidden(it) }
         binding.etcTxt.text = carinfo.etc
 
+
         binding.constraintLayout.setOnClickListener {
             onItemClick?.invoke(binding, model)
         }

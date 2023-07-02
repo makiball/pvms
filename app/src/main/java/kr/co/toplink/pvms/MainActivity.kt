@@ -40,6 +40,10 @@ import kr.co.toplink.pvms.model.ActivityClassModel
             activitygo(2)
         }
 
+        binding.smsregBt.setOnClickListener {
+            activitygo(3)
+        }
+
 
         if (!allRuntimePermissionsGranted()) {
             getRuntimePermissions()
@@ -106,6 +110,13 @@ import kr.co.toplink.pvms.model.ActivityClassModel
             ActivityClassModel(
                 CamCarSearchActivity::class.java,
                 getString(R.string.camsearch_bt)
+            )
+        )
+
+        activityClassModels.add(
+            ActivityClassModel(
+                SmsManagerActivity::class.java,
+                getString(R.string.smsreg_bt)
             )
         )
 

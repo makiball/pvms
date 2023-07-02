@@ -33,33 +33,9 @@ data class CarInfoToday(
 )
 
 @Entity
-data class CarSearch(
+data class SmsManager(
     @PrimaryKey(autoGenerate =true)
     var id: Int = 0,
-    var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
-    var carnumber: String,
-    var carnumber4d: String,
-    var carnumberOnly: String,
-    var phone: String,
-    var date: String,
-    var etc: String
-)
-
-@Entity
-data class SmsMsg(
-    @PrimaryKey(autoGenerate =true)
-    var id: Int = 0,
-    var type: Int,     //없으면 외부차량, 있으면 등록 차량
-    var carnumber: String
-)
-
-@Entity
-data class SmsSendLog(
-    @PrimaryKey(autoGenerate =true)
-    var id: Int = 0,
-    var carInfoId: Int,     //없으면 외부차량, 있으면 등록 차량
-    var carnumber: String,
-    var type: Int,          //없으면 외부차량, 있으면 등록 차량
-    var msg: String,
-    var date: String
+    var smstitle: String,     //없으면 외부차량, 있으면 등록 차량
+    var smscontent: String
 )

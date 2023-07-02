@@ -5,12 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.pvms.R
 import kr.co.toplink.pvms.data.CarInfoListTodayModel
-
-import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
+import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
 import kr.co.toplink.pvms.util.PhoneHidden
 
 class CarInfoListTodayViewBinder(
-    private val onItemClick : ((CarinfoItemLayoutBinding, CarInfoListTodayModel) -> Unit)? = null
+    private val onItemClick : ((CarinfoItemTodayLayoutBinding, CarInfoListTodayModel) -> Unit)? = null
 ) : MappableItemViewBinder<CarInfoListTodayModel, CarInfoViewHolder>(CarInfoListTodayModel::class.java) {
 
     override fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
@@ -25,7 +24,7 @@ class CarInfoListTodayViewBinder(
     }
 
     override fun getItemLayoutResource(): Int {
-        return R.layout.carinfo_item_layout
+        return R.layout.carinfo_item_today_layout
     }
 
     override fun areItemsTheSame(oldItem: CarInfoListTodayModel, newItem: CarInfoListTodayModel): Boolean {
@@ -38,8 +37,8 @@ class CarInfoListTodayViewBinder(
 }
 
 class CarInfoViewHolder(
-    private val binding: CarinfoItemLayoutBinding,
-    private val onItemClick: ((CarinfoItemLayoutBinding, CarInfoListTodayModel) -> Unit)? = null
+    private val binding: CarinfoItemTodayLayoutBinding,
+    private val onItemClick: ((CarinfoItemTodayLayoutBinding, CarInfoListTodayModel) -> Unit)? = null
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(model: CarInfoListTodayModel) {

@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import javax.inject.Singleton
 
-@Database(entities = [CarInfo::class, CarInfoToday::class], version = 2)
+@Database(entities = [CarInfo::class, CarInfoToday::class, SmsManager::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class CarInfoDatabase: RoomDatabase() {
     abstract fun CarInfoDao(): CarInfoDao

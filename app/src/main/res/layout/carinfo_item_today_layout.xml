@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/carnumber_txt"
-                android:layout_width="150dp"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="8dp"
@@ -46,19 +46,57 @@
                 android:text="010-1234-1234"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/carnumber_txt"
+                app:layout_constraintTop_toTopOf="@id/carnumber_txt"
                 app:layout_constraintStart_toEndOf="@id/carnumber_txt"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/call"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd = "10dp"
+                android:backgroundTint="#4CAF50"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/detail_call_icon"
+                app:iconSize="15dp"
+                app:layout_constraintEnd_toStartOf="@id/sms"
+                app:layout_constraintTop_toBottomOf="@id/etc_txt"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sms"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd = "10dp"
+                android:backgroundTint="#3F51B5"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/detail_sms_icon"
+                app:iconSize="15dp"
+                app:layout_constraintEnd_toStartOf="@id/kakaotalk"
+                app:layout_constraintTop_toBottomOf="@id/etc_txt"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/kakaotalk"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:backgroundTint="#FFEB3B"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                app:icon="@drawable/detail_notice_icon"
+                app:iconTint="#000000"
+                app:iconSize="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etc_txt"
+                />
 
             <TextView
                 android:id="@+id/type_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="등록"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/carnumber_txt"
                 app:layout_constraintEnd_toEndOf="parent"/>
-
 
             <TextView
                 android:id="@+id/etc_txt"

@@ -61,4 +61,11 @@ interface CarInfoDao {
     @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo WHERE etc LIKE '%' || :searchText || '%' ORDER BY id DESC")
     fun CarInfoSearchLikeEtc(searchText: String?) : List<CarInfo>
 
+    /* SMS 데이터 목록 가져오기 */
+    @Query("SELECT id, smstitle, smscontent FROM SmsManager ORDER BY id DESC")
+    fun SmsMagAll(): LiveData<MutableList<SmsManager>>
+
+    /* SMS 데이터 한개 삭제하기 */
+    @Query("DELETE FROM SmsManager WHERE id = :id")
+    fun SmsMagDeletebyid(id: Int)
 }

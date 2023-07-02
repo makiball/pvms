@@ -8,6 +8,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.media.Image
 import android.os.Bundle
+import android.util.Log
 import android.util.Pair
 import android.view.OrientationEventListener
 import android.view.View
@@ -26,7 +27,6 @@ import kr.co.toplink.pvms.data.CarInfoListTodayModel
 import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
-import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.*
@@ -65,6 +65,7 @@ class CamCarSearchActivity: AppCompatActivity(){
 
         val postCardViewBinder = CarInfoListTodayViewBinder { binding, CarInfoListTodayModel ->
             gotoDetailWithTransition(CarInfoListTodayModel, binding)
+            Log.d(TAG,"=====> 클릭")
         }
 
         listAdapter = SingleViewBinderListAdapter(postCardViewBinder as ItemBinder)
@@ -129,7 +130,7 @@ class CamCarSearchActivity: AppCompatActivity(){
 
     private fun gotoDetailWithTransition (
         carInfoListTodayModel: CarInfoListTodayModel,
-        binding : CarinfoItemLayoutBinding
+        binding : CarinfoItemTodayLayoutBinding
     ) {
         val intent =
             Intent(this, CarNumberSearchDetailActivity::class.java)

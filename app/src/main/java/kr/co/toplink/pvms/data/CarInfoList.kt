@@ -14,3 +14,10 @@ data class CarInfoList(
     val date: Date,
     val etc: String?
 ): Parcelable
+
+@Parcelize
+data class SmsManagerList(
+    var id: Int = 0,
+    var smstitle: String,     //없으면 외부차량, 있으면 등록 차량
+    var smscontent: String
+): Parcelable

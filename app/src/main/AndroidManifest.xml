@@ -39,6 +39,7 @@
         <activity android:name=".CarNumberSearchDetailActivity" />
         <activity android:name=".CamCarSearchActivity" />
         <activity android:name=".CamCarInputActivity" />
+        <activity android:name=".SmsManagerActivity" />
     </application>
 
 </manifest>
