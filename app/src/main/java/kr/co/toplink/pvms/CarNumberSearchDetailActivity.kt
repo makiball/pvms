@@ -5,25 +5,29 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
+import android.widget.AdapterView.OnItemClickListener
+import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import kr.co.toplink.pvms.data.CarInfoListModel
-import kr.co.toplink.pvms.database.CarInfo
+import kr.co.toplink.pvms.data.SmsManagerList
+import kr.co.toplink.pvms.data.SmsMangerModel
+import kr.co.toplink.pvms.database.SmsManager
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchDetailBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
+import kr.co.toplink.pvms.model.SmsManagerViewModel
 import kr.co.toplink.pvms.util.DateToYmdhis
 import kr.co.toplink.pvms.util.DeleteDialog
 import kr.co.toplink.pvms.util.PhoneHidden
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 class CarNumberSearchDetailActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumbersearchDetailBinding
     private lateinit var viewModel: CarNumberSearchViewModel
+    private lateinit var viewModel2: SmsManagerViewModel
     private var id : Int = 0
     private var phone : String? = ""
 
@@ -59,6 +63,13 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
             id = it.carinfolist.id.toInt()
         }
+
+
+        /* 스피너 설정 */
+        binding.textItem.setOnItemClickListener(OnItemClickListener { adapterView, view, position, id ->
+            //binding.textShowItem.setText(adapterView.getItemAtPosition(position) as String)
+        })
+
 
         /* 전화 */
         binding.call.setOnClickListener {
@@ -97,9 +108,28 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         init()
     }
 
-
-
     private fun init() {
-        viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
+        viewModel2 = ViewModelProvider(this).get(SmsManagerViewModel::class.java)
+        viewModel2.allListSms(this)
+        viewModel2.smsManagerList.observe(this, androidx.lifecycle.Observer {
+            it.apply {
+               // listAdapter.submitList(generateMockCarinfo(this))
+                val itemAdapter = ArrayAdapter(
+                    this@CarNumberSearchDetailActivity,
+                    kr.co.toplink.pvms.R.layout.sms_item_list_layout, generateMockCarinfo(this)
+                )
+                binding.textItem.setAdapter(itemAdapter)
+            }
+        })
+    }
+
+    private fun generateMockCarinfo(smsmaglist: MutableList<SmsManager>): List<String> {
+        val smsList = java.util.ArrayList<String>()
+        smsmaglist.forEach{
+            //val smsMagList = SmsManagerList(it.id, it.smstitle, it.smscontent)
+            //smsList.add(SmsMangerModel(smsMagList))
+            smsList.add(it.smstitle)
+        }
+        return smsList
     }
 }

@@ -3,11 +3,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/back_bt"
@@ -45,6 +43,24 @@
             app:layout_constraintEnd_toStartOf="@id/back_bt"
             app:layout_constraintTop_toBottomOf="@id/back_bt"/>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/smslist"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd = "8dp"
+            android:hint="문자 내용을 선택하세요!"
+            app:layout_constraintStart_toStartOf="@id/call"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/carnumber_txt">
+
+            <AutoCompleteTextView
+                android:id="@+id/text_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/carnumber_txt"
             android:layout_width="0dp"
@@ -75,7 +91,7 @@
             app:layout_constraintTop_toBottomOf="@id/carnumber_txt"
              />
 
-    <com.google.android.material.textview.MaterialTextView
+        <com.google.android.material.textview.MaterialTextView
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -85,10 +101,10 @@
         android:textSize="20sp"
         android:textStyle=""
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/phone"
+        app:layout_constraintTop_toBottomOf="@id/call"
         />
 
-    <com.google.android.material.textview.MaterialTextView
+        <com.google.android.material.textview.MaterialTextView
         android:id="@+id/etc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,7 +117,6 @@
         app:layout_constraintTop_toBottomOf="@id/date"
         />
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/call"
             android:layout_width="50dp"
@@ -112,7 +127,7 @@
             app:icon="@drawable/detail_call_icon"
             app:iconSize="24dp"
             app:layout_constraintEnd_toStartOf="@id/sms"
-            app:layout_constraintTop_toBottomOf="@id/carnumber_txt"
+            app:layout_constraintTop_toBottomOf="@id/smslist"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -125,7 +140,7 @@
             app:icon="@drawable/detail_sms_icon"
             app:iconSize="24dp"
             app:layout_constraintEnd_toStartOf="@id/kakaotalk"
-            app:layout_constraintTop_toBottomOf="@id/carnumber_txt"
+            app:layout_constraintTop_toBottomOf="@id/smslist"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -139,7 +154,7 @@
             app:iconTint="#000000"
             app:iconSize="24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/carnumber_txt"
+            app:layout_constraintTop_toBottomOf="@id/smslist"
             />
 
         <androidx.recyclerview.widget.RecyclerView

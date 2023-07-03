@@ -81,7 +81,7 @@
             android:hint="문자 제목 (예시 : 차량이상)">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/carnum_inpt"
+                android:id="@+id/smstitle_inpt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -92,11 +92,11 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:hint="문자 내용">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone_inpt"
+                android:id="@+id/smscont_inpt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lines="3"
@@ -107,15 +107,29 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/reg_bt"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="#009688"
-            android:text="등록" />
+            android:layout_gravity="center">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/reg_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#009688"
+                android:text="등록" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/modify_bt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#009688"
+                android:text="수정" />
+        </FrameLayout>
     </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 
 

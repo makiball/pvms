@@ -140,5 +140,4 @@ import kr.co.toplink.pvms.model.ActivityClassModel
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
     }
-
 }

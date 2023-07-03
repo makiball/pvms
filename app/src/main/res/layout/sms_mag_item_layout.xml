@@ -49,7 +49,7 @@
                 app:layout_constraintStart_toStartOf="@id/sms_title_txt"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id = "@+id/alldelte"
+                android:id = "@+id/delete"
                 android:layout_width="53dp"
                 android:layout_height="40dp"
                 android:backgroundTint="#E91E63"

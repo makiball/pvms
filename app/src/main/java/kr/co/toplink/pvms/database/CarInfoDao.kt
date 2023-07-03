@@ -68,4 +68,12 @@ interface CarInfoDao {
     /* SMS 데이터 한개 삭제하기 */
     @Query("DELETE FROM SmsManager WHERE id = :id")
     fun SmsMagDeletebyid(id: Int)
+
+    /* SMS 데이터 한개 수정하기 */
+    @Update
+    fun SmsMagUpdatebyid(vararg smsmanager: SmsManager)
+
+    /* SMS 입력 하기 */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun SmsMagInsert(smsmanager: SmsManager)
 }
