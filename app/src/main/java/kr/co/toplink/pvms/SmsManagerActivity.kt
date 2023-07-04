@@ -143,20 +143,10 @@ class SmsManagerActivity : AppCompatActivity() {
 
     private fun generateMockCarinfo(smsmaglist: MutableList<SmsManager>): List<SmsMangerModel> {
         val smsList = ArrayList<SmsMangerModel>()
-        SmsMsgStore.setSmsMsgList(smsmaglist)
         smsmaglist.forEach{
             val smsMagList = SmsManagerList(it.id, it.smstitle, it.smscontent)
             smsList.add(SmsMangerModel(smsMagList))
         }
         return smsList
-    }
-}
-
-/* 싱글톤 문자 메세지를 가져오기 */
-object SmsMsgStore {
-    private var smsMsgList = mutableListOf<SmsManager>()
-    fun setSmsMsgList(smsmsglist : MutableList<SmsManager>) {
-        this.smsMsgList.clear()
-        this.smsMsgList = smsmsglist
     }
 }

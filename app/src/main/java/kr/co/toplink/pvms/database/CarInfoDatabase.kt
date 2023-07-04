@@ -9,6 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Singleton
 
 @Database(entities = [CarInfo::class, CarInfoToday::class, SmsManager::class], version = 3)
@@ -30,6 +31,8 @@ abstract class CarInfoDatabase: RoomDatabase() {
                     ).addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
+
+                            val nowDate = Date()
 
                             CoroutineScope(Dispatchers.IO).launch {
                                 getInstance(context)?.CarInfoDao()?.SmsMagInsert(
@@ -53,6 +56,19 @@ abstract class CarInfoDatabase: RoomDatabase() {
                                         smscontent = "입주민 차량에 (문열림, 트렁크) 열림등으로 이상이 발생하여 문자 보내드립니다. 차량 확인 해보세요. 000 관리 사무소"
                                     )
                                 )
+
+                                getInstance(context)?.CarInfoDao()?.CarInfoInsert(
+                                    CarInfo (
+                                        id = 1,
+                                        carnumber = "000가0000",
+                                        carnumber4d = "0000",
+                                        carnumberonly = "000 0000",
+                                        phone = "",
+                                        date = nowDate,
+                                        etc = ""
+                                    )
+                                )
+
                             }
 
                         }

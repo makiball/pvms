@@ -5,8 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -17,9 +19,8 @@ import kr.co.toplink.pvms.database.SmsManager
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchDetailBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.model.SmsManagerViewModel
-import kr.co.toplink.pvms.util.DateToYmdhis
-import kr.co.toplink.pvms.util.DeleteDialog
-import kr.co.toplink.pvms.util.PhoneHidden
+import kr.co.toplink.pvms.util.*
+import org.json.JSONObject
 
 
 class CarNumberSearchDetailActivity : AppCompatActivity() {
@@ -30,6 +31,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     private lateinit var viewModel2: SmsManagerViewModel
     private var id : Int = 0
     private var phone : String? = ""
+    private var smsid : Int = 0
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,6 +70,10 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         /* 스피너 설정 */
         binding.textItem.setOnItemClickListener(OnItemClickListener { adapterView, view, position, id ->
             //binding.textShowItem.setText(adapterView.getItemAtPosition(position) as String)
+
+            smsid = id.toInt()
+//            smsMsgList[smsid].smstitle
+            //Log.d(TAG,"" )
         })
 
 
@@ -79,15 +85,38 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        /* 문자 */
         binding.sms.setOnClickListener {
 
-            val message = "차좀 빼줘!!!"
+            //val message = "차좀 빼줘!!!"
+            if(smsid == 0) {
+                Toast.makeText(this, " 문자 내용을 선택해주세요. ", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val  message  = smsMsgList[smsid].smscontent
 
             val intent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("smsto:$phone")
                 putExtra("sms_body", message)
             }
             startActivity(intent)
+        }
+
+        /* 알림톡 */
+        binding.kakaotalk.setOnClickListener {
+            val url = "https://example.com/api" // JSON을 받을 API의 URL을 입력하세요
+
+            val jsonReceiver = JsonReceiver()
+            jsonReceiver.fetchJson(url, object : JsonCallback {
+                override fun onSuccess(json: JSONObject) {
+                    // JSON 파싱에 성공한 경우 처리할 로직을 작성하세요
+                }
+
+                override fun onFailure(errorMessage: String?) {
+                    // JSON 파싱에 실패하거나 응답이 실패한 경우 처리할 로직을 작성하세요
+                }
+            })
         }
 
 
@@ -128,8 +157,13 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         smsmaglist.forEach{
             //val smsMagList = SmsManagerList(it.id, it.smstitle, it.smscontent)
             //smsList.add(SmsMangerModel(smsMagList))
+            smsMsgList.add(SmsManager(it.id, it.smstitle, it.smscontent))
             smsList.add(it.smstitle)
         }
         return smsList
+    }
+
+    companion object {
+        private var smsMsgList = mutableListOf<SmsManager>()
     }
 }
