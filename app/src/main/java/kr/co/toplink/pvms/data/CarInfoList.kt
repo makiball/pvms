@@ -1,9 +1,8 @@
 package kr.co.toplink.pvms.data
 
+
 import android.os.Parcelable
-import androidx.recyclerview.widget.DiffUtil
-import androidx.room.ColumnInfo
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 @Parcelize
