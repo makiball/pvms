@@ -25,7 +25,7 @@ class SettingActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivitySettingBinding
-    var user = User("", "", "")
+    lateinit var user : User
     lateinit var sp: SharedPreferencesUtil
     lateinit var userResponse: UserResponse
     var fcm : String = ""
@@ -36,6 +36,7 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        user = User("", "", "")
         sp = SharedPreferencesUtil(this)
 
         fcm = sp.getFCMToken()
