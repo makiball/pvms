@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "669312164698",
+    "project_id": "pvms-91a6b",
+    "storage_bucket": "pvms-91a6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669312164698:android:0c1bfe3f5c1f9a0d1dc963",
+        "android_client_info": {
+          "package_name": "kr.co.toplink.pvms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "669312164698-erp8h16fub1u5oetvf2mk3re56m4o4at.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU374ofUkeU_5loC7S7SFBR33SJ69RD2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "669312164698-erp8h16fub1u5oetvf2mk3re56m4o4at.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

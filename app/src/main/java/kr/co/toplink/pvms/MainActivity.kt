@@ -11,22 +11,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ExperimentalGetImage
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.messaging.FirebaseMessaging
 import kr.co.toplink.pvms.databinding.ActivityMainBinding
 import kr.co.toplink.pvms.model.ActivityClassModel
+import kr.co.toplink.pvms.util.SharedPreferencesUtil
 
 
 @ExperimentalGetImage class MainActivity : AppCompatActivity() {
 
     private val activityClassModels = ArrayList<ActivityClassModel>()
-
     private lateinit var binding: ActivityMainBinding
+    lateinit var sp: SharedPreferencesUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        sp = SharedPreferencesUtil(this)
+
         addActivity()
+        getFCMToken()
 
         binding.carnumberregBt.setOnClickListener {
             activitygo(0)
@@ -44,6 +49,9 @@ import kr.co.toplink.pvms.model.ActivityClassModel
             activitygo(3)
         }
 
+        binding.settingBt.setOnClickListener {
+            activitygo(4)
+        }
 
         if (!allRuntimePermissionsGranted()) {
             getRuntimePermissions()
@@ -120,12 +128,32 @@ import kr.co.toplink.pvms.model.ActivityClassModel
             )
         )
 
+        activityClassModels.add(
+            ActivityClassModel(
+                SettingActivity::class.java,
+                getString(R.string.setting_bt)
+            )
+        )
     }
 
     /* 엑티비티 바로가기 */
     fun activitygo(position: Int) {
         Intent(this, activityClassModels[position].clazz).also {
             startActivity(it)
+        }
+    }
+
+    // 토큰 생성
+    private fun getFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@addOnCompleteListener
+            }
+            Log.d(TAG, "token 정보: ${task.result ?: "task.result is null"}")
+
+            if (task.result != null) {
+                sp.setFCMToken(task.result)
+            }
         }
     }
 

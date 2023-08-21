@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.Pair
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -133,7 +134,7 @@ class CarNumberSearchActivity: AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         //Toast.makeText(this, " 화면활성화 ", Toast.LENGTH_SHORT).show()
-        init()
+        //init()
     }
 
 
@@ -147,11 +148,13 @@ class CarNumberSearchActivity: AppCompatActivity() {
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
 
             it?.apply {
+
                 binding.totalreg.text = "총 수량 : ${this.size}대"
                 listAdapter.submitList(generateMockCarinfo(this))
                 //listAdapter.submitList(this)
             }
         })
+
         viewModel.selectedOption.observe(this) { selectedOption ->
             // 선택된 옵션에 대한 처리 작업
             /*
@@ -172,6 +175,8 @@ class CarNumberSearchActivity: AppCompatActivity() {
     }
 
     private fun generateMockCarinfo(carInfo: List<CarInfoList>): List<CarInfoListModel> {
+
+
         val carInfoList = ArrayList<CarInfoListModel>()
 
         carInfo.forEach{

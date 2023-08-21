@@ -23,14 +23,16 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="차량 번호 조회"
+                android:text="@string/carnumbersearch_bt"
+                style="@style/Bold"
+                android:textSize="20sp"
                 android:imeOptions="flagNoExtractUi|actionSearch"
                 android:inputType="textNoSuggestions" />
+
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
     <View
@@ -56,25 +58,28 @@
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id = "@+id/check_1"
+            style="@style/Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "차량번호"
+            android:text = "@string/check_1"
             android:layout_margin = "5dp"
             />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id = "@+id/check_2"
+            style="@style/Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "휴대폰번호"
+            android:text = "@string/check_2"
             android:layout_margin = "5dp"
             />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
             android:id = "@+id/check_3"
+            style="@style/Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text = "비고"
+            android:text = "@string/check_3"
             android:layout_margin = "5dp"
             />
 
@@ -87,14 +92,14 @@
         android:backgroundTint="#E91E63"
         android:layout_marginEnd = "8dp"
         android:layout_marginTop = "10dp"
-        android:text = "전부삭제"
+        android:text = "@string/carnumbersearch_alldelte_bt"
         app:layout_constraintTop_toBottomOf="@id/linelayout"
         app:layout_constraintStart_toEndOf="@id/search_rdg"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id = "@+id/search_inpt"
-        android:hint="차량번호"
+        android:hint="@string/search_inpt_hint"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin = "8dp"
@@ -107,6 +112,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id = "@+id/search_inpt_text"
+            style="@style/Normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
@@ -119,7 +125,7 @@
         android:layout_height="0dp"
         android:backgroundTint="#009688"
         android:layout_marginEnd = "8dp"
-        android:text = "찾기"
+        android:text = "@string/carnumbersearch_search_bt"
         app:layout_constraintTop_toTopOf="@id/search_inpt"
         app:layout_constraintBottom_toBottomOf="@id/search_inpt"
         app:layout_constraintStart_toEndOf="@id/search_inpt"
@@ -146,11 +152,11 @@
             <!-- first element of the row that is the part of table but it is invisible-->
             <TextView
                 android:id="@+id/totalreg"
+                style="@style/Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:text="총 수량 : 0대"
-                android:gravity="left"
+                android:text="@string/totalreg"
                 android:textColor="#000"
                 android:textSize="18sp" />
 
@@ -167,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#C6C6C6"
-                android:text=" 차량번호"
+                android:text="@string/carnumberserch_table_1"
                 android:gravity="center"
                 android:textColor="#000"
                 android:padding = "5dp"
@@ -178,7 +184,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#C6C6C6"
-                android:text="휴대폰번호"
+                android:text="@string/carnumberserch_table_2"
                 android:gravity="center"
                 android:textColor="#000"
                 android:padding = "5dp"
@@ -189,7 +195,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#C6C6C6"
-                android:text="기 타"
+                android:text="@string/carnumberserch_table_3"
                 android:gravity="center"
                 android:textColor="#000"
                 android:padding = "5dp"

@@ -23,14 +23,16 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="차량번호 상세"
+                    android:text="@string/carnumbersearch_detail_title"
+                    style="@style/Bold"
+                    android:textSize="20sp"
                     android:imeOptions="flagNoExtractUi|actionSearch"
                     android:inputType="textNoSuggestions" />
+
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
         <View
@@ -49,13 +51,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd = "8dp"
-            android:hint="문자 내용을 선택하세요!"
+            android:hint="@string/smslist_hint"
             app:layout_constraintStart_toStartOf="@id/call"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/carnumber_txt">
 
             <AutoCompleteTextView
                 android:id="@+id/text_item"
+                style="@style/Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none" />
@@ -63,6 +66,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/carnumber_txt"
+            style="@style/ExtraBold"
             android:layout_width="0dp"
             android:layout_height="70dp"
             android:layout_marginTop="10dp"

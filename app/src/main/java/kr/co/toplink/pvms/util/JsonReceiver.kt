@@ -1,6 +1,12 @@
 package kr.co.toplink.pvms.util
 
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kr.co.toplink.pvms.data.SendKakaoAlrim
+import kr.co.toplink.pvms.data.SerializeConvert
 import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import java.io.IOException
 
@@ -33,9 +39,18 @@ class JsonReceiver {
         })
     }
 
+
+
     private fun createRequest(url: String): Request {
+
+        val data = SerializeConvert("test","test","test")
+        val json = Json.encodeToString(data)
+        val mediaType = "application/json".toMediaType()
+        val requestBody = json.toRequestBody(mediaType)
+
         return Request.Builder()
             .url(url)
+            .post(requestBody)
             .build()
     }
 }

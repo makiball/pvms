@@ -2,6 +2,7 @@ package kr.co.toplink.pvms.model
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineScope
@@ -68,6 +69,7 @@ class CarNumberSearchViewModel   : BaseViewModel() {
                 val carinfos = CoroutineScope(Dispatchers.IO).async {
                     db.CarInfoDao().CarInfoSearchLikeCarnumber(searchtext)
                 }.await()
+
                 for (carinfo in carinfos) {
                     list.add(
                         CarInfoList(
