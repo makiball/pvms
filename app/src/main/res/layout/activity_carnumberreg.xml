@@ -22,12 +22,13 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="차량 번호 조회"
+                android:text="@string/carnumberreg_bt"
+                style="@style/Bold"
+                android:textSize="20sp"
                 android:imeOptions="flagNoExtractUi|actionSearch"
                 android:inputType="textNoSuggestions" />
         </LinearLayout>
@@ -44,9 +45,10 @@
     <!-- 서브 타이틀 -->
     <com.google.android.material.textview.MaterialTextView
         android:id = "@+id/subtitle1"
+        style = "@style/Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "차량 번호 등록"
+        android:text = "@string/excel_reg_title"
         android:layout_marginTop = "16dp"
         android:layout_marginStart="8dp"
         android:textColor = "#000000"
@@ -58,9 +60,10 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id = "@+id/subtitle1_1"
+        style = "@style/Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "차량번호, 휴대폰 번호, 기타  순으로 나열"
+        android:text = "@string/excel_subtitle1_1"
         android:layout_marginTop = "4dp"
         android:layout_marginStart="8dp"
         android:textColor = "#818181"
@@ -86,11 +89,12 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id = "@+id/file_upload_text"
+        style = "@style/Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:text = "0"
+        android:text = "@string/excel_zero"
         app:layout_constraintBaseline_toBottomOf="@id/file_upload_progressbar"
         app:layout_constraintStart_toEndOf="@id/file_upload_progressbar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:backgroundTint="#009688"
-        android:text = "엑셀파일찾기"
+        android:text = "@string/excel_file_upload_bt"
         app:layout_constraintTop_toBottomOf="@id/file_upload_text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -122,9 +126,10 @@
     <!-- 서브 타이틀 -->
     <com.google.android.material.textview.MaterialTextView
         android:id = "@+id/subtitle2"
+        style="@style/Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "직접 등록"
+        android:text = "@string/user_input_title"
         android:layout_marginTop = "32dp"
         android:layout_marginStart="8dp"
         android:textColor = "#000000"
@@ -148,7 +153,7 @@
         app:cornerRadius="50dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:hint="차량번호 예:(123허1234)"
+            android:hint="@string/user_carnum_inpt_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -156,6 +161,7 @@
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id = "@+id/carnum_inpt"
+                style="@style/Normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
@@ -164,7 +170,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:hint="휴대폰번호"
+            android:hint="@string/user_phone_inpt_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop = "30dp"
@@ -172,6 +178,7 @@
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id = "@+id/phone_inpt"
+                style="@style/Normal"
                 android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -181,7 +188,7 @@
 
 
         <com.google.android.material.textfield.TextInputLayout
-            android:hint="기타 (예:입주민,방문자)"
+            android:hint="@string/user_etc_inpt_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop = "30dp"
@@ -189,6 +196,7 @@
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id = "@+id/etc_inpt"
+                style="@style/Normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
@@ -202,7 +210,7 @@
             android:layout_marginTop="20dp"
             android:backgroundTint="#009688"
             android:layout_gravity="center"
-            android:text = "등록" />
+            android:text = "@string/user_reg_bt" />
 
     </com.google.android.material.circularreveal.CircularRevealLinearLayout>
 

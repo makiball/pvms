@@ -1,15 +1,47 @@
 <resources>
     <string name="app_name">주차 차량 관리 시스템</string>
-
     <string name="carnumberreg_bt">차량 번호 등록</string>
     <string name="carnumbersearch_bt">차량 번호 조회</string>
     <string name="camsearch_bt">카메라 주차 검색</string>
-    <string name="smsreg_bt">알림문자 등록 / 조회</string>
+    <string name="smsreg_bt">알림 문자 관리</string>
     <string name="parkresult_bt">주차 보고서</string>
-
+    <string name="setting_bt">설정</string>
     <string name="line_1">line 1</string>
     <string name="line_2">line 2</string>
-
     <string name="password">password</string>
+
+    <!-- carnumberreg_bt : 차량 번호 등록 -->
+    <string name = "excel_reg_title">차량 엑셀 등록</string>
+    <string name = "excel_subtitle1_1">차량번호, 휴대폰 번호, 기타  순으로 나열</string>
+    <string name = "excel_file_upload_bt">엑셀파일찾기</string>
+    <string name = "excel_zero">0</string>
+    <string name = "user_input_title">직접 등록</string>
+    <string name = "user_carnum_inpt_hint">차량번호 예:(123허1234)</string>
+    <string name = "user_phone_inpt_hint">휴대폰번호</string>
+    <string name = "user_etc_inpt_hint">기타 (예:입주민,방문자)</string>
+    <string name = "user_reg_bt">등록</string>
+
+    <!-- carnumberserch : 차량 번호 조회 -->
+    <string name = "carnumbersearch_alldelte_bt">전부삭제</string>
+    <string name = "carnumbersearch_search_bt">찾기</string>
+    <string name = "check_1">차량번호</string>
+    <string name = "check_2">휴대폰번호</string>
+    <string name = "check_3">비고</string>
+    <string name = "search_inpt_hint">차량번호</string>
+    <string name = "totalreg">총 수량 : 0대</string>
+    <string name = "carnumberserch_table_1">차량번호</string>
+    <string name = "carnumberserch_table_2">휴대폰번호</string>
+    <string name = "carnumberserch_table_3">비고</string>
+
+    <!-- carnumberserch : 차량 번호 상세 -->
+    <string name = "carnumbersearch_detail_title">차량번호 상세</string>
+    <string name = "smslist_hint">문자 내용을 선택하세요!</string>
+
+
+    <!-- setting : 설정 -->
+    <string name = "setting_id">알림톡 전용 아이디</string>
+    <string name = "setting_pw">알림톡 전용 패스워드</string>
+    <string name = "setting_msg">알림톡을 전송할려면 아이디와 패스워드가 필요합니다. \n\n 생성은 topicklink@gmail 문의 메일로 보내주세요.</string>
+    <string name = "user_join_bt">로그인</string>
 
 </resources>

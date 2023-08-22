@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import kr.co.toplink.pvms.data.CarInfoListModel
+import kr.co.toplink.pvms.data.SendKakaoAlrim
 import kr.co.toplink.pvms.data.SmsManagerList
 import kr.co.toplink.pvms.data.SmsMangerModel
 import kr.co.toplink.pvms.database.SmsManager
@@ -30,8 +31,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     private lateinit var viewModel: CarNumberSearchViewModel
     private lateinit var viewModel2: SmsManagerViewModel
     private var id : Int = 0
-    private var phone : String? = ""
+    private var phone : String = ""
     private var smsid : Int = 0
+    private lateinit var sendkakaoalrim : SendKakaoAlrim
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,14 +57,12 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         binding.backBt.setOnClickListener{  finish()  }
 
         carinfolistmodel?.let {
-
             val formattedDate = DateToYmdhis(it.carinfolist.date)
-            phone = it.carinfolist.phone
+            phone = it.carinfolist.phone.toString()
             binding.carnumberTxt.text = it.carinfolist.carnumber
             binding.phone.text = phone?.let { it -> PhoneHidden(it) }
             binding.etc.text = it.carinfolist.etc
             binding.date.text = "등록일 : $formattedDate"
-
             id = it.carinfolist.id.toInt()
         }
 
@@ -105,12 +105,20 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
         /* 알림톡 */
         binding.kakaotalk.setOnClickListener {
-            val url = "https://example.com/api" // JSON을 받을 API의 URL을 입력하세요
+            val url = "https://ggulzem.site/pvms/sendMessage.php" // JSON을 받을 API의 URL을 입력하세요
+            val  message  = smsMsgList[smsid].smscontent
 
             val jsonReceiver = JsonReceiver()
+
+            //sendkakaoalrim.id = "edu"
+            //sendkakaoalrim.phone = phone
+            //sendkakaoalrim.phone = message
+
+            Log.d(TAG, "json => 카카오 전송요청")
             jsonReceiver.fetchJson(url, object : JsonCallback {
                 override fun onSuccess(json: JSONObject) {
                     // JSON 파싱에 성공한 경우 처리할 로직을 작성하세요
+                    Log.d(TAG, "json => $json")
                 }
 
                 override fun onFailure(errorMessage: String?) {
