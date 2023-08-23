@@ -17,7 +17,8 @@ import kr.co.toplink.pvms.model.ActivityClassModel
 import kr.co.toplink.pvms.util.SharedPreferencesUtil
 
 
-@ExperimentalGetImage class MainActivity : AppCompatActivity() {
+@ExperimentalGetImage
+class MainActivity : AppCompatActivity() {
 
     private val activityClassModels = ArrayList<ActivityClassModel>()
     private lateinit var binding: ActivityMainBinding
@@ -159,6 +160,8 @@ import kr.co.toplink.pvms.util.SharedPreferencesUtil
 
     companion object {
         private val TAG = this.javaClass.simpleName
+
+        const val channel_id = "pvms_user"
         private const val PERMISSION_REQUESTS = 1
 
         private val REQUIRED_RUNTIME_PERMISSIONS =
