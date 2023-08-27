@@ -21,14 +21,20 @@ import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.DeleteDialog
 import kr.co.toplink.pvms.viewholder.ItemBinder
 import kr.co.toplink.pvms.viewholder.PostCardViewBinder
+import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
+import kr.co.toplink.pvms.viewmodel.ExcellViewModel
+import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 
 const val KEY_CARINFOLIST_MODEL = "car-info-model"
 
 class CarNumberSearchActivity: AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
+
     private lateinit var binding: ActivityCarnumbersearchBinding
     private lateinit var viewModel: CarNumberSearchViewModel
+    private lateinit var carinfviewModel: CarInfoViewModel
+
     private lateinit var listAdapter: SingleViewBinderListAdapter
     private var selectedOption : Option = Option.carnumber
 
@@ -38,6 +44,9 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
         binding = ActivityCarnumbersearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        carinfviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
+
 
 
         // 뒤로가기시 현재 엑티비티 닫기
@@ -63,14 +72,13 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
         binding.check1.isChecked = true
         binding.searchRdg.setOnCheckedChangeListener { group, checkedId  ->
-            //var msg = "차량번호"
             selectedOption = when (checkedId) {
                 R.id.check_1 -> Option.carnumber
                 R.id.check_2 -> Option.phone
                 R.id.check_3 -> Option.etc
                 else -> Option.carnumber // 기본값 설정
             }
-            viewModel.setSelectedOption(selectedOption)
+            carinfviewModel.setSelectedOption(selectedOption)
         }
 
         binding.searchBt.apply{
@@ -146,9 +154,7 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
     private fun attachObserver() {
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
-
             it?.apply {
-
                 binding.totalreg.text = "총 수량 : ${this.size}대"
                 listAdapter.submitList(generateMockCarinfo(this))
                 //listAdapter.submitList(this)
@@ -156,34 +162,16 @@ class CarNumberSearchActivity: AppCompatActivity() {
         })
 
         viewModel.selectedOption.observe(this) { selectedOption ->
-            // 선택된 옵션에 대한 처리 작업
-            /*
-            when (selectedOption) {
-                Option.carnumber -> {
-                    // Option 1 선택 시 처리할 작업
-                }
-                Option.phone -> {
-                    // Option 2 선택 시 처리할 작업
-                }
-                Option.etc -> {
-                    // Option 3 선택 시 처리할 작업
-                }
-            }*/
-
             binding.searchInpt.hint = selectedOption.text
         }
     }
 
     private fun generateMockCarinfo(carInfo: List<CarInfoList>): List<CarInfoListModel> {
-
-
         val carInfoList = ArrayList<CarInfoListModel>()
-
         carInfo.forEach{
             val carinfolist = CarInfoList(it.id, it.carnumber, it.phone, it.date, it.etc)
             carInfoList.add(CarInfoListModel(carinfolist))
         }
-
         return carInfoList
     }
 }

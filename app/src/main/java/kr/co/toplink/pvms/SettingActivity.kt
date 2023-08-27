@@ -97,12 +97,8 @@ class SettingActivity : AppCompatActivity() {
                     //Log.d(TAG,"유저 가져오기 : $userResponse")
                     Toast.makeText(this@SettingActivity, userResponse.msg, Toast.LENGTH_LONG).show();
                 }
-
             }
-
         }
-
-
 
         // 뒤로가기시 현재 엑티비티 닫기
         val callback = object: OnBackPressedCallback(true) {
