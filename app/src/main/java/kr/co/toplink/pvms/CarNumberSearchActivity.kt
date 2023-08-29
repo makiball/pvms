@@ -15,6 +15,7 @@ import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListModel
 import kr.co.toplink.pvms.data.Option
+import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchBinding
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
@@ -44,9 +45,6 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
         binding = ActivityCarnumbersearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        carinfviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
-
 
 
         // 뒤로가기시 현재 엑티비티 닫기
@@ -104,8 +102,6 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
         }
 
-       init()
-
         binding.alldelte.setOnClickListener {
             val msg = "데이터를 삭제하시면 복구 하실수 없습니다. "
             val dlg = DeleteDialog(this)
@@ -115,6 +111,8 @@ class CarNumberSearchActivity: AppCompatActivity() {
             }
             dlg.show(msg)
         }
+
+       init()
     }
 
     private fun gotoDetailWithTransition (
@@ -147,12 +145,41 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
 
     private fun init() {
-        viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
-        viewModel.searchCarnum(this, "")
+        //viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
+        //viewModel.searchCarnum(this, "")
+
+        carinfviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
+        carinfviewModel.setSelectedOption(selectedOption)
+        carinfviewModel.getCarInfo()
         attachObserver()
     }
 
     private fun attachObserver() {
+
+        carinfviewModel.searchChk.observe(this, EventObserver {
+            /*
+            when (it.name) {
+                "carnumber" -> binding.check1.isChecked = true
+                "phone" -> binding.check2.isChecked = true
+                "etc" -> binding.check3.isChecked = true
+                else -> binding.check1.isChecked = true
+            }
+             */
+            binding.searchInpt.hint = selectedOption.text
+        })
+
+        carinfviewModel.carinfos.observe(this) {
+            binding.recyclerView.apply {
+
+            }
+        }
+
+        /*
+        carinfviewModel.carinfos.observe(this){
+            binding.totalreg.text = "총 수량 : ${it.size}대"
+            listAdapter.submitList(it)
+        }
+
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
             it?.apply {
                 binding.totalreg.text = "총 수량 : ${this.size}대"
@@ -164,9 +191,11 @@ class CarNumberSearchActivity: AppCompatActivity() {
         viewModel.selectedOption.observe(this) { selectedOption ->
             binding.searchInpt.hint = selectedOption.text
         }
+         */
     }
 
-    private fun generateMockCarinfo(carInfo: List<CarInfoList>): List<CarInfoListModel> {
+    /*
+    private fun generateMockCarinfo(carInfo: List<CarInfo>): List<CarInfoListModel> {
         val carInfoList = ArrayList<CarInfoListModel>()
         carInfo.forEach{
             val carinfolist = CarInfoList(it.id, it.carnumber, it.phone, it.date, it.etc)
@@ -174,4 +203,5 @@ class CarNumberSearchActivity: AppCompatActivity() {
         }
         return carInfoList
     }
+     */
 }
