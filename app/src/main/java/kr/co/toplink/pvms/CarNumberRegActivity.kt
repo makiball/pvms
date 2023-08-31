@@ -14,6 +14,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineScope
@@ -25,6 +26,9 @@ import kr.co.toplink.pvms.databinding.ActivityCarnumberregBinding
 import kr.co.toplink.pvms.model.ExcellReaderViewModel
 import kr.co.toplink.pvms.util.InputCheck
 import kr.co.toplink.pvms.util.OpenDialog
+import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
+import kr.co.toplink.pvms.viewmodel.ExcellViewModel
+import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Math.floor
@@ -39,13 +43,17 @@ class CarNumberRegActivity : AppCompatActivity() {
 
     private lateinit var db: CarInfoDatabase
 
-    private lateinit var viewModel: ExcellReaderViewModel
+//    private lateinit var viewModel: ExcellReaderViewModel
+
+    private lateinit var viewModel: ExcellViewModel
+    private lateinit var carInfoviewModel : CarInfoViewModel
+
+
     private var file: File? = null
     private var fileUri: Uri? = null
     private var url: String? = null
 
     private var inputcheck = InputCheck()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +61,8 @@ class CarNumberRegActivity : AppCompatActivity() {
         binding = ActivityCarnumberregBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        db = CarInfoDatabase.getInstance(this)!!
-
+//        db = CarInfoDatabase.getInstance(this)!!
+//        val viewModelFactory = ViewModelFactory(this)
 
         // 뒤로가기시 현재 엑티비티 닫기
         val callback = object: OnBackPressedCallback(true) {
@@ -214,7 +222,7 @@ class CarNumberRegActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        viewModel = ViewModelProvider(this).get(ExcellReaderViewModel::class.java)
+        viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ExcellViewModel::class.java)
         viewModel.fileDir = File(this.filesDir, AppConstant.doc)
         if (intent.extras?.containsKey("excellPath") == true) {
             val filePath = intent.extras?.getString("excellPath").orEmpty()
@@ -323,6 +331,7 @@ class CarNumberRegActivity : AppCompatActivity() {
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.
     private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
 
+
         //우측 4개 번호판을 자르기
         val carnumber4d = inputcheck.getCarNumber4d(carnuminput)
         val carnumberdigit = inputcheck.getCarNumberDigit(carnuminput)
@@ -341,6 +350,23 @@ class CarNumberRegActivity : AppCompatActivity() {
             }
              */
 
+        carInfoviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
+        carInfoviewModel.addCarInfo(
+            CarInfo(
+                carnumber = carnuminput,
+                carnumber4d = carnumber4d,
+                carnumberonly = carnumberdigit,
+                phone = phoneinput,
+                date = datepatterned,
+                etc = etcinpt
+            )
+        )
+
+        carInfoviewModel.carinfos.observe(this){
+            Log.d(TAG, "=====> $it ");
+        }
+
+/*
         CoroutineScope(Dispatchers.IO).launch {
             db.CarInfoDao().CarInfoInsert(CarInfo(
                 carnumber = carnuminput,
@@ -351,7 +377,7 @@ class CarNumberRegActivity : AppCompatActivity() {
                 etc = etcinpt
             ))
         }
-
+*/
 /*
         var carinfoList = "자동차 정보들 \n"
         CoroutineScope(Dispatchers.Main).launch {

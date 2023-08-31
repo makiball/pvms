@@ -10,8 +10,18 @@ import kr.co.toplink.pvms.data.CarInfoRow
 @Dao
 interface CarInfoDao {
 
+    /* 자동차 반호 입력 */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun CarInfoInsert(carinfo: CarInfo)
+
     @Query("SELECT * FROM CarInfo")
     fun CarInfoAll(): List<CarInfo>
+
+    @Query("DELETE FROM CarInfo")
+    fun CarInfoDelete()
+
+    @Query("DELETE FROM CarInfo WHERE id = :id")
+    fun CarInfoDeletebyid(id: Int)
 
     /* 처음 로딩을 위해서 */
     @Query("SELECT  id, carnumber, phone, date, etc, type FROM CarInfoToday ORDER BY id DESC")
@@ -25,20 +35,11 @@ interface CarInfoDao {
     fun CarInfoGetTdoday(searchText: String?): LiveData<MutableList<CarInfoToday>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun CarInfoInsert(carinfo: CarInfo)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsertToday(carinfotoday: CarInfoToday)
-
-    @Query("DELETE FROM CarInfo")
-    fun CarInfoDelete()
 
     @Query("DELETE FROM CarInfoToday")
     fun CarInfoTodayDelete()
 
-
-    @Query("DELETE FROM CarInfo WHERE id = :id")
-    fun CarInfoDeletebyid(id: Int)
 
     /* 차랑번호 검색 */
     @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")

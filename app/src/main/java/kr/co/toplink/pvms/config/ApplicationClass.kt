@@ -6,6 +6,8 @@ import androidx.room.Room
 import com.google.gson.GsonBuilder
 import kr.co.toplink.pvms.BuildConfig
 import kr.co.toplink.pvms.database.AppDatabase
+import kr.co.toplink.pvms.repository.car.CarLocalDataSource
+import kr.co.toplink.pvms.repository.car.CarRepository
 import kr.co.toplink.pvms.util.SharedPreferencesUtil
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -54,6 +56,16 @@ class ApplicationClass : Application() {
             ).fallbackToDestructiveMigration()
                 .build().also {
                     database = it
+            }
+        }
+    }
+
+    private var carRepository: CarRepository? = null
+    fun provideCarRepository(context: Context): CarRepository {
+        return carRepository ?: kotlin.run {
+            val dao = provideDatabase(context.applicationContext).carinfoDao()
+            CarRepository(CarLocalDataSource(dao)).also {
+                carRepository = it
             }
         }
     }

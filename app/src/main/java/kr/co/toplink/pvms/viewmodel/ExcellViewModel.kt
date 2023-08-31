@@ -1,9 +1,13 @@
-package kr.co.toplink.pvms.model
+package kr.co.toplink.pvms.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.AppConstant
+import kr.co.toplink.pvms.model.ListItems
+import kr.co.toplink.pvms.model.SingleRow
 import org.apache.poi.EncryptedDocumentException
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.poifs.crypt.Decryptor
@@ -19,13 +23,12 @@ import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ExcellReaderViewModel  : BaseViewModel() {
+class ExcellViewModel() : ViewModel() {
 
     private val TAG = this.javaClass.simpleName
 
     var excelDataListLiveData: MutableLiveData<List<ListItems>> = MutableLiveData()
     var excelExceptionListData: MutableLiveData<String> = MutableLiveData()
-
     var excellFirstRowData: MutableLiveData<List<String>> = MutableLiveData()
 
     private val list = ArrayList<ListItems>()
@@ -44,7 +47,7 @@ class ExcellReaderViewModel  : BaseViewModel() {
             if (file.length() > Int.MAX_VALUE) {
                 excelExceptionListData.postValue("File too big")
             }
-            launch {
+            viewModelScope.launch {
                 val myInput = FileInputStream(file)
                 val firstRow: MutableList<String> = arrayListOf()
                 if (password.isNotEmpty()) {
@@ -160,7 +163,7 @@ class ExcellReaderViewModel  : BaseViewModel() {
     }
 
     fun sortBy(sortBy: String) {
-        launch {
+        viewModelScope.launch {
             try {
                 val filtered = list
                     .map { excelData ->
@@ -244,4 +247,5 @@ class ExcellReaderViewModel  : BaseViewModel() {
             }
         }
     }
+
 }
