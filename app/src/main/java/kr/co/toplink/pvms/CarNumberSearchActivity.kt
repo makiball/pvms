@@ -10,7 +10,10 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kr.co.toplink.pvms.adapter.CarNumberSearchAdapter
 import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListModel
@@ -39,6 +42,8 @@ class CarNumberSearchActivity: AppCompatActivity() {
     private lateinit var listAdapter: SingleViewBinderListAdapter
     private var selectedOption : Option = Option.carnumber
 
+    lateinit var carnumbersearchadapter : CarNumberSearchAdapter
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +64,7 @@ class CarNumberSearchActivity: AppCompatActivity() {
             finish()
         }
 
+        /*
         val postCardViewBinder = PostCardViewBinder { binding, CarInfoListModel ->
             gotoDetailWithTransition(CarInfoListModel, binding)
         }
@@ -67,6 +73,7 @@ class CarNumberSearchActivity: AppCompatActivity() {
             this.adapter = listAdapter
             layoutManager = LinearLayoutManager(this@CarNumberSearchActivity)
         }
+         */
 
         binding.check1.isChecked = true
         binding.searchRdg.setOnCheckedChangeListener { group, checkedId  ->
@@ -168,10 +175,18 @@ class CarNumberSearchActivity: AppCompatActivity() {
             binding.searchInpt.hint = selectedOption.text
         })
 
+        carnumbersearchadapter = CarNumberSearchAdapter(carinfviewModel)
         carinfviewModel.carinfos.observe(this) {
             binding.recyclerView.apply {
-
+                adapter = carnumbersearchadapter
+                layoutManager = GridLayoutManager(this@CarNumberSearchActivity, 1)
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             }
+
+            carnumbersearchadapter.apply {
+                submitList(it)
+            }
+            binding.totalreg.text = "총 수량 : ${it.size}대"
         }
 
         /*
@@ -179,6 +194,7 @@ class CarNumberSearchActivity: AppCompatActivity() {
             binding.totalreg.text = "총 수량 : ${it.size}대"
             listAdapter.submitList(it)
         }
+
 
         viewModel.carinfoList.observe(this, androidx.lifecycle.Observer {
             it?.apply {

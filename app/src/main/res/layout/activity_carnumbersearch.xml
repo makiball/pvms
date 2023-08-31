@@ -147,7 +147,8 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop = "20dp">
 
             <!-- first element of the row that is the part of table but it is invisible-->
             <TextView
@@ -162,13 +163,12 @@
 
         </TableRow>
 
-        <!-- first row of the table layout-->
+        <!-- first row of the table layout
         <TableRow
             android:id="@+id/simpleTableLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- first element of the row that is the part of table but it is invisible-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -179,7 +179,6 @@
                 android:padding = "5dp"
                 android:textSize="16sp" />
 
-            <!-- second element of the row that is shown in the screenshot-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -190,7 +189,6 @@
                 android:padding = "5dp"
                 android:textSize="16sp" />
 
-            <!-- second element of the row that is shown in the screenshot-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -201,6 +199,7 @@
                 android:padding = "5dp"
                 android:textSize="16sp" />
         </TableRow>
+        -->
     </TableLayout>
 
     <androidx.recyclerview.widget.RecyclerView
