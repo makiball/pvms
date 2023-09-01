@@ -33,5 +33,8 @@ class CarLocalDataSource (
         return dao.CarInfoSearchLikeEtc(etc)
     }
 
+    override suspend fun  carInfoSearchByCarnumber(carnum: String): CarInfo {
+        return dao.CarInfoSearchByCarnumber(carnum)
+    }
 
 }

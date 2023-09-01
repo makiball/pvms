@@ -52,4 +52,10 @@ class CarRepository(
             localDataSource.carInfoSearchLikeEtc(etc)
         }
     }
+
+    suspend fun carInfoSearchByCarnumber(carnum: String): CarInfo  {
+        return   withContext(ioDispatcher) {
+            localDataSource.carInfoSearchByCarnumber(carnum)
+        }
+    }
 }

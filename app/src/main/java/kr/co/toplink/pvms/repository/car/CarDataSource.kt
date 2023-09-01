@@ -20,4 +20,6 @@ interface CarDataSource {
     /* 기타 검색 */
     suspend fun carInfoSearchLikeEtc(etc : String) : List<CarInfo>
 
+    suspend fun carInfoSearchByCarnumber(carnum : String) : CarInfo
+
 }

@@ -27,8 +27,8 @@ interface CarInfoDao {
     fun CarInfoSearchByCarnumberOnly(searchText: String) : List<CarInfo>
 
     /* 번호판 검색 전체 */
-    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumber = :searchText limit 1")
-    fun CarInfoSearchByCarnumber(searchText: String) : List<CarInfo>
+    @Query("SELECT * FROM CarInfo WHERE carnumber = :searchText limit 1")
+    fun CarInfoSearchByCarnumber(searchText: String) : CarInfo
 
 
     /* 휴대폽번호 검색 */

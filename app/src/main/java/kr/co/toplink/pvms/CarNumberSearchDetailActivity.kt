@@ -21,6 +21,8 @@ import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchDetailBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.model.SmsManagerViewModel
 import kr.co.toplink.pvms.util.*
+import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
+import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import org.json.JSONObject
 
 
@@ -28,8 +30,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumbersearchDetailBinding
-    private lateinit var viewModel: CarNumberSearchViewModel
-    private lateinit var viewModel2: SmsManagerViewModel
+    private lateinit var carInfoviewModel: CarInfoViewModel
+    private lateinit var smsManagerviewModel: SmsManagerViewModel
+    private lateinit var carnum : String
     private var id : Int = 0
     private var phone : String = ""
     private var smsid : Int = 0
@@ -40,6 +43,25 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCarnumbersearchDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 뒤로가기시 현재 엑티비티 닫기
+        val callback = object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+        binding.backBt.setOnClickListener{  finish()  }
+
+        if (intent.hasExtra("carnum")) {
+            carnum = intent.getStringExtra("carnum").toString()
+        } else {
+            finish()
+        }
+
+        Log.d(TAG,"==================> $carnum" )
+
+        init()
 
         /*
         val carinfolistmodel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -148,6 +170,19 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     }
 
     private fun init() {
+
+        carInfoviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
+        carInfoviewModel.carInfoSearchByCarnumber(carnum)
+        carInfoviewModel.carinfo.observe(this, EventObserver {
+
+            phone = it.phone.toString()
+            binding.carnumberTxt.text = it.carnumber
+            binding.phone.text = PhoneHidden(phone)
+            binding.etc.text = it.etc
+
+        })
+
+        /*
         viewModel2 = ViewModelProvider(this).get(SmsManagerViewModel::class.java)
         viewModel2.allListSms(this)
         viewModel2.smsManagerList.observe(this, androidx.lifecycle.Observer {
@@ -160,6 +195,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
                 binding.textItem.setAdapter(itemAdapter)
             }
         })
+         */
     }
 
     private fun generateMockCarinfo(smsmaglist: MutableList<SmsManager>): List<String> {

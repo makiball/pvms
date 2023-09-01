@@ -15,6 +15,9 @@ class CarInfoViewModel(private val carRepository: CarRepository) : ViewModel() {
     private val _carinfos = MutableLiveData<List<CarInfo>>()
     val carinfos: LiveData<List<CarInfo>> = _carinfos
 
+    private val _carinfo = MutableLiveData<Event<CarInfo>>()
+    val carinfo: LiveData<Event<CarInfo>> = _carinfo
+
     private val _searchChk = MutableLiveData<Event<Option>>()
     var searchChk: LiveData<Event<Option>> = _searchChk
 
@@ -63,6 +66,13 @@ class CarInfoViewModel(private val carRepository: CarRepository) : ViewModel() {
         viewModelScope.launch {
             val carinfo = carRepository.carInfoSearchLikeEtc(etc)
             _carinfos.value = carinfo
+        }
+    }
+
+    fun carInfoSearchByCarnumber(carnum : String) {
+        viewModelScope.launch {
+            val carinfo = carRepository.carInfoSearchByCarnumber(carnum)
+            _carinfo.value = Event(carinfo)
         }
     }
 
