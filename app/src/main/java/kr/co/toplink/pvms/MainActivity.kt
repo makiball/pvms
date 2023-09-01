@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
         activityClassModels.add(
             ActivityClassModel(
                 CarNumberSearchActivity::class.java,
-                getString(R.string.carnumberreg_bt)
+                getString(R.string.carnumbersearch_bt)
             )
         )
 

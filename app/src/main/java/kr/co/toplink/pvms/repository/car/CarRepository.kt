@@ -11,7 +11,7 @@ class CarRepository(
 ) {
     suspend fun addCarInfo(carInfo : CarInfo) {
         withContext(ioDispatcher) {
-            val carInfo = CarInfo(
+            val carInfoData = CarInfo(
                 carnumber = carInfo.carnumber,
                 carnumber4d = carInfo.carnumber4d,
                 carnumberonly = carInfo.carnumberonly,
@@ -19,13 +19,37 @@ class CarRepository(
                 date = carInfo.date,
                 etc = carInfo.etc
             )
-            localDataSource.addCarInfo(carInfo)
+            localDataSource.addCarInfo(carInfoData)
         }
     }
 
     suspend fun getCarInfo() : List<CarInfo> {
         return withContext(ioDispatcher) {
             localDataSource.getCarInfo()
+        }
+    }
+
+    suspend fun carInfoDelete() {
+        withContext(ioDispatcher) {
+            localDataSource.carInfoDelete()
+        }
+    }
+
+    suspend fun carInfoSearchLikeCarnumber(carnum : String): List<CarInfo>  {
+        return withContext(ioDispatcher) {
+            localDataSource.carInfoSearchLikeCarnumber(carnum)
+        }
+    }
+
+    suspend fun carInfoSearchLikePhone(phone: String): List<CarInfo>  {
+        return   withContext(ioDispatcher) {
+            localDataSource.carInfoSearchLikePhone(phone)
+        }
+    }
+
+    suspend fun carInfoSearchLikeEtc(etc: String): List<CarInfo>  {
+        return   withContext(ioDispatcher) {
+            localDataSource.carInfoSearchLikeEtc(etc)
         }
     }
 }

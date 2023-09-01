@@ -86,27 +86,24 @@ class CarNumberSearchActivity: AppCompatActivity() {
             carinfviewModel.setSelectedOption(selectedOption)
         }
 
-        binding.searchBt.apply{
+        binding.searchBt.setOnClickListener{
 
-            setOnClickListener {
                 val searchtext = binding.searchInptText.text.toString()
 
                 when(selectedOption) {
                     Option.carnumber -> {
-                        viewModel.searchCarnum(this@CarNumberSearchActivity, searchtext)
+                        carinfviewModel.carInfoSearchLikeCarnumber(searchtext)
                     }
                     Option.phone -> {
-                        viewModel.searchPhone(this@CarNumberSearchActivity, searchtext)
+                        carinfviewModel.carInfoSearchLikePhone(searchtext)
                     }
                     Option.etc -> {
-                        viewModel.searchEtc(this@CarNumberSearchActivity, searchtext)
+                        carinfviewModel.carInfoSearchLikeEtc(searchtext)
                     }
                     else -> {
-                        viewModel.searchCarnum(this@CarNumberSearchActivity, searchtext)
+                        carinfviewModel.carInfoSearchLikeCarnumber(searchtext)
                     }
                 }
-            }
-
         }
 
         binding.alldelte.setOnClickListener {
@@ -114,11 +111,10 @@ class CarNumberSearchActivity: AppCompatActivity() {
             val dlg = DeleteDialog(this)
             dlg.setOnOKClickedListener{
                 /* 모두 삭제 처리 */
-                viewModel.allDeteData(this)
+                carinfviewModel.carInfoDelete()
             }
             dlg.show(msg)
         }
-
        init()
     }
 

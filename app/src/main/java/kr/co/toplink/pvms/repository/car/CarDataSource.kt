@@ -1,21 +1,23 @@
 package kr.co.toplink.pvms.repository.car
 
-import kotlinx.coroutines.withContext
-import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.database.CarInfo
 
 interface CarDataSource {
 
-    /* 자동차 번호 등록 */
-    suspend fun addCarInfo(carInfo : CarInfo)
+    suspend fun addCarInfo(carinfo: CarInfo)
 
-    /* 자동차 번호 리스트 */
     suspend fun getCarInfo() : List<CarInfo>
 
-    /* 자동차 번호 삭제 */
-    /* 자동차 번호 전부 삭제 */
-    /* 자동차 번호 수정 */
+    /* 등록된 것 전부 삭제 */
+    suspend fun carInfoDelete()
 
+    /* 번호판 검색 */
+    suspend fun carInfoSearchLikeCarnumber(carnum : String) : List<CarInfo>
 
+    /* 휴대폰 검색 */
+    suspend fun carInfoSearchLikePhone(phone : String) : List<CarInfo>
+
+    /* 기타 검색 */
+    suspend fun carInfoSearchLikeEtc(etc : String) : List<CarInfo>
 
 }

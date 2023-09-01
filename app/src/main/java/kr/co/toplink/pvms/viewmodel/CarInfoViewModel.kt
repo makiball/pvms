@@ -37,4 +37,33 @@ class CarInfoViewModel(private val carRepository: CarRepository) : ViewModel() {
             _carinfos.value = carinfo
         }
     }
+
+    fun carInfoDelete() {
+        viewModelScope.launch {
+            carRepository.carInfoDelete()
+            getCarInfo()
+        }
+    }
+
+    fun carInfoSearchLikeCarnumber(carnum : String) {
+        viewModelScope.launch {
+            val carinfo = carRepository.carInfoSearchLikeCarnumber(carnum)
+            _carinfos.value = carinfo
+        }
+    }
+
+    fun carInfoSearchLikePhone(phone : String) {
+        viewModelScope.launch {
+            val carinfo = carRepository.carInfoSearchLikePhone(phone)
+            _carinfos.value = carinfo
+        }
+    }
+
+    fun carInfoSearchLikeEtc(etc : String) {
+        viewModelScope.launch {
+            val carinfo = carRepository.carInfoSearchLikeEtc(etc)
+            _carinfos.value = carinfo
+        }
+    }
+
 }

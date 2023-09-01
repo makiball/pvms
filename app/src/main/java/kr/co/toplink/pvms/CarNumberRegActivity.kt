@@ -362,11 +362,11 @@ class CarNumberRegActivity : AppCompatActivity() {
             )
         )
 
+/*
         carInfoviewModel.carinfos.observe(this){
-            Log.d(TAG, "=====> $it ");
+            Log.d(TAG, "=====> $it ")
         }
 
-/*
         CoroutineScope(Dispatchers.IO).launch {
             db.CarInfoDao().CarInfoInsert(CarInfo(
                 carnumber = carnuminput,
