@@ -142,6 +142,9 @@ class CarNumberSearchActivity: AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        init()
+
         //Toast.makeText(this, " 화면활성화 ", Toast.LENGTH_SHORT).show()
         //init()
     }

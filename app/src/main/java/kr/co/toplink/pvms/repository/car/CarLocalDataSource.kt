@@ -16,9 +16,12 @@ class CarLocalDataSource (
         return dao.CarInfoAll()
     }
 
-
     override suspend fun carInfoDelete() {
         return dao.CarInfoDelete()
+    }
+
+    override suspend fun carInfoDeletebyid(carnum: String) {
+        return dao.CarInfoDeletebyid(carnum)
     }
 
     override suspend fun carInfoSearchLikeCarnumber(carnum: String): List<CarInfo> {
@@ -33,5 +36,8 @@ class CarLocalDataSource (
         return dao.CarInfoSearchLikeEtc(etc)
     }
 
+    override suspend fun  carInfoSearchByCarnumber(carnum: String): CarInfo {
+        return dao.CarInfoSearchByCarnumber(carnum)
+    }
 
 }

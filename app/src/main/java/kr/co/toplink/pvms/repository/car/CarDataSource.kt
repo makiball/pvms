@@ -11,6 +11,8 @@ interface CarDataSource {
     /* 등록된 것 전부 삭제 */
     suspend fun carInfoDelete()
 
+    suspend fun carInfoDeletebyid(carnum: String)
+
     /* 번호판 검색 */
     suspend fun carInfoSearchLikeCarnumber(carnum : String) : List<CarInfo>
 
@@ -19,5 +21,7 @@ interface CarDataSource {
 
     /* 기타 검색 */
     suspend fun carInfoSearchLikeEtc(etc : String) : List<CarInfo>
+
+    suspend fun carInfoSearchByCarnumber(carnum : String) : CarInfo
 
 }

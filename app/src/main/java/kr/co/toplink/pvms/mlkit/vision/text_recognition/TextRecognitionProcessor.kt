@@ -136,6 +136,7 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
         //완전번호판
         if(type == 0) {
 
+            /*
             CoroutineScope(Dispatchers.Main).launch {
                 val carinfos = CoroutineScope(Dispatchers.IO).async {
                     db.CarInfoDao().CarInfoSearchByCarnumber(textcarnum)
@@ -158,6 +159,7 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                     }
                 }
             }
+             */
         }
 
         //불완전번호판

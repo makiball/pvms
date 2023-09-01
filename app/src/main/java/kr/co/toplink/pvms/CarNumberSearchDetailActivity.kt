@@ -21,6 +21,9 @@ import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchDetailBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.model.SmsManagerViewModel
 import kr.co.toplink.pvms.util.*
+import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
+import kr.co.toplink.pvms.viewmodel.SmsMngViewModel
+import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import org.json.JSONObject
 
 
@@ -28,18 +31,82 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumbersearchDetailBinding
-    private lateinit var viewModel: CarNumberSearchViewModel
-    private lateinit var viewModel2: SmsManagerViewModel
+    private lateinit var carInfoviewModel: CarInfoViewModel
+    private lateinit var smsMngviewModel: SmsMngViewModel
+    private lateinit var carnum : String
     private var id : Int = 0
     private var phone : String = ""
     private var smsid : Int = 0
     private lateinit var sendkakaoalrim : SendKakaoAlrim
+    private var smsMsgList = mutableListOf<SmsManager>()
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCarnumbersearchDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 뒤로가기시 현재 엑티비티 닫기
+        val callback = object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
+        binding.backBt.setOnClickListener{  finish()  }
+
+        if (intent.hasExtra("carnum")) {
+            carnum = intent.getStringExtra("carnum").toString()
+        } else {
+            finish()
+        }
+
+        init()
+
+        /* 삭제 */
+        binding.delete.setOnClickListener {
+
+            //Toast.makeText(this, " $id ", Toast.LENGTH_SHORT).show()
+
+            val msg = "데이터를 삭제하시면 복구 하실수 없습니다. "
+            val dlg = DeleteDialog(this)
+            dlg.setOnOKClickedListener{
+                carInfoviewModel.carInfoDeletebyid(carnum)
+                finish()
+            }
+            dlg.show(msg)
+        }
+
+        /* 전화 */
+        binding.call.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = Uri.parse("tel:$phone")
+            }
+            startActivity(intent)
+        }
+
+        /* 문자 */
+        binding.sms.setOnClickListener {
+
+            //val message = "차좀 빼줘!!!"
+            if(smsid == 0) {
+                Toast.makeText(this, " 문자 내용을 선택해주세요. ", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val  message  = smsMsgList[smsid].smscontent
+
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("smsto:$phone")
+                putExtra("sms_body", message)
+            }
+            startActivity(intent)
+        }
+
+        /* 스피너 설정 */
+        binding.textItem.setOnItemClickListener(OnItemClickListener { adapterView, view, position, id ->
+            smsid = id.toInt()
+        })
 
         /*
         val carinfolistmodel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,42 +135,6 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         }
 
 
-        /* 스피너 설정 */
-        binding.textItem.setOnItemClickListener(OnItemClickListener { adapterView, view, position, id ->
-            //binding.textShowItem.setText(adapterView.getItemAtPosition(position) as String)
-
-            smsid = id.toInt()
-//            smsMsgList[smsid].smstitle
-            //Log.d(TAG,"" )
-        })
-
-
-        /* 전화 */
-        binding.call.setOnClickListener {
-            val intent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:$phone")
-            }
-            startActivity(intent)
-        }
-
-        /* 문자 */
-        binding.sms.setOnClickListener {
-
-            //val message = "차좀 빼줘!!!"
-            if(smsid == 0) {
-                Toast.makeText(this, " 문자 내용을 선택해주세요. ", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val  message  = smsMsgList[smsid].smscontent
-
-            val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = Uri.parse("smsto:$phone")
-                putExtra("sms_body", message)
-            }
-            startActivity(intent)
-        }
-
         /* 알림톡 */
         binding.kakaotalk.setOnClickListener {
             val url = "https://ggulzem.site/pvms/sendMessage.php" // JSON을 받을 API의 URL을 입력하세요
@@ -129,25 +160,47 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         }
 
 
-        /* 삭제 */
-        binding.delete.setOnClickListener {
-
-            //Toast.makeText(this, " $id ", Toast.LENGTH_SHORT).show()
-
-            val msg = "데이터를 삭제하시면 복구 하실수 없습니다. "
-            val dlg = DeleteDialog(this)
-            dlg.setOnOKClickedListener{
-                viewModel.idDeteData(this, id)
-                finish()
-            }
-            dlg.show(msg)
-        }
-
         init()
          */
     }
 
     private fun init() {
+
+        carInfoviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
+        carInfoviewModel.carInfoSearchByCarnumber(carnum)
+        carInfoviewModel.carinfo.observe(this, EventObserver {
+
+            val formattedDate = DateToYmdhis(it.date)
+            phone = it.phone.toString()
+            binding.carnumberTxt.text = it.carnumber
+            binding.phone.text = PhoneHidden(phone)
+            binding.etc.text = it.etc
+            binding.date.text = "등록일 : $formattedDate"
+
+        })
+
+
+        smsMngviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(SmsMngViewModel::class.java)
+        smsMngviewModel.smsMagAll()
+        smsMngviewModel.smsinfos.observe(this)  {
+            val smsList = java.util.ArrayList<String>()
+            it.forEach{
+                //smsList.add(SmsMangerModel(smsMagList))
+                smsMsgList.add(SmsManager(it.id, it.smstitle, it.smscontent))
+                smsList.add(it.smstitle)
+            }
+
+            Log.d(TAG, "smsList => $smsList")
+
+            val itemAdapter = ArrayAdapter(
+                this@CarNumberSearchDetailActivity,
+                kr.co.toplink.pvms.R.layout.sms_item_list_layout, smsList
+            )
+
+            binding.textItem.setAdapter(itemAdapter)
+        }
+
+        /*
         viewModel2 = ViewModelProvider(this).get(SmsManagerViewModel::class.java)
         viewModel2.allListSms(this)
         viewModel2.smsManagerList.observe(this, androidx.lifecycle.Observer {
@@ -160,6 +213,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
                 binding.textItem.setAdapter(itemAdapter)
             }
         })
+         */
     }
 
     private fun generateMockCarinfo(smsmaglist: MutableList<SmsManager>): List<String> {
@@ -174,6 +228,6 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        private var smsMsgList = mutableListOf<SmsManager>()
+        //private var smsMsgList = mutableListOf<SmsManager>()
     }
 }

@@ -27,8 +27,8 @@ interface CarInfoDao {
     fun CarInfoSearchByCarnumberOnly(searchText: String) : List<CarInfo>
 
     /* 번호판 검색 전체 */
-    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumber = :searchText limit 1")
-    fun CarInfoSearchByCarnumber(searchText: String) : List<CarInfo>
+    @Query("SELECT * FROM CarInfo WHERE carnumber = :searchText limit 1")
+    fun CarInfoSearchByCarnumber(searchText: String) : CarInfo
 
 
     /* 휴대폽번호 검색 */
@@ -43,8 +43,8 @@ interface CarInfoDao {
     @Query("DELETE FROM CarInfo")
     fun CarInfoDelete()
 
-    @Query("DELETE FROM CarInfo WHERE id = :id")
-    fun CarInfoDeletebyid(id: Int)
+    @Query("DELETE FROM CarInfo WHERE carnumber = :searchText ")
+    fun CarInfoDeletebyid(searchText: String)
 
     /* 처음 로딩을 위해서 */
     @Query("SELECT  id, carnumber, phone, date, etc, type FROM CarInfoToday ORDER BY id DESC")
@@ -63,9 +63,11 @@ interface CarInfoDao {
     @Query("DELETE FROM CarInfoToday")
     fun CarInfoTodayDelete()
 
+
+
     /* SMS 데이터 목록 가져오기 */
     @Query("SELECT id, smstitle, smscontent FROM SmsManager ORDER BY id DESC")
-    fun SmsMagAll(): LiveData<MutableList<SmsManager>>
+    fun SmsMagAll(): List<SmsManager>
 
     /* SMS 데이터 한개 삭제하기 */
     @Query("DELETE FROM SmsManager WHERE id = :id")

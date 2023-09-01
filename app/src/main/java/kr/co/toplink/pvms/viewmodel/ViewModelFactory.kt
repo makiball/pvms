@@ -14,6 +14,10 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
                 //CarInfoViewModel(car)
             }
 
+            modelClass.isAssignableFrom(SmsMngViewModel::class.java) -> {
+                SmsMngViewModel(ApplicationClass().provideSmsRepository(context)) as T
+            }
+
             modelClass.isAssignableFrom(ExcellViewModel::class.java) -> {
                 ExcellViewModel() as T
             }

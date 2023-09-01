@@ -26,7 +26,7 @@ class SmsManagerViewModel : BaseViewModel() {
         db = CarInfoDatabase.getInstance(context)!!
 
         /* ROOM 실시간 라이브면 사용안해도됨 */
-        smsManagerList = db.CarInfoDao().SmsMagAll()
+        //smsManagerList = db.CarInfoDao().SmsMagAll()
     }
 
     /* 문자 입력 */

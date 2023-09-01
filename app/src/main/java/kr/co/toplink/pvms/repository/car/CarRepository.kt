@@ -35,6 +35,12 @@ class CarRepository(
         }
     }
 
+    suspend fun carInfoDeletebyid(carnum: String) {
+        withContext(ioDispatcher) {
+            localDataSource.carInfoDeletebyid(carnum)
+        }
+    }
+
     suspend fun carInfoSearchLikeCarnumber(carnum : String): List<CarInfo>  {
         return withContext(ioDispatcher) {
             localDataSource.carInfoSearchLikeCarnumber(carnum)
@@ -50,6 +56,12 @@ class CarRepository(
     suspend fun carInfoSearchLikeEtc(etc: String): List<CarInfo>  {
         return   withContext(ioDispatcher) {
             localDataSource.carInfoSearchLikeEtc(etc)
+        }
+    }
+
+    suspend fun carInfoSearchByCarnumber(carnum: String): CarInfo  {
+        return   withContext(ioDispatcher) {
+            localDataSource.carInfoSearchByCarnumber(carnum)
         }
     }
 }

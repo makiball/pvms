@@ -147,6 +147,7 @@ class CarNumberSearchViewModel   : BaseViewModel() {
 
     /* 하나 삭제 */
     fun idDeteData(context: Context, id: Int) {
+        /*
         db = CarInfoDatabase.getInstance(context)!!
         try {
             launch {
@@ -160,7 +161,7 @@ class CarNumberSearchViewModel   : BaseViewModel() {
             e.printStackTrace()
             carMsgData.postValue(e.message.orEmpty())
         }
-/*
+
             val carinfos = CoroutineScope(Dispatchers.IO).async {
                 db.CarInfoDao().CarInfoSearchLikeCarnumber("")
             }.await()

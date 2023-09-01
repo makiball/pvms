@@ -284,6 +284,13 @@ class CarNumberRegActivity : AppCompatActivity() {
                     it.singleRowList.get(1).value?.let { it2 ->  phone = it2  }
                     it.singleRowList.get(2).value?.let { it3 ->  etc = it3  }
 
+                    if(Regex("^010.*").matches(phone)) {
+                        phone = "${phone.substring(0, 3)}-${phone.substring(3, 7)}-${phone.substring(7)}"
+                    } else {
+                        phone = "${phone.substring(0, 3)}-${phone.substring(3, 6)}-${phone.substring(6)}"
+                    }
+
+
                     if(inputcheck.getIsNumber(carnum)) {
                         insertDatabase(
                             carnum,
