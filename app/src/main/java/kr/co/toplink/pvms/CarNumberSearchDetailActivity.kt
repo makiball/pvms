@@ -41,6 +41,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         binding = ActivityCarnumbersearchDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        /*
         val carinfolistmodel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(KEY_CARINFOLIST_MODEL, CarInfoListModel::class.java)
         } else {
@@ -143,6 +144,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         }
 
         init()
+         */
     }
 
     private fun init() {
