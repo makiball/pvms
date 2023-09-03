@@ -2,6 +2,7 @@ package kr.co.toplink.pvms.repository.sms
 
 import kr.co.toplink.pvms.database.CarInfoDao
 import kr.co.toplink.pvms.database.SmsManager
+import kr.co.toplink.pvms.network.response.KakaoAlrimResponse
 
 class SmsLocalDataSource(
     private val dao : CarInfoDao
@@ -21,6 +22,4 @@ class SmsLocalDataSource(
     override suspend fun smsMagInsert(smsmanager: SmsManager) {
         dao.SmsMagInsert(smsmanager)
     }
-
-
 }
