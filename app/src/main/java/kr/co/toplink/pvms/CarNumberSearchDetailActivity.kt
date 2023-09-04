@@ -2,6 +2,8 @@ package kr.co.toplink.pvms
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -110,6 +112,17 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
         /* 알림톡 */
         binding.kakaotalk.setOnClickListener {
+
+
+            val connectivityManager = getSystemService(ConnectivityManager::class.java)
+            val currentNetwork = connectivityManager.getActiveNetwork()
+
+            if(currentNetwork == null) {
+                Toast.makeText(this, " 인터넷 연결을 확인 하세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            Log.d(TAG, "currentNetwork=====> $currentNetwork")
 
             if(smsid == 99999) {
                 Toast.makeText(this, " 문자 내용을 선택해주세요.", Toast.LENGTH_SHORT).show()
