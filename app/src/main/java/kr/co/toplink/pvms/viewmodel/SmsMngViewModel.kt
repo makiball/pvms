@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.SmsManager
 import kr.co.toplink.pvms.repository.sms.SmsRepository
+import kr.co.toplink.pvms.Event
 
 class SmsMngViewModel(private val smsRepository: SmsRepository) : ViewModel() {
 
@@ -19,10 +20,20 @@ class SmsMngViewModel(private val smsRepository: SmsRepository) : ViewModel() {
     private val _smsinfo = MutableLiveData<List<SmsManager>>()
     val smsinfo: LiveData<List<SmsManager>> = _smsinfo
 
+    private val _smsManager = MutableLiveData<Event<SmsManager>>()
+    val smsManager: LiveData<Event<SmsManager>> = _smsManager
+
     fun smsMagAll() {
         viewModelScope.launch {
             val smsinfo = smsRepository.smsMagAll()
             _smsinfos.value = smsinfo
+        }
+    }
+
+    fun smsManager(id: Int) {
+        viewModelScope.launch {
+            val smsManager = smsRepository.smsManager(id)
+            _smsManager.value = Event(smsManager)
         }
     }
 

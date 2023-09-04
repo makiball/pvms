@@ -16,6 +16,12 @@ class SmsRepository(
         }
     }
 
+    suspend fun smsManager(id: Int): SmsManager {
+        return withContext(ioDispatcher) {
+            localDataSource.smsManager(id)
+        }
+    }
+
     suspend fun smsMagDeletebyid(id: Int) {
         withContext(ioDispatcher) {
             localDataSource.smsMagDeletebyid(id)

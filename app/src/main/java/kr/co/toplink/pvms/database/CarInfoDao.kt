@@ -69,6 +69,9 @@ interface CarInfoDao {
     @Query("SELECT id, smstitle, smscontent FROM SmsManager ORDER BY id DESC")
     fun SmsMagAll(): List<SmsManager>
 
+    @Query("SELECT * FROM SmsManager WHERE id = :id")
+    fun SmsManager(id: Int): SmsManager
+
     /* SMS 데이터 한개 삭제하기 */
     @Query("DELETE FROM SmsManager WHERE id = :id")
     fun SmsMagDeletebyid(id: Int)

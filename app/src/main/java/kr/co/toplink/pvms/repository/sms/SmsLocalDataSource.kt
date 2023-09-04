@@ -11,6 +11,10 @@ class SmsLocalDataSource(
         return dao.SmsMagAll()
     }
 
+    override suspend fun smsManager(id: Int): SmsManager {
+        return dao.SmsManager(id)
+    }
+
     override suspend fun smsMagDeletebyid(id: Int) {
         dao.SmsMagDeletebyid(id)
     }

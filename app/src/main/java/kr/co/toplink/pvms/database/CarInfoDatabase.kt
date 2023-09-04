@@ -39,36 +39,23 @@ abstract class CarInfoDatabase: RoomDatabase() {
                                     SmsManager (
                                         id = 1,
                                         smstitle = "불법주차",
-                                        smscontent = "입주민 차량이 불법 구역에 주차되어 있어 타 차량에 불편함이 있습니다. 즉시 다른 지역으로 이동 주차 바랍니다. 000 관리 사무소"
+                                        smscontent = "입주민 차량이 불법 구역에 주차되어 있어 타 차량에 불편함이 있습니다. 즉시 다른 지역으로 이동 주차 바랍니다."
                                     )
                                 )
                                 getInstance(context)?.CarInfoDao()?.SmsMagInsert(
                                     SmsManager (
                                         id = 2,
                                         smstitle = "이동주차",
-                                        smscontent = "등록되지 않은 차량입니다. 즉시 다른 주차장으로 이동 바라며 이의제기는 관리사무소에 문의 주시기 바랍니다.  000 관리 사무소"
+                                        smscontent = "등록되지 않은 차량입니다. 즉시 다른 주차장으로 이동 바라며 이의제기는 관리사무소에 문의 주시기 바랍니다."
                                     )
                                 )
                                 getInstance(context)?.CarInfoDao()?.SmsMagInsert(
                                     SmsManager (
                                         id = 3,
                                         smstitle = "차량이상",
-                                        smscontent = "입주민 차량에 (문열림, 트렁크) 열림등으로 이상이 발생하여 문자 보내드립니다. 차량 확인 해보세요. 000 관리 사무소"
+                                        smscontent = "입주민 차량에 (문열림, 트렁크) 열림등으로 이상이 발생하여 문자 보내드립니다. 차량 확인 해보세요."
                                     )
                                 )
-
-                                getInstance(context)?.CarInfoDao()?.CarInfoInsert(
-                                    CarInfo (
-                                        id = 1,
-                                        carnumber = "000가0000",
-                                        carnumber4d = "0000",
-                                        carnumberonly = "000 0000",
-                                        phone = "",
-                                        date = nowDate,
-                                        etc = ""
-                                    )
-                                )
-
                             }
 
                         }
