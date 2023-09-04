@@ -40,7 +40,13 @@ class SmsManagerAdapter(private val smsmngviewModel: SmsMngViewModel) :
             binding.smsTitleTxt.text = smsManager.smstitle
             binding.smsContTxt.text = smsManager.smscontent
 
-            smsmngviewModel.smsManager(smsManager.id)
+            binding.constraintLayout.setOnClickListener {
+                smsmngviewModel.smsManager(smsManager.id)
+            }
+
+            binding.delete.setOnClickListener {
+                smsmngviewModel.smsMagDeletebyid(smsManager.id)
+            }
 
             binding.executePendingBindings()
         }

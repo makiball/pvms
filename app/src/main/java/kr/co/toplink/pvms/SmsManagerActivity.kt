@@ -120,6 +120,10 @@ class SmsManagerActivity : AppCompatActivity() {
         binding.modifyBt.visibility  = View.INVISIBLE
         binding.modifyBt.setOnClickListener {
 
+            val smstitleinpt = binding.smstitleInpt.text.toString()
+            val smscontinpt = binding.smscontInpt.text.toString()
+            val smsmanager = SmsManager(id, smstitleinpt, smscontinpt)
+            smsmngviewModel.smsMagUpdatebyid(smsmanager)
             /*
             val smstitleinpt = binding.smstitleInpt.text.toString()
             val smscontinpt = binding.smscontInpt.text.toString()
@@ -181,6 +185,11 @@ class SmsManagerActivity : AppCompatActivity() {
         smsmngviewModel.smsManager.observe(this, EventObserver{
             binding.smstitleInpt.setText(it.smstitle)
             binding.smscontInpt.setText(it.smscontent)
+
+            id = it.id
+
+            binding.regBt.visibility = View.GONE
+            binding.modifyBt.visibility = View.VISIBLE
         })
     }
 

@@ -24,7 +24,6 @@ import kr.co.toplink.pvms.viewmodel.UserViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import org.json.JSONObject
 
-
 class CarNumberSearchDetailActivity : AppCompatActivity() {
 
     private val TAG = this.javaClass.simpleName
@@ -36,8 +35,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     private lateinit var carnum : String
     private var id : Int = 0
     private var phone : String = ""
-    private var smsid : Int = 0
+    private var smsid : Int = 99999
     private lateinit var sendkakaoalrim : SendKakaoAlrim
+    private var smsMsgList = mutableListOf<SmsManager>()
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +92,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
             //val message = "차좀 빼줘!!!"
             /*
-            if(smsid == 0) {
+            if(smsid == 99999) {
                 Toast.makeText(this, " 문자 내용을 선택해주세요. ", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -110,16 +110,17 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
         /* 알림톡 */
         binding.kakaotalk.setOnClickListener {
-            val  message  = smsMsgList[smsid].smscontent
 
-            val id = sp.getUser().email
-            if(id == "" || id == "비회원") {
-                Toast.makeText(this, " 설정에서 알림톡 로그인을 해주세요. ", Toast.LENGTH_SHORT).show()
+            if(smsid == 99999) {
+                Toast.makeText(this, " 문자 내용을 선택해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            if(smsid == 0) {
-                Toast.makeText(this, " 문자 내용을 선택해주세요. ", Toast.LENGTH_SHORT).show()
+            val  message  = smsMsgList[smsid].smscontent
+            val id = sp.getUser().email
+
+            if(id == "" || id == "비회원") {
+                Toast.makeText(this, " 설정에서 알림톡 로그인을 해주세요.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -128,7 +129,12 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
             userViewModel.kakaoAlimSend(kakaoalim)
             userViewModel.kakaoalrimresponse.observe(this, EventObserver {
                 //Log.d(TAG, "======> $it $id")
-                Toast.makeText(this, " ${it.msg} ", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, " ${it.msg} ", Toast.LENGTH_SHORT).show()
+                val msg = it.msg
+                val dlg = ComfirmDialog(this)
+                dlg.setOnOKClickedListener{
+                }
+                dlg.show(msg)
             })
         }
 
@@ -187,6 +193,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         carInfoviewModel.carInfoSearchByCarnumber(carnum)
         carInfoviewModel.carinfo.observe(this, EventObserver {
 
+            val formattedDate = DateToYmdhis(it.date)
+            binding.date.text = "등록일 : $formattedDate"
+
             phone = it.phone.toString()
             binding.carnumberTxt.text = it.carnumber
             binding.phone.text = PhoneHidden(phone)
@@ -242,7 +251,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         return smsList
     }
 
+    /*
     companion object {
-        private var smsMsgList = mutableListOf<SmsManager>()
+
     }
+     */
 }
