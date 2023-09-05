@@ -23,16 +23,18 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="차량 검색"
+                android:text="@string/camsearch_bt"
+                style="@style/Bold"
+                android:textSize="20sp"
                 android:imeOptions="flagNoExtractUi|actionSearch"
                 android:inputType="textNoSuggestions" />
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <View
         android:id = "@+id/linelayout"
         android:layout_width="match_parent"
@@ -164,7 +166,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- first element of the row that is the part of table but it is invisible-->
+            <!-- first element of the row that is the part of table but it is invisible
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,8 +176,9 @@
                 android:textColor="#000"
                 android:padding = "5dp"
                 android:textSize="16sp" />
+                -->
 
-            <!-- second element of the row that is shown in the screenshot-->
+            <!-- second element of the row that is shown in the screenshot
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -185,8 +188,8 @@
                 android:textColor="#000"
                 android:padding = "5dp"
                 android:textSize="16sp" />
-
-            <!-- second element of the row that is shown in the screenshot-->
+            -->
+            <!-- second element of the row that is shown in the screenshot
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -196,6 +199,7 @@
                 android:textColor="#000"
                 android:padding = "5dp"
                 android:textSize="16sp" />
+                -->
         </TableRow>
     </TableLayout>
 

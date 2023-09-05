@@ -18,6 +18,10 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
                 UserViewModel(addRepo) as T
             }
 
+            modelClass.isAssignableFrom(CamCarViewModel::class.java) -> {
+                CamCarViewModel(ApplicationClass().provideCamRepository(context)) as T
+            }
+
             modelClass.isAssignableFrom(CarInfoViewModel::class.java) -> {
                 CarInfoViewModel(ApplicationClass().provideCarRepository(context)) as T
                 //CarInfoViewModel(car)

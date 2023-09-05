@@ -14,8 +14,10 @@ import kr.co.toplink.pvms.network.response.KakaoAlrimResponse
 
 class UserViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
+    /*
     private val _user = MutableLiveData<User>()
     val user : LiveData<User> = _user
+     */
 
     private val _userPo = MutableLiveData<Event<Int>>()
     val userPo : LiveData<Event<Int>> = _userPo
@@ -30,6 +32,13 @@ class UserViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch{
             val userResponse = authRepository.signIn(user)
             _userResponse.value = Event(userResponse)
+        }
+    }
+
+    fun getPoint(user: User) {
+        viewModelScope.launch{
+            val userResponse = authRepository.signIn(user)
+            _userPo.value = Event(userResponse.smsPoint)
         }
     }
 

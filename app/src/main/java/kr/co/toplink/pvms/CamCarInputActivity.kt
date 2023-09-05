@@ -30,7 +30,7 @@ class CamCarInputActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         val value = intent.getStringExtra("carnum").toString()
-        db = CarInfoDatabase.getInstance(this)!!
+        // db = CarInfoDatabase.getInstance(this)!!
 
         binding.apply {
             binding.carnumInpt.setText(value)
@@ -85,6 +85,7 @@ class CamCarInputActivity: AppCompatActivity() {
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.
     private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
 
+        /*
         val datepatterned = Date()
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -98,6 +99,7 @@ class CamCarInputActivity: AppCompatActivity() {
                 )
             )
         }
+         */
     }
 
 }

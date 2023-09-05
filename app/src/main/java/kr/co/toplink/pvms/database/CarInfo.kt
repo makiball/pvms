@@ -11,12 +11,12 @@ import java.util.Date
 data class CarInfo(
     @PrimaryKey(autoGenerate =true)
     val id: Int = 0,
-    val carnumber: String?,      //차량 번호 풀번호
-    val carnumber4d: String?,    //차량 번호 뒷 4자리
-    val carnumberonly: String?,  //차량 번호 숫자만
-    val phone: String?,
+    val carnumber: String? = "",      //차량 번호 풀번호
+    val carnumber4d: String? = "",    //차량 번호 뒷 4자리
+    val carnumberonly: String? = "",  //차량 번호 숫자만
+    val phone: String,
     val date: Date,
-    val etc: String?
+    val etc: String
 )
 
 @Entity(
@@ -25,11 +25,20 @@ data class CarInfo(
 data class CarInfoToday(
     @PrimaryKey(autoGenerate =true)
     val id: Int = 0,
-    val carnumber: String?,      //차량 번호 풀번호
-    val phone: String?,
+    val carnumber: String? = "",      //차량 번호 풀번호
+    val phone: String,
     val date: Date,
-    val etc: String?,
+    val etc: String,
     val type: Int = 0     //0 등록차량, 1미등록차량
+)
+
+@Entity
+data class Report(
+    @PrimaryKey(autoGenerate =true)
+    val id: Int = 0,
+    val date: Date,
+    val type_0: Int = 0,
+    val type_1: Int = 0
 )
 
 @Entity

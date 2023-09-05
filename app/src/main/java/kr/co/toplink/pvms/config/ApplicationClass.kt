@@ -14,6 +14,8 @@ import kr.co.toplink.pvms.database.AppDatabase
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.SmsManager
+import kr.co.toplink.pvms.repository.cam.CamLocalDataSource
+import kr.co.toplink.pvms.repository.cam.CamRepository
 import kr.co.toplink.pvms.repository.car.CarLocalDataSource
 import kr.co.toplink.pvms.repository.car.CarRepository
 import kr.co.toplink.pvms.repository.sms.SmsLocalDataSource
@@ -74,7 +76,7 @@ class ApplicationClass : Application() {
                                 SmsManager (
                                     id = 1,
                                     smstitle = "불법주차",
-                                    smscontent = "입주민 차량이 불법 구역에 주차되어 있어 타 차량에 불편함이 있습니다. 즉시 다른 지역으로 이동 주차 바랍니다. 000 관리 사무소"
+                                    smscontent = "입주민 차량이 불법 구역에 주차되어 있어 타 차량에 불편함이 있습니다. 즉시 다른 지역으로 이동 주차 바랍니다."
                                 )
                             )
 
@@ -82,7 +84,7 @@ class ApplicationClass : Application() {
                                 SmsManager (
                                     id = 2,
                                     smstitle = "이동주차",
-                                    smscontent = "등록되지 않은 차량입니다. 즉시 다른 주차장으로 이동 바라며 이의제기는 관리사무소에 문의 주시기 바랍니다.  000 관리 사무소"
+                                    smscontent = "등록되지 않은 차량입니다. 즉시 다른 주차장으로 이동 바라며 이의제기는 관리사무소에 문의 주시기 바랍니다."
                                 )
                             )
 
@@ -90,7 +92,7 @@ class ApplicationClass : Application() {
                                 SmsManager (
                                     id = 3,
                                     smstitle = "차량이상",
-                                    smscontent = "입주민 차량에 (문열림, 트렁크) 열림등으로 이상이 발생하여 문자 보내드립니다. 차량 확인 해보세요. 000 관리 사무소"
+                                    smscontent = "입주민 차량에 (문열림, 트렁크) 열림등으로 이상이 발생하여 문자 보내드립니다. 차량 확인 해보세요."
                                 )
                             )
                         }
@@ -108,6 +110,16 @@ class ApplicationClass : Application() {
             val dao = provideDatabase(context.applicationContext).carinfoDao()
             CarRepository(CarLocalDataSource(dao)).also {
                 carRepository = it
+            }
+        }
+    }
+
+    private var camRepository: CamRepository? = null
+    fun provideCamRepository(context: Context): CamRepository {
+        return camRepository ?: kotlin.run {
+            val dao = provideDatabase(context.applicationContext).carinfoDao()
+            CamRepository(CamLocalDataSource(dao)).also {
+                camRepository = it
             }
         }
     }

@@ -6,7 +6,7 @@ import android.media.AudioManager
 import android.media.ToneGenerator
 import android.util.Log
 import androidx.camera.core.ExperimentalGetImage
-import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.CamCarInputActivity
+import kr.co.toplink.pvms.EventObserver
 import kr.co.toplink.pvms.RegSwitch
 import kr.co.toplink.pvms.camerax.BaseImageAnalyzer
 import kr.co.toplink.pvms.camerax.GraphicOverlay
@@ -24,12 +25,17 @@ import kr.co.toplink.pvms.data.isOpen
 import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
+import kr.co.toplink.pvms.viewmodel.CamCarViewModel
 import java.io.IOException
 import java.util.*
 
 
 @ExperimentalGetImage
-class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnalyzer<Text>() {
+class TextRecognitionProcessor(
+    private val view: GraphicOverlay,
+    private val camCarViewModel: CamCarViewModel,
+    private val context: LifecycleOwner
+) : BaseImageAnalyzer<Text>() {
 
     private val recognizer = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
     override val graphicOverlay: GraphicOverlay
@@ -48,10 +54,13 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
 
     val tone = ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME)
 
+    /*
     private var db: CarInfoDatabase
     init {
         db = CarInfoDatabase.getInstance(view.context)!!
     }
+     */
+
     private var isStart = 0
 
     override fun detectInImage(image: InputImage): Task<Text> {
@@ -135,8 +144,43 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
 
         //완전번호판
         if(type == 0) {
+            camCarViewModel.CarInfoSearchByCarnumber(textcarnum)
+            camCarViewModel.carinfo.observe(context, EventObserver{
+                if(it.carnumber != "") {
+                    val carinfotoday = CarInfoToday(
+                        carnumber = it.carnumber,
+                        phone = it.phone,
+                        date = datepatterned,
+                        etc = it.etc,
+                        type = 0
+                    )
+                    camCarViewModel.carInfoInsertToday(carinfotoday)
+                    tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
+                }
+            })
+        }
 
-            /*
+        //불완전번호판
+        if(type == 1) {
+            camCarViewModel.carInfoSearchByCarnumberOnly(textcarnum)
+            camCarViewModel.carinfo.observe(context, EventObserver{
+                if(it.carnumber != "") {
+                    val carinfotoday = CarInfoToday(
+                        carnumber = it.carnumber,
+                        phone = it.phone,
+                        date = datepatterned,
+                        etc = it.etc,
+                        type = 0
+                    )
+                    camCarViewModel.carInfoInsertToday(carinfotoday)
+                    tone.startTone(ToneGenerator.TONE_DTMF_S, 500)
+                }
+            })
+        }
+
+        /*
+        //완전번호판
+        if(type == 0) {
             CoroutineScope(Dispatchers.Main).launch {
                 val carinfos = CoroutineScope(Dispatchers.IO).async {
                     db.CarInfoDao().CarInfoSearchByCarnumber(textcarnum)
@@ -159,7 +203,6 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                     }
                 }
             }
-             */
         }
 
         //불완전번호판
@@ -187,6 +230,7 @@ class TextRecognitionProcessor(private val view: GraphicOverlay) : BaseImageAnal
                 }
             }
         }
+         */
 
     }
 

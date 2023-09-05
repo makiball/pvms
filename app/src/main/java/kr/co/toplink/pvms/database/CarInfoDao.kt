@@ -10,6 +10,7 @@ import kr.co.toplink.pvms.data.CarInfoRow
 @Dao
 interface CarInfoDao {
 
+    /* ------------------------------------------------- 차량전체 -----------------------------------------------*/
     /* 자동차 반호 입력 */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsert(carinfo: CarInfo)
@@ -23,8 +24,8 @@ interface CarInfoDao {
     fun CarInfoSearchLikeCarnumber(searchText: String) : List<CarInfo>
 
     /* 번호판 검색 숫자만 */
-    @Query("SELECT id, carnumber, phone, etc, date FROM CarInfo WHERE carnumberonly = :searchText")
-    fun CarInfoSearchByCarnumberOnly(searchText: String) : List<CarInfo>
+    @Query("SELECT * FROM CarInfo WHERE carnumberonly = :searchText limit 1")
+    fun CarInfoSearchByCarnumberOnly(searchText: String) : CarInfo
 
     /* 번호판 검색 전체 */
     @Query("SELECT * FROM CarInfo WHERE carnumber = :searchText limit 1")
@@ -45,23 +46,48 @@ interface CarInfoDao {
 
     @Query("DELETE FROM CarInfo WHERE carnumber = :searchText ")
     fun CarInfoDeletebyid(searchText: String)
+    /* ------------------------------------------------- 차량전체 -----------------------------------------------*/
 
-    /* 처음 로딩을 위해서 */
-    @Query("SELECT  id, carnumber, phone, date, etc, type FROM CarInfoToday ORDER BY id DESC")
-    fun CarInfoTodayAll(): LiveData<MutableList<CarInfoToday>>
 
-    /* 데이터 변경을 위해서 */
-    @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo ORDER BY id DESC")
-    fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
 
-    @Query("SELECT id, carnumber, phone, date, etc, type FROM CarInfoToday WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
-    fun CarInfoGetTdoday(searchText: String?): LiveData<MutableList<CarInfoToday>>
+    /* ------------------------------------------------- 캠조회 -----------------------------------------------*/
+    @Query("SELECT * FROM CarInfoToday ORDER BY id DESC")
+    fun CarInfoTodayList():  List<CarInfoToday>
+
+    @Query("SELECT * FROM CarInfoToday WHERE carnumber = :carnum")
+    fun CarInfoToday(carnum: String):  CarInfoToday
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoInsertToday(carinfotoday: CarInfoToday)
 
     @Query("DELETE FROM CarInfoToday")
     fun CarInfoTodayDelete()
+
+    /* SMS 데이터 한개 수정하기 */
+    @Update
+    fun CarInfoTodayUpdateById(vararg carinfotoday: CarInfoToday)
+
+    @Query("DELETE FROM CarInfoToday WHERE id = :id")
+    fun CarInfoTodayDeleteById(id: Int)
+    /* ------------------------------------------------- 캠조회 -----------------------------------------------*/
+
+
+
+    /* ------------------------------------------------- 이전버전 -----------------------------------------------*/
+    /* 처음 로딩을 위해서 */
+    @Query("SELECT  id, carnumber, phone, date, etc, type FROM CarInfoToday ORDER BY id DESC")
+    fun CarInfoTodayAll(): LiveData<MutableList<CarInfoToday>>
+
+    /* 데이터 변경을 위해서
+    @Query("SELECT id, carnumber, phone, date, etc FROM CarInfo ORDER BY id DESC")
+    fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
+     */
+
+    @Query("SELECT id, carnumber, phone, date, etc, type FROM CarInfoToday WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
+    fun CarInfoGetTdoday(searchText: String?): LiveData<MutableList<CarInfoToday>>
+
+
+    /* ------------------------------------------------- 이전버전 -----------------------------------------------*/
 
 
 

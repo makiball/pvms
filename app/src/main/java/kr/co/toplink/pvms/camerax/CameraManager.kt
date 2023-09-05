@@ -13,18 +13,17 @@ import androidx.lifecycle.LifecycleOwner
 import kr.co.toplink.pvms.mlkit.vision.VisionType
 
 import kr.co.toplink.pvms.mlkit.vision.text_recognition.TextRecognitionProcessor
+import kr.co.toplink.pvms.viewmodel.CamCarViewModel
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 
 @ExperimentalGetImage
 class CameraManager(
     private val context: Context,
     private val finderView: PreviewView,
     private val lifecycleOwner: LifecycleOwner,
-    private val graphicOverlay: GraphicOverlay
+    private val graphicOverlay: GraphicOverlay,
+    private val camCarViewModel: CamCarViewModel
 ) {
 
     private var preview: Preview? = null
@@ -51,7 +50,7 @@ class CameraManager(
     }
 
     private fun selectAnalyzer(): ImageAnalysis.Analyzer {
-        return TextRecognitionProcessor(graphicOverlay)
+        return TextRecognitionProcessor(graphicOverlay, camCarViewModel, lifecycleOwner)
         /*
         return when (analyzerVisionType) {
             VisionType.Object -> ObjectDetectionProcessor(graphicOverlay)

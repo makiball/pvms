@@ -19,7 +19,11 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kr.co.toplink.pvms.adapter.CamCarSearchAdapter
+import kr.co.toplink.pvms.adapter.CarNumberSearchAdapter
 import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
 import kr.co.toplink.pvms.data.CarInfoListToday
@@ -32,6 +36,8 @@ import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.*
 import kr.co.toplink.pvms.viewholder.CarInfoListTodayViewBinder
 import kr.co.toplink.pvms.viewholder.ItemBinder
+import kr.co.toplink.pvms.viewmodel.CamCarViewModel
+import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import java.util.*
 
 @ExperimentalGetImage
@@ -39,13 +45,20 @@ class CamCarSearchActivity: AppCompatActivity(){
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCamCarSearchBinding
     private lateinit var cameraManager: CameraManager
+
+    private lateinit var camCarViewModel: CamCarViewModel
+    private lateinit var carViewModel: CamCarViewModel
+
     private lateinit var listAdapter: SingleViewBinderListAdapter
+    private lateinit var camcarsearchadapter : CamCarSearchAdapter
     private lateinit var viewModel: CarNumberSearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCamCarSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        init()
 
         // 뒤로가기시 현재 엑티비티 닫기
         val callback = object: OnBackPressedCallback(true) {
@@ -63,6 +76,18 @@ class CamCarSearchActivity: AppCompatActivity(){
         createCameraManager()
         cameraManager.startCamera()
 
+        binding.alldelte.setOnClickListener {
+            val msg = "데이터를 삭제하시면 복구 하실수 없습니다. "
+            val dlg = DeleteDialog(this)
+            dlg.setOnOKClickedListener{
+                /* 모두 삭제 처리 */
+                camCarViewModel.carInfoTodayDelete()
+            }
+            dlg.show(msg)
+        }
+
+
+        /*
         val postCardViewBinder = CarInfoListTodayViewBinder { binding, CarInfoListTodayModel ->
             gotoDetailWithTransition(CarInfoListTodayModel, binding)
             Log.d(TAG,"=====> 클릭")
@@ -75,16 +100,7 @@ class CamCarSearchActivity: AppCompatActivity(){
         }
 
         init()
-
-        binding.alldelte.setOnClickListener {
-            val msg = "데이터를 삭제하시면 복구 하실수 없습니다. "
-            val dlg = DeleteDialog(this)
-            dlg.setOnOKClickedListener{
-                /* 모두 삭제 처리 */
-                viewModel.allTodayDeteData(this)
-            }
-            dlg.show(msg)
-        }
+         */
 
         /* 차량 등록 미등록 스위치 액션 */
         binding.isReg.setOnCheckedChangeListener { _, isChecked ->
@@ -100,6 +116,33 @@ class CamCarSearchActivity: AppCompatActivity(){
     }
 
     private fun init() {
+
+        camCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CamCarViewModel::class.java)
+        camcarsearchadapter = CamCarSearchAdapter(camCarViewModel)
+        camCarViewModel.carInfoTodayList()
+        camCarViewModel.camcarinfos.observe(this, EventObserver {
+
+            binding.totalreg.text = "총 차량 : ${it.size}"
+
+            //미등록 갯수, 등록 갯수
+            val regSu = it.filter { it.type == 0 }.size
+            val regSuNo = it.filter { it.type == 1 }.size
+
+            binding.totalnotreg.text = "등록차량 : $regSu"
+            binding.total.text = "미등록 차량 : $regSuNo"
+
+            binding.recyclerView.apply {
+                adapter = camcarsearchadapter
+                layoutManager = GridLayoutManager(this@CamCarSearchActivity, 1)
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
+
+            camcarsearchadapter.apply {
+                submitList(it)
+            }
+        })
+
+        /*
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
         viewModel.searchCarnumToday(this, "")
         viewModel.carinfoListToday.observe(this, androidx.lifecycle.Observer {
@@ -116,6 +159,7 @@ class CamCarSearchActivity: AppCompatActivity(){
 
             }
         })
+         */
     }
 
     private fun generateMockCarinfo(carInfo: MutableList<CarInfoToday>): List<CarInfoListTodayModel> {
@@ -154,7 +198,8 @@ class CamCarSearchActivity: AppCompatActivity(){
             this,
             binding.previewViewFinder,
             this,
-            binding.graphicOverlayFinder
+            binding.graphicOverlayFinder,
+            camCarViewModel
         )
     }
 
