@@ -41,7 +41,7 @@ class TextRecognitionProcessor(
     override val graphicOverlay: GraphicOverlay
         get() = view
 
-    private lateinit var regswitch: RegSwitch
+    private var regswitch = "OFF"
 
     private var isOpen : isOpen    = kr.co.toplink.pvms.data.isOpen.OFF
 
@@ -53,6 +53,16 @@ class TextRecognitionProcessor(
     var oldCarNum : String = ""
 
     val tone = ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME)
+
+    init {
+        camCarViewModel.regSwitch.observe(context){
+            regswitch = when(it) {
+                regSwitch.ON -> "ON"
+                regSwitch.OFF -> "OFF"
+                else -> { "OFF" }
+            }
+        }
+    }
 
     /*
     private var db: CarInfoDatabase
@@ -100,6 +110,15 @@ class TextRecognitionProcessor(
                 oldCarNum = ""
             }
 
+            val openReg = RegSwitch.getRegIsOPen()
+            if((regex.matches(carnum) || regex01.matches(carnum)) && regswitch == "ON" && openReg == 0) {
+                RegSwitch.setRegOpen()
+                val intent = Intent(view.context, CamCarInputActivity::class.java)
+                intent.putExtra("carnum", carnum)
+                view.context.startActivity(intent)
+            }
+
+            /*
             val swtich = RegSwitch.getSharedSwitch()
             val openReg = RegSwitch.getRegIsOPen()
             //Log.d(TAG,"=====> $swtich ")
@@ -109,6 +128,7 @@ class TextRecognitionProcessor(
                 intent.putExtra("carnum", carnum)
                 view.context.startActivity(intent)
             }
+            */
 
             //완전한 번호판
             if(regex.matches(carnum)) {

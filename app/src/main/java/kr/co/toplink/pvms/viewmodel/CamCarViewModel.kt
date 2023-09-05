@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.Event
+import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.repository.cam.CamRepository
@@ -23,11 +24,17 @@ class CamCarViewModel(private val camRepository: CamRepository) : ViewModel() {
     private val _carinfo = MutableLiveData<Event<CarInfo>>()
     val carinfo: LiveData<Event<CarInfo>> = _carinfo
 
+    private val _regSwitch = MutableLiveData<regSwitch>()
+    val regSwitch: LiveData<regSwitch> = _regSwitch
+
+    fun regSwitch(regSwitch: regSwitch) {
+        viewModelScope.launch {
+            _regSwitch.value = regSwitch
+        }
+    }
 
     fun carInfoSearchByCarnumberOnly(carnum: String) {
         viewModelScope.launch {
-
-            val datepatterned = Date()
 
             val carinfo = camRepository.carInfoSearchByCarnumberOnly(carnum)
             _carinfo.value = Event(carinfo)

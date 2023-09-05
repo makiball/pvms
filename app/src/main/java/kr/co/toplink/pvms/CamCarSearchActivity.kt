@@ -106,9 +106,11 @@ class CamCarSearchActivity: AppCompatActivity(){
         binding.isReg.setOnCheckedChangeListener { _, isChecked ->
 
             if (isChecked) {
-                RegSwitch.setSharedSwitch(regSwitch.ON)
+                //RegSwitch.setSharedSwitch(regSwitch.ON)
+                camCarViewModel.regSwitch(regSwitch.ON)
             } else {
-                RegSwitch.setSharedSwitch(regSwitch.OFF)
+                camCarViewModel.regSwitch(regSwitch.OFF)
+                //RegSwitch.setSharedSwitch(regSwitch.OFF)
                 // SwitchMaterial이 OFF 상태일 때 동작
                 // 여기에 필요한 코드 작성
             }
@@ -141,6 +143,8 @@ class CamCarSearchActivity: AppCompatActivity(){
                 submitList(it)
             }
         })
+
+        camCarViewModel.regSwitch(regSwitch.OFF)
 
         /*
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)
