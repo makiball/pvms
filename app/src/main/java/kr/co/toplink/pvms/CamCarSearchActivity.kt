@@ -105,6 +105,8 @@ class CamCarSearchActivity: AppCompatActivity(){
         /* 차량 등록 미등록 스위치 액션 */
         binding.isReg.setOnCheckedChangeListener { _, isChecked ->
 
+            //Log.d(TAG, "=====> $isChecked")
+
             if (isChecked) {
                 //RegSwitch.setSharedSwitch(regSwitch.ON)
                 camCarViewModel.regSwitch(regSwitch.ON)
@@ -265,7 +267,11 @@ class CamCarSearchActivity: AppCompatActivity(){
     }
 
     /* 화면이 다시 돌아올대 닫는다. */
-
+    override fun onResume() {
+        super.onResume()
+        binding.isReg.isChecked = false
+        init()
+    }
 }
 
 /* 미등록 스위치와 화면 등록 창 여부를 표시한다. */

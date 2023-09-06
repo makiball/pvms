@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CarNumberRegActivity">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/back_bt"
         android:layout_width="match_parent"
@@ -22,16 +23,18 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <EditText
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="차량 등록"
+                android:text="차량 등록"
+                style="@style/Bold"
+                android:textSize="20sp"
                 android:imeOptions="flagNoExtractUi|actionSearch"
                 android:inputType="textNoSuggestions" />
         </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <View
         android:id = "@+id/linelayout"
         android:layout_width="match_parent"

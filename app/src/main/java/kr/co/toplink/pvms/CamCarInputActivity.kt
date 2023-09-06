@@ -5,16 +5,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kr.co.toplink.pvms.adapter.CamCarSearchAdapter
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.ActivityCamCarInputBinding
-import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.util.InputCheck
+import kr.co.toplink.pvms.viewmodel.CamCarViewModel
+import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import java.util.*
 
 class CamCarInputActivity: AppCompatActivity() {
@@ -22,6 +25,7 @@ class CamCarInputActivity: AppCompatActivity() {
     private lateinit var binding: ActivityCamCarInputBinding
     private lateinit var viewModel: CarNumberSearchViewModel
     private lateinit var db: CarInfoDatabase
+    private lateinit var camCarViewModel: CamCarViewModel
     private var inputcheck = InputCheck()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,9 +56,13 @@ class CamCarInputActivity: AppCompatActivity() {
 
         /* 미등록 차량 데이터베이스 등록 */
         binding.regBt.setOnClickListener {
+
+            val datepatterned = Date()
+
             val carnuminput = binding.carnumInpt.text.toString()
             var phoneinput = binding.phoneInpt.text.toString().replace("\\s+".toRegex(), "")
             val etcinpt = binding.etcInpt.text.toString()
+
 
             if(carnuminput.isEmpty() == true) {
                 Toast.makeText(this, "차량 번호를 입력해주세요.", Toast.LENGTH_SHORT).show()
@@ -77,9 +85,30 @@ class CamCarInputActivity: AppCompatActivity() {
                 }
             }
 
+            val carInfoToday = CarInfoToday(
+                carnumber = carnuminput,
+                phone  = phoneinput,
+                date  = datepatterned,
+                etc  = etcinpt,
+                type = 1
+            )
+
+            camCarViewModel.carInfoInsertToday(carInfoToday)
+
+            /*
             insertDatabase(carnuminput, phoneinput, etcinpt)
+             */
+
             Toast.makeText(this, "입력 성공 차량 번호 조회 가능!", Toast.LENGTH_SHORT).show()
+
+            finish()
         }
+
+        init()
+    }
+
+    fun init() {
+        camCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CamCarViewModel::class.java)
     }
 
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.

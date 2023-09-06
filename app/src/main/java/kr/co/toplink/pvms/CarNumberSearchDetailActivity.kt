@@ -41,6 +41,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     private lateinit var sendkakaoalrim : SendKakaoAlrim
     private var smsMsgList = mutableListOf<SmsManager>()
 
+
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

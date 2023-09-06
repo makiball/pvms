@@ -20,6 +20,7 @@ import kr.co.toplink.pvms.KEY_CARINFOLIST_MODEL
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
 import kr.co.toplink.pvms.databinding.CarinfoItemLayoutBinding
+import kr.co.toplink.pvms.util.PhoneHidden
 
 class CarNumberSearchAdapter(private val viewModel: CarInfoViewModel) :
     ListAdapter<CarInfo, CarNumberSearchAdapter.CarNumberViewHolder>(CarNumberSearchDiffCallback()) {
@@ -43,7 +44,7 @@ class CarNumberSearchAdapter(private val viewModel: CarInfoViewModel) :
         fun bind(carinfo: CarInfo, context: Context) {
 
             binding.carnumberTxt.setText(carinfo.carnumber)
-            binding.phoneTxt.setText(carinfo.phone)
+            binding.phoneTxt.setText(PhoneHidden(carinfo.phone))
             binding.etcTxt.setText(carinfo.etc)
             //binding.clickListener = clickListener
 
@@ -56,6 +57,8 @@ class CarNumberSearchAdapter(private val viewModel: CarInfoViewModel) :
                 intent.putExtra("carnum",carinfo.carnumber)
                 startActivity(context, intent, null)
             }
+
+
 
             binding.executePendingBindings()
         }
