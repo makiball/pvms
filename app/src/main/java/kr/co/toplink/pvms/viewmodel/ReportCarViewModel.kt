@@ -15,8 +15,8 @@ import kr.co.toplink.pvms.repository.report.ReportRepository
 
 class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewModel() {
 
-    private val _reports = MutableLiveData<Event<List<Report>>>()
-    val reports: LiveData<Event<List<Report>>> = _reports
+    private val _reports = MutableLiveData<List<Report>>()
+    val reports: LiveData<List<Report>> = _reports
 
     private val _report = MutableLiveData<Event<Report>>()
     val report: LiveData<Event<Report>> = _report
@@ -33,7 +33,7 @@ class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewM
     fun reportList() {
        viewModelScope.launch {
            val reports = reportRepository.reportList()
-           _reports.value = Event(reports)
+           _reports.value = reports
         }
     }
 
