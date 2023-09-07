@@ -31,6 +31,7 @@ class CamCarSearchDetailActivity: AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
     lateinit var sp: SharedPreferencesUtil
     private lateinit var carnum : String
+    private var lasteid : Int = 0
     private var id : Int = 0
     private var phone : String = ""
     private var etc : String = ""

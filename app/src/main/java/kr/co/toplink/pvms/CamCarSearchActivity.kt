@@ -62,7 +62,9 @@ class CamCarSearchActivity: AppCompatActivity(){
 
     private lateinit var reportCarViewModel: ReportCarViewModel
 
-    private lateinit var carInfoToday: ArrayList<CarInfoToday>
+    private var lastid : Int = 0
+
+    private lateinit var CarInfoToday : List<CarInfoToday>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,46 +140,42 @@ class CamCarSearchActivity: AppCompatActivity(){
                 /* 모두 삭제 처리 */
                 //camCarViewModel.carInfoTodayDelete()
 
+                //미등록 갯수, 등록 갯수
 
                 val datepatterned = Date()
-                reportCarViewModel.lastid.observe(this, EventObserver {
+                //Log.d(TAG,"=====> ${CarInfoToday.size}")
 
-                    val lastid = it + 1
+                //미등록 갯수, 등록 갯수
+                val regSu = CarInfoToday.filter { it.type == 0 }.size
+                val regSuNo = CarInfoToday.filter { it.type == 1 }.size
+                val lowStop = CarInfoToday.filter { it.lawstop == 1 }.size
 
-                    camCarViewModel.camcarinfos.observe(this, EventObserver {
+                if(regSu <= 0) {
+                    Toast.makeText(this, "차량 조회가 없습니다.", Toast.LENGTH_SHORT).show()
+                    return@setOnOKClickedListener
+                }
 
-                        val total = it.size
+                val report = Report(
+                    id = lastid,
+                    date = datepatterned,
+                    total_type_0 = regSu,
+                    total_type_1 = regSuNo,
+                    total_lawstop = lowStop
+                    )
+                reportCarViewModel.reportInsert(report)
 
-                        //미등록 갯수, 등록 갯수
-                        val regSu = it.filter { it.type == 0 }.size
-                        val regSuNo = it.filter { it.type == 1 }.size
-                        val lowStop = it.filter { it.lawstop == 1 }.size
-
-                        val report = Report(
-                            id = lastid,
-                            date = datepatterned,
-                            total_type_0 = regSu,
-                            total_type_1 = regSuNo,
-                            total_lawstop = lowStop,
-
-                            )
-                        reportCarViewModel.reportInsert(report)
-
-
-                        it.forEach {
-                            val carInfoTotal = CarInfoTotal(
-                                carnumber = it.carnumber,
-                                phone = it.phone,
-                                date = it.date,
-                                etc = it.etc,
-                                type = it.type,
-                                lawstop = it.lawstop,
-                                reportnum = lastid
-                            )
-                            reportCarViewModel.carInfoTotalInsert(carInfoTotal)
-                        }
-                    })
-                })
+                CarInfoToday.forEach{
+                    val carInfoTotal = CarInfoTotal(
+                        carnumber = it.carnumber,
+                        phone = it.phone,
+                        date = it.date,
+                        etc = it.etc,
+                        type = it.type,
+                        lawstop = it.lawstop,
+                        reportnum = lastid
+                    )
+                    reportCarViewModel.carInfoTotalInsert(carInfoTotal)
+                }
                 camCarViewModel.carInfoTodayDelete()
             }
             dlg.show(msg)
@@ -190,6 +188,8 @@ class CamCarSearchActivity: AppCompatActivity(){
         camcarsearchadapter = CamCarSearchAdapter(camCarViewModel)
         camCarViewModel.carInfoTodayList()
         camCarViewModel.camcarinfos.observe(this, EventObserver {
+
+            CarInfoToday = it
 
             binding.total.text = "총 차량 : ${it.size}"
 
@@ -215,6 +215,12 @@ class CamCarSearchActivity: AppCompatActivity(){
         camCarViewModel.regSwitch(regSwitch.OFF)
 
         reportCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ReportCarViewModel::class.java)
+        reportCarViewModel.reportLastId()
+        reportCarViewModel.lastid.observe(this, EventObserver {
+            lastid = it + 1
+
+            Log.d(TAG, "=====> $lastid")
+        })
 
         /*
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)

@@ -38,6 +38,7 @@ class CamCarInputActivity: AppCompatActivity() {
         val value = intent.getStringExtra("carnum").toString()
         // db = CarInfoDatabase.getInstance(this)!!
 
+        
         binding.apply {
             binding.carnumInpt.setText(value)
             binding.carnumInpt.requestFocus()

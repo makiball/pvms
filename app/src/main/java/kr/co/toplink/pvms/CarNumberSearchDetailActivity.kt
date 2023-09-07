@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -64,6 +65,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
         } else {
             finish()
         }
+
+        //불법주차 가릭
+        binding.lowstop.visibility = View.GONE
 
         init()
 
