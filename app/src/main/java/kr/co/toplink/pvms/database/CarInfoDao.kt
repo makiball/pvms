@@ -72,10 +72,39 @@ interface CarInfoDao {
     /* ------------------------------------------------- 캠조회 -----------------------------------------------*/
 
 
+    /* ------------------------------------------------- 주차보고서 -----------------------------------------------*/
+    @Query("SELECT * FROM Report ORDER BY id DESC")
+    fun ReportList():  List<Report>
+
+    @Query("SELECT * FROM Report WHERE id = :id")
+    fun Report(id: Int):  Report
+
+    @Query("SELECT id FROM Report ORDER BY id DESC limit 1")
+    fun ReportLastId(): Int
+
+    @Insert
+    fun ReportInsert(report: Report)
+
+    @Query("DELETE FROM Report")
+    fun ReportDelete()
+
+    @Update
+    fun ReportUpdateById(vararg report: Report)
+
+    @Query("DELETE FROM Report WHERE id = :id")
+    fun ReportDeleteById(id: Int)
+
+    @Query("SELECT * FROM CarInfoTotal ORDER BY id DESC")
+    fun CarInfoTotalList():  List<CarInfoTotal>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun CarInfoTotalInsert(carInfoTotal: CarInfoTotal)
+    /* ------------------------------------------------- 주차보고서 -----------------------------------------------*/
+
 
     /* ------------------------------------------------- 이전버전 -----------------------------------------------*/
     /* 처음 로딩을 위해서 */
-    @Query("SELECT  id, carnumber, phone, date, etc, type FROM CarInfoToday ORDER BY id DESC")
+    @Query("SELECT  * FROM CarInfoToday ORDER BY id DESC")
     fun CarInfoTodayAll(): LiveData<MutableList<CarInfoToday>>
 
     /* 데이터 변경을 위해서
@@ -83,13 +112,9 @@ interface CarInfoDao {
     fun CarInfoGetAll(): LiveData<MutableList<CarInfoList>>
      */
 
-    @Query("SELECT id, carnumber, phone, date, etc, type FROM CarInfoToday WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
+    @Query("SELECT * FROM CarInfoToday WHERE carnumber LIKE '%' || :searchText || '%' ORDER BY id DESC")
     fun CarInfoGetTdoday(searchText: String?): LiveData<MutableList<CarInfoToday>>
-
-
     /* ------------------------------------------------- 이전버전 -----------------------------------------------*/
-
-
 
     /* SMS 데이터 목록 가져오기 */
     @Query("SELECT id, smstitle, smscontent FROM SmsManager ORDER BY id DESC")

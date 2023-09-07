@@ -50,12 +50,13 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop = "10dp"
             android:layout_marginEnd = "8dp"
             android:text = ""
             android:hint="@string/smslist_hint"
-            app:layout_constraintStart_toStartOf="@id/call"
+            app:layout_constraintStart_toStartOf="@id/phone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/carnumber_txt">
+            app:layout_constraintTop_toBottomOf="@id/phone">
 
             <AutoCompleteTextView
                 android:id="@+id/text_item"
@@ -95,6 +96,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/carnumber_txt"
              />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/lowstop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "불법주차"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toEndOf="@+id/smslist"
+            app:layout_constraintTop_toBottomOf="@id/carnumber_txt"
+            />
 
         <com.google.android.material.textview.MaterialTextView
         android:id="@+id/date"

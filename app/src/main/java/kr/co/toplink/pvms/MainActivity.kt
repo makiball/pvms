@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
             activitygo(4)
         }
 
+        binding.parkresultBt.setOnClickListener {
+            activitygo(5)
+        }
+
         if (!allRuntimePermissionsGranted()) {
             getRuntimePermissions()
         }
@@ -135,6 +139,14 @@ class MainActivity : AppCompatActivity() {
                 getString(R.string.setting_bt)
             )
         )
+
+        activityClassModels.add(
+            ActivityClassModel(
+                ReportCarActivity::class.java,
+                getString(R.string.reportcar_bt)
+            )
+        )
+
     }
 
     /* 엑티비티 바로가기 */

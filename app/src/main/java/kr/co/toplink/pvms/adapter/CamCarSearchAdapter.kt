@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kr.co.toplink.pvms.CamCarSearchDetailActivity
 import kr.co.toplink.pvms.CarNumberSearchDetailActivity
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
@@ -48,6 +49,9 @@ class CamCarSearchAdapter(private val viewModel: CamCarViewModel) :
                 binding.constraintLayout.setBackgroundColor(Color.rgb(231, 230, 230))
             }
 
+            val lawstopTxt = if(carInfoToday.lawstop == 1) "불법주차" else ""
+            binding.lawstopTxt.text = lawstopTxt
+
             binding.typeTxt.text = type_txt
             binding.carnumberTxt.text = carInfoToday.carnumber
             binding.phoneTxt.text = PhoneHidden(carInfoToday.phone)
@@ -58,7 +62,7 @@ class CamCarSearchAdapter(private val viewModel: CamCarViewModel) :
 
                 //Toast.makeText(context, " 테스트 ", Toast.LENGTH_SHORT).show()
                 val intent =
-                    Intent(context, CarNumberSearchDetailActivity::class.java)
+                    Intent(context, CamCarSearchDetailActivity::class.java)
                 intent.putExtra("carnum",carInfoToday.carnumber)
                 ContextCompat.startActivity(context, intent, null)
             }

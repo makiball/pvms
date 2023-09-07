@@ -15,6 +15,8 @@ import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.ActivityCamCarInputBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
+import kr.co.toplink.pvms.util.ComfirmDialog
+import kr.co.toplink.pvms.util.DeleteDialog
 import kr.co.toplink.pvms.util.InputCheck
 import kr.co.toplink.pvms.viewmodel.CamCarViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
@@ -90,7 +92,8 @@ class CamCarInputActivity: AppCompatActivity() {
                 phone  = phoneinput,
                 date  = datepatterned,
                 etc  = etcinpt,
-                type = 1
+                type = 1,
+                lawstop = 0
             )
 
             camCarViewModel.carInfoInsertToday(carInfoToday)
@@ -98,8 +101,6 @@ class CamCarInputActivity: AppCompatActivity() {
             /*
             insertDatabase(carnuminput, phoneinput, etcinpt)
              */
-
-            Toast.makeText(this, "입력 성공 차량 번호 조회 가능!", Toast.LENGTH_SHORT).show()
 
             finish()
         }

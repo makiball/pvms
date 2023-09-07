@@ -116,7 +116,7 @@
         android:id = "@+id/tablelayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:collapseColumns="3"
+        android:collapseColumns="4"
         android:layout_margin = "8dp"
         android:layout_marginTop = "10dp"
         android:stretchColumns="*"
@@ -131,34 +131,45 @@
 
             <!-- first element of the row that is the part of table but it is invisible-->
             <TextView
-                android:id="@+id/totalreg"
+                android:id="@+id/total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
                 android:text="총 차량 : 0"
                 android:gravity="left"
                 android:textColor="#000"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/totalreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="등록 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="15sp" />
+
 
             <TextView
                 android:id="@+id/totalnotreg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:text="등록차량 : 0"
+                android:text="미등록 : 0"
                 android:gravity="left"
                 android:textColor="#000"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/total"
+                android:id="@+id/lawstop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:text="미등록 차량 : 0"
+                android:text="불법주차 : 0"
                 android:gravity="left"
                 android:textColor="#000"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
 
         </TableRow>
 

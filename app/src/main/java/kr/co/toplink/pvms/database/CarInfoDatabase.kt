@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Singleton
 
-@Database(entities = [CarInfo::class, CarInfoToday::class, SmsManager::class], version = 7)
+@Database(entities = [CarInfo::class, CarInfoToday::class, SmsManager::class, Report::class, CarInfoTotal::class], version = 10)
 @TypeConverters(Converters::class)
 abstract class CarInfoDatabase: RoomDatabase() {
 

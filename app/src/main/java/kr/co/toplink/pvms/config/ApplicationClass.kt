@@ -18,6 +18,8 @@ import kr.co.toplink.pvms.repository.cam.CamLocalDataSource
 import kr.co.toplink.pvms.repository.cam.CamRepository
 import kr.co.toplink.pvms.repository.car.CarLocalDataSource
 import kr.co.toplink.pvms.repository.car.CarRepository
+import kr.co.toplink.pvms.repository.report.ReportLocalDataSource
+import kr.co.toplink.pvms.repository.report.ReportRepository
 import kr.co.toplink.pvms.repository.sms.SmsLocalDataSource
 import kr.co.toplink.pvms.repository.sms.SmsRepository
 import kr.co.toplink.pvms.util.SharedPreferencesUtil
@@ -130,6 +132,16 @@ class ApplicationClass : Application() {
             val dao = provideDatabase(context.applicationContext).carinfoDao()
             SmsRepository(SmsLocalDataSource(dao)).also {
                 smsRepository = it
+            }
+        }
+    }
+
+    private var reportRepository: ReportRepository? = null
+    fun provideReportRepository(context: Context) : ReportRepository {
+        return reportRepository ?: kotlin.run {
+            val dao = provideDatabase(context.applicationContext).carinfoDao()
+            ReportRepository(ReportLocalDataSource(dao)).also {
+                reportRepository = it
             }
         }
     }

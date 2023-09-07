@@ -29,16 +29,35 @@ data class CarInfoToday(
     val phone: String,
     val date: Date,
     val etc: String,
-    val type: Int = 0     //0 등록차량, 1미등록차량
+    val type: Int = 0,    //0 등록차량, 1미등록차량
+    val lawstop: Int = 0  //0 안어김, 1 어김
 )
 
-@Entity
+@Entity(
+    indices = [Index(value = ["date"])]
+)
 data class Report(
     @PrimaryKey(autoGenerate =true)
     val id: Int = 0,
     val date: Date,
-    val type_0: Int = 0,
-    val type_1: Int = 0
+    val total_type_0: Int = 0,        // 등록
+    val total_type_1: Int = 0,         // 미등록
+    val total_lawstop: Int = 0         // 불법주차
+)
+
+@Entity(
+    indices = [Index(value = ["carnumber", "reportnum"], unique = true)]
+)
+data class CarInfoTotal(
+    @PrimaryKey(autoGenerate =true)
+    val id: Int = 0,
+    val carnumber: String? = "",      //차량 번호 풀번호
+    val phone: String,
+    val date: Date,
+    val etc: String,
+    val type: Int = 0,    //0 등록차량, 1미등록차량
+    val lawstop: Int = 0,  //0 안어김, 1 어김
+    val reportnum: Int = 0
 )
 
 @Entity

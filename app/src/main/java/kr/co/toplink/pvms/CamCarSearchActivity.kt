@@ -19,24 +19,31 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.adapter.CamCarSearchAdapter
 import kr.co.toplink.pvms.adapter.CarNumberSearchAdapter
 import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
+import kr.co.toplink.pvms.data.CarInfoList
 import kr.co.toplink.pvms.data.CarInfoListToday
 import kr.co.toplink.pvms.data.CarInfoListTodayModel
 import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfoToday
+import kr.co.toplink.pvms.database.CarInfoTotal
+import kr.co.toplink.pvms.database.Report
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
 import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
+import kr.co.toplink.pvms.repository.report.ReportRepository
 import kr.co.toplink.pvms.util.*
 import kr.co.toplink.pvms.viewholder.CarInfoListTodayViewBinder
 import kr.co.toplink.pvms.viewholder.ItemBinder
 import kr.co.toplink.pvms.viewmodel.CamCarViewModel
+import kr.co.toplink.pvms.viewmodel.ReportCarViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 import java.util.*
 
@@ -52,6 +59,10 @@ class CamCarSearchActivity: AppCompatActivity(){
     private lateinit var listAdapter: SingleViewBinderListAdapter
     private lateinit var camcarsearchadapter : CamCarSearchAdapter
     private lateinit var viewModel: CarNumberSearchViewModel
+
+    private lateinit var reportCarViewModel: ReportCarViewModel
+
+    private lateinit var carInfoToday: ArrayList<CarInfoToday>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +128,60 @@ class CamCarSearchActivity: AppCompatActivity(){
                 // 여기에 필요한 코드 작성
             }
         }
+
+        /* 보고서 등록 */
+        binding.makeReport.setOnClickListener {
+
+            val msg = "보고서 생성시 주차 검색 내용은 삭제됩니다."
+            val dlg = DeleteDialog(this)
+            dlg.setOnOKClickedListener{
+                /* 모두 삭제 처리 */
+                //camCarViewModel.carInfoTodayDelete()
+
+
+                val datepatterned = Date()
+                reportCarViewModel.lastid.observe(this, EventObserver {
+
+                    val lastid = it + 1
+
+                    camCarViewModel.camcarinfos.observe(this, EventObserver {
+
+                        val total = it.size
+
+                        //미등록 갯수, 등록 갯수
+                        val regSu = it.filter { it.type == 0 }.size
+                        val regSuNo = it.filter { it.type == 1 }.size
+                        val lowStop = it.filter { it.lawstop == 1 }.size
+
+                        val report = Report(
+                            id = lastid,
+                            date = datepatterned,
+                            total_type_0 = regSu,
+                            total_type_1 = regSuNo,
+                            total_lawstop = lowStop,
+
+                            )
+                        reportCarViewModel.reportInsert(report)
+
+
+                        it.forEach {
+                            val carInfoTotal = CarInfoTotal(
+                                carnumber = it.carnumber,
+                                phone = it.phone,
+                                date = it.date,
+                                etc = it.etc,
+                                type = it.type,
+                                lawstop = it.lawstop,
+                                reportnum = lastid
+                            )
+                            reportCarViewModel.carInfoTotalInsert(carInfoTotal)
+                        }
+                    })
+                })
+                camCarViewModel.carInfoTodayDelete()
+            }
+            dlg.show(msg)
+        }
     }
 
     private fun init() {
@@ -126,14 +191,16 @@ class CamCarSearchActivity: AppCompatActivity(){
         camCarViewModel.carInfoTodayList()
         camCarViewModel.camcarinfos.observe(this, EventObserver {
 
-            binding.totalreg.text = "총 차량 : ${it.size}"
+            binding.total.text = "총 차량 : ${it.size}"
 
             //미등록 갯수, 등록 갯수
             val regSu = it.filter { it.type == 0 }.size
             val regSuNo = it.filter { it.type == 1 }.size
+            val lowStop = it.filter { it.lawstop == 1 }.size
 
-            binding.totalnotreg.text = "등록차량 : $regSu"
-            binding.total.text = "미등록 차량 : $regSuNo"
+            binding.totalreg.text = "등록 : $regSu"
+            binding.totalnotreg.text = "미등록 : $regSuNo"
+            binding.lawstop.text = "불법주차 : $lowStop"
 
             binding.recyclerView.apply {
                 adapter = camcarsearchadapter
@@ -145,8 +212,9 @@ class CamCarSearchActivity: AppCompatActivity(){
                 submitList(it)
             }
         })
-
         camCarViewModel.regSwitch(regSwitch.OFF)
+
+        reportCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ReportCarViewModel::class.java)
 
         /*
         viewModel = ViewModelProvider(this).get(CarNumberSearchViewModel::class.java)

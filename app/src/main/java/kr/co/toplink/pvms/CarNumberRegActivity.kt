@@ -89,7 +89,7 @@ class CarNumberRegActivity : AppCompatActivity() {
         /* 등록처리 */
         binding.regBt.setOnClickListener {
 
-            val carnuminput = binding.carnumInpt.text.toString()
+            var carnuminput = binding.carnumInpt.text.toString()
             var phoneinput = binding.phoneInpt.text.toString().replace("\\s+".toRegex(), "")
             val etcinpt = binding.etcInpt.text.toString()
 
@@ -99,8 +99,9 @@ class CarNumberRegActivity : AppCompatActivity() {
             }
 
             /* 차량 번호 정규식 */
-            val carnumcheck = inputcheck.getIsNumber(carnuminput)
-            if(!carnumcheck) {
+            //val carnumcheck = inputcheck.getIsNumber(carnuminput)
+            carnuminput = carnuminput.replace("\\s".toRegex(), "")
+            if(carnuminput != "") {
                 Toast.makeText(this, "조회 할수 없는 차량 번호입니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -113,14 +114,6 @@ class CarNumberRegActivity : AppCompatActivity() {
                 } else {
                     phoneinput = "${phoneinput.substring(0, 3)}-${phoneinput.substring(3, 6)}-${phoneinput.substring(6)}"
                 }
-
-                /*
-                val phoneinput = inputcheck.getIsPhone(phoneinput)
-                if(!phoneinput) {
-                    Toast.makeText(this, "휴대폰번호를 정확하게 입력해주세요.", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                 */
             }
 
             insertDatabase(carnuminput, phoneinput, etcinpt)
@@ -280,8 +273,10 @@ class CarNumberRegActivity : AppCompatActivity() {
                     var phone = ""
                     var etc = ""
 
-                    it.singleRowList.get(0).value?.let { it1 ->  carnum = inputcheck.blankDelte(it1) }
-                    it.singleRowList.get(1).value?.let { it2 ->  phone = it2  }
+                    //it.singleRowList.get(0).value?.let { it1 ->  carnum = inputcheck.blankDelte(it1) }
+
+                    it.singleRowList.get(0).value?.let { it1 ->  carnum = it1.replace("\\s".toRegex(), "") }
+                    it.singleRowList.get(1).value?.let { it2 ->  phone = it2.replace(Regex("[^0-9]"), "")  }
                     it.singleRowList.get(2).value?.let { it3 ->  etc = it3  }
 
                     if(Regex("^010.*").matches(phone)) {
@@ -291,7 +286,7 @@ class CarNumberRegActivity : AppCompatActivity() {
                     }
 
 
-                    if(inputcheck.getIsNumber(carnum)) {
+                    if(carnum != "") {
                         insertDatabase(
                             carnum,
                             phone,

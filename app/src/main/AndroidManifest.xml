@@ -40,9 +40,11 @@
         <activity android:name=".CarNumberSearchActivity" />
         <activity android:name=".CarNumberSearchDetailActivity" />
         <activity android:name=".CamCarSearchActivity" />
+        <activity android:name=".CamCarSearchDetailActivity" />
         <activity android:name=".CamCarInputActivity" />
         <activity android:name=".SmsManagerActivity" />
         <activity android:name=".SettingActivity" />
+        <activity android:name=".ReportCarActivity" />
 
         <service
             android:name=".fcm.FirebaseMessagingService"
