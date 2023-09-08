@@ -94,8 +94,23 @@ interface CarInfoDao {
     @Query("DELETE FROM Report WHERE id = :id")
     fun ReportDeleteById(id: Int)
 
+    @Query("DELETE FROM CarInfoTotal WHERE reportnum = :reportid")
+    fun CarInfoTotalDelteReportId(reportid : Int)
+
     @Query("SELECT * FROM CarInfoTotal ORDER BY id DESC")
     fun CarInfoTotalList():  List<CarInfoTotal>
+
+    @Query("SELECT * FROM CarInfoTotal WHERE carnumber = :carnum  ORDER BY id DESC")
+    fun CarInfoTotalListCarnum(carnum: String):  List<CarInfoTotal>
+
+    @Query("SELECT * FROM CarInfoTotal WHERE reportnum = :reportid AND carnumber LIKE '%' || :carnum || '%'  ORDER BY id DESC")
+    fun CarInfoTotalListId(reportid: Int, carnum: String):  List<CarInfoTotal>
+
+    @Query("SELECT * FROM CarInfoTotal WHERE reportnum = :reportid AND type = :type AND carnumber LIKE '%' || :carnum || '%'  ORDER BY id DESC")
+    fun CarInfoTotalListType(reportid: Int, type : Int, carnum: String):  List<CarInfoTotal>
+
+    @Query("SELECT * FROM CarInfoTotal WHERE reportnum = :reportid AND lawstop = 1 AND carnumber LIKE '%' || :carnum || '%'  ORDER BY id DESC")
+    fun CarInfoTotalListLaw(reportid: Int, carnum: String):  List<CarInfoTotal>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoTotalInsert(carInfoTotal: CarInfoTotal)

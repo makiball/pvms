@@ -9,4 +9,6 @@ interface AuthDataSource {
     suspend fun singIn(user: User) : UserResponse
 
     suspend fun kakaoAlimSend(kakaoalim : KakaoAlim): KakaoAlrimResponse
+
+    suspend fun kakaoReportSend(kakaoalim : KakaoAlim): KakaoAlrimResponse
 }

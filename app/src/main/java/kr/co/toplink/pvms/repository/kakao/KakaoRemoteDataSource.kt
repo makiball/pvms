@@ -9,4 +9,9 @@ class KakaoRemoteDataSource(private val apiclient:KakaoAlrimApi): KakaoDataSourc
     override suspend fun kakaoAlimSend(id: String, msg: String): KakaoAlrimResponse {
         return apiclient.sendSmsMsg(id, msg)
     }
+
+    override suspend fun kakaoReportSend(id: String, msg: String): KakaoAlrimResponse {
+        return apiclient.sendSmsMsg(id, msg)
+    }
+
 }

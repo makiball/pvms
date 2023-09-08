@@ -116,7 +116,7 @@ class CamCarSearchDetailActivity: AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val  message  = smsMsgList[smsid].smscontent
+            val  message  = "차량번호 $carnum \n" + smsMsgList[smsid].smscontent
             val id = sp.getUser().email
 
             if(id == "" || id == "비회원") {

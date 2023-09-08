@@ -21,8 +21,8 @@ class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewM
     private val _report = MutableLiveData<Event<Report>>()
     val report: LiveData<Event<Report>> = _report
 
-    private val _carInfoTotals = MutableLiveData<Event<List<CarInfoTotal>>>()
-    val carInfoTotals: LiveData<Event<List<CarInfoTotal>>> = _carInfoTotals
+    private val _carInfoTotals = MutableLiveData<List<CarInfoTotal>>()
+    val carInfoTotals: LiveData<List<CarInfoTotal>> = _carInfoTotals
 
     private val _carInfoTotal = MutableLiveData<Event<CarInfoTotal>>()
     val carInfoTotal: LiveData<Event<CarInfoTotal>> = _carInfoTotal
@@ -72,12 +72,51 @@ class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewM
     fun reportDeleteById(id: Int)  {
         viewModelScope.launch {
             reportRepository.reportDeleteById(id)
+            reportList()
+        }
+    }
+
+    fun carInfoTotalDelteReportId(reportid: Int)  {
+        viewModelScope.launch {
+            reportRepository.carInfoTotalDelteReportId(reportid)
         }
     }
 
     fun carInfoTotalList()  {
         viewModelScope.launch {
-            reportRepository.carInfoTotalList()
+            val carInfoTotals = reportRepository.carInfoTotalList()
+            _carInfoTotals.value = carInfoTotals
+        }
+    }
+
+    fun carInfoTotalListCarnum(carnum: String) {
+        viewModelScope.launch {
+            val carInfoTotals = reportRepository.carInfoTotalListCarnum(carnum)
+            _carInfoTotals.value = carInfoTotals
+        }
+    }
+
+    // 전체 자동차 번호 조회
+    fun carInfoTotalListId(reportid: Int, carnum: String) {
+        viewModelScope.launch {
+            val carInfoTotals = reportRepository.carInfoTotalListId(reportid, carnum)
+            _carInfoTotals.value = carInfoTotals
+        }
+    }
+
+    // 등록, 미등록 자동차 번호 조회
+    fun carInfoTotalListType(reportid: Int, type : Int, carnum: String) {
+        viewModelScope.launch {
+            val carInfoTotals = reportRepository.carInfoTotalListType(reportid, type, carnum)
+            _carInfoTotals.value = carInfoTotals
+        }
+    }
+
+    // 불법주차 번호 조회
+    fun carInfoTotalListLaw(reportid: Int, carnum: String) {
+        viewModelScope.launch {
+            val carInfoTotals = reportRepository.carInfoTotalListLaw(reportid, carnum)
+            _carInfoTotals.value = carInfoTotals
         }
     }
 

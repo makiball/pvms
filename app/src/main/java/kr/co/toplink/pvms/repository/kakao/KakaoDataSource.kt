@@ -7,4 +7,6 @@ interface KakaoDataSource {
 
     suspend fun kakaoAlimSend(id: String, msg: String): KakaoAlrimResponse
 
+    suspend fun kakaoReportSend(id: String, msg: String): KakaoAlrimResponse
+
 }

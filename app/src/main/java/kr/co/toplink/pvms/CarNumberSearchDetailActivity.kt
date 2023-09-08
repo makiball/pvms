@@ -15,16 +15,18 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kr.co.toplink.pvms.adapter.CarInfoTotalAdapter
+import kr.co.toplink.pvms.adapter.CarNumberSearchAdapter
+import kr.co.toplink.pvms.adapter.ReportCarAdapter
 import kr.co.toplink.pvms.data.*
 import kr.co.toplink.pvms.database.SmsManager
 import kr.co.toplink.pvms.databinding.ActivityCarnumbersearchDetailBinding
 import kr.co.toplink.pvms.model.CarNumberSearchViewModel
 import kr.co.toplink.pvms.model.SmsManagerViewModel
 import kr.co.toplink.pvms.util.*
-import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
-import kr.co.toplink.pvms.viewmodel.SmsMngViewModel
-import kr.co.toplink.pvms.viewmodel.UserViewModel
-import kr.co.toplink.pvms.viewmodel.ViewModelFactory
+import kr.co.toplink.pvms.viewmodel.*
 import org.json.JSONObject
 
 class CarNumberSearchDetailActivity : AppCompatActivity() {
@@ -41,6 +43,9 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
     private var smsid : Int = 99999
     private lateinit var sendkakaoalrim : SendKakaoAlrim
     private var smsMsgList = mutableListOf<SmsManager>()
+
+    private lateinit var reportCarViewModel: ReportCarViewModel
+    private lateinit var carInfoTotalAdapter: CarInfoTotalAdapter
 
 
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
@@ -134,7 +139,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            val  message  = smsMsgList[smsid].smscontent
+            val  message  = "차량번호 $carnum \n" + smsMsgList[smsid].smscontent
             val id = sp.getUser().email
 
             if(id == "" || id == "비회원") {
@@ -214,7 +219,7 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
             val formattedDate = DateToYmdhis(it.date)
             binding.date.text = "등록일 : $formattedDate"
 
-            phone = it.phone.toString()
+            phone = it.phone
             binding.carnumberTxt.text = it.carnumber
             binding.phone.text = PhoneHidden(phone)
             binding.etc.text = it.etc
@@ -241,6 +246,21 @@ class CarNumberSearchDetailActivity : AppCompatActivity() {
 
         userViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(UserViewModel::class.java)
 
+
+        reportCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ReportCarViewModel::class.java)
+        carInfoTotalAdapter = CarInfoTotalAdapter(reportCarViewModel)
+        reportCarViewModel.carInfoTotalListCarnum(carnum)
+        reportCarViewModel.carInfoTotals.observe(this) {
+            binding.recyclerView.apply {
+                adapter = carInfoTotalAdapter
+                layoutManager = GridLayoutManager(this@CarNumberSearchDetailActivity, 1)
+                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            }
+
+            carInfoTotalAdapter.apply {
+                submitList(it)
+            }
+        }
 
         /*
         viewModel2 = ViewModelProvider(this).get(SmsManagerViewModel::class.java)

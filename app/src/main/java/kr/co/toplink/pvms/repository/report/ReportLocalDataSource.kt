@@ -36,8 +36,29 @@ class ReportLocalDataSource(
         dao.ReportDeleteById(id)
     }
 
+    override suspend fun carInfoTotalDelteReportId(reportid: Int){
+        dao.ReportDeleteById(reportid)
+    }
+
     override suspend fun carInfoTotalList(): List<CarInfoTotal> {
         return dao.CarInfoTotalList()
+    }
+
+    override suspend fun carInfoTotalListCarnum(carnum: String):  List<CarInfoTotal> {
+        return dao.CarInfoTotalListCarnum(carnum)
+    }
+
+    override suspend fun carInfoTotalListId(reportid: Int, carnum: String):  List<CarInfoTotal> {
+        return dao.CarInfoTotalListId(reportid, carnum)
+    }
+
+
+    override suspend fun carInfoTotalListType(reportid: Int, type: Int, carnum: String):  List<CarInfoTotal> {
+        return dao.CarInfoTotalListType(reportid, type, carnum)
+    }
+
+    override suspend fun carInfoTotalListLaw(reportid: Int, carnum: String):  List<CarInfoTotal> {
+        return dao.CarInfoTotalListLaw(reportid, carnum)
     }
 
     override suspend fun carInfoTotalInsert(carInfoTotal: CarInfoTotal) {

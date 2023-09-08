@@ -11,7 +11,7 @@ fun DateToYmdhis(date : Date) : String {
     // Set the time zone to Korea (Asia/Seoul)
     val koreaTimeZone = TimeZone.getTimeZone("Asia/Seoul")
     // Create a SimpleDateFormat with the desired format
-    val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    val dateFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm")
     dateFormat.timeZone = koreaTimeZone
     // Format the date in the desired time zone
     val formattedDate = dateFormat.format(utilDate)

@@ -19,7 +19,17 @@ interface ReportDataSource {
 
     suspend fun reportDeleteById(id: Int)
 
+    suspend fun carInfoTotalDelteReportId(reportid: Int)
+
     suspend fun carInfoTotalList():  List<CarInfoTotal>
+
+    suspend fun carInfoTotalListCarnum(carnum: String):  List<CarInfoTotal>
+
+    suspend fun carInfoTotalListId(reportid: Int, carnum: String):  List<CarInfoTotal>
+
+    suspend fun carInfoTotalListType(reportid: Int, type : Int, carnum: String):  List<CarInfoTotal>
+
+    suspend fun carInfoTotalListLaw(reportid: Int, carnum: String):  List<CarInfoTotal>
 
     suspend fun carInfoTotalInsert(carInfoTotal: CarInfoTotal)
 }

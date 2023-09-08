@@ -101,7 +101,7 @@ class CarNumberRegActivity : AppCompatActivity() {
             /* 차량 번호 정규식 */
             //val carnumcheck = inputcheck.getIsNumber(carnuminput)
             carnuminput = carnuminput.replace("\\s".toRegex(), "")
-            if(carnuminput != "") {
+            if(carnuminput == "") {
                 Toast.makeText(this, "조회 할수 없는 차량 번호입니다.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }

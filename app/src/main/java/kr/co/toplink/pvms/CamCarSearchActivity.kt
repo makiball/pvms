@@ -146,11 +146,12 @@ class CamCarSearchActivity: AppCompatActivity(){
                 //Log.d(TAG,"=====> ${CarInfoToday.size}")
 
                 //미등록 갯수, 등록 갯수
+                val total = CarInfoToday.size
                 val regSu = CarInfoToday.filter { it.type == 0 }.size
                 val regSuNo = CarInfoToday.filter { it.type == 1 }.size
                 val lowStop = CarInfoToday.filter { it.lawstop == 1 }.size
 
-                if(regSu <= 0) {
+                if(total <= 0) {
                     Toast.makeText(this, "차량 조회가 없습니다.", Toast.LENGTH_SHORT).show()
                     return@setOnOKClickedListener
                 }

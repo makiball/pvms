@@ -78,6 +78,7 @@
                 app:layout_constraintTop_toBottomOf="@id/lawstop_txt"
                 app:layout_constraintStart_toStartOf="@id/lawstop_txt"/>
 
+            <!--
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/kakaotalk"
                 android:layout_width="130dp"
@@ -102,7 +103,7 @@
                 android:textSize = "15sp"
                 app:layout_constraintTop_toBottomOf="@id/kakaotalk"
                 app:layout_constraintEnd_toEndOf="parent"/>
-
+            -->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

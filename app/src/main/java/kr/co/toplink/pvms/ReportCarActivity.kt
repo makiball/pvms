@@ -11,6 +11,7 @@ import kr.co.toplink.pvms.adapter.ReportCarAdapter
 import kr.co.toplink.pvms.databinding.ActivityReportcarBinding
 import kr.co.toplink.pvms.viewmodel.CarInfoViewModel
 import kr.co.toplink.pvms.viewmodel.ReportCarViewModel
+import kr.co.toplink.pvms.viewmodel.UserViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
 
 class ReportCarActivity: AppCompatActivity() {
@@ -18,6 +19,8 @@ class ReportCarActivity: AppCompatActivity() {
     private lateinit var binding: ActivityReportcarBinding
     private lateinit var reportCarViewModel: ReportCarViewModel
     private lateinit var reportCarAdapter: ReportCarAdapter
+
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,13 +45,15 @@ class ReportCarActivity: AppCompatActivity() {
     private fun init() {
 
         reportCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ReportCarViewModel::class.java)
+        userViewModel =  ViewModelProvider(this, ViewModelFactory(this)).get(UserViewModel::class.java)
+
         reportCarViewModel.reportList()
         attachObserver()
     }
 
 
     private fun attachObserver() {
-        reportCarAdapter = ReportCarAdapter(reportCarViewModel)
+        reportCarAdapter = ReportCarAdapter(reportCarViewModel, userViewModel)
         reportCarViewModel.reports.observe(this)  {
             binding.recyclerView.apply {
                 adapter = reportCarAdapter
@@ -61,5 +66,10 @@ class ReportCarActivity: AppCompatActivity() {
                 submitList(it)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        init()
     }
 }

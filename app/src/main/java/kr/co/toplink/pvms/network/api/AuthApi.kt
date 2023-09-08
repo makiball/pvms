@@ -16,4 +16,7 @@ interface AuthApi {
 
     @POST("sendMessage.php")
     suspend fun sendSmsMsg(@Body  kakaoalrim: KakaoAlim) : KakaoAlrimResponse
+
+    @POST("reportMessage.php")
+    suspend fun reportMsg(@Body  kakaoalrim: KakaoAlim) : KakaoAlrimResponse
 }

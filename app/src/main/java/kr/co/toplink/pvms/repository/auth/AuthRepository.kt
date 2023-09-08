@@ -13,4 +13,8 @@ class AuthRepository(private val remoteDataSource: AuthRemoteDataSource) {
     suspend fun kakaoAlimSend(kakaoalim : KakaoAlim): KakaoAlrimResponse {
         return remoteDataSource.kakaoAlimSend(kakaoalim)
     }
+
+    suspend fun kakaoReportSend(kakaoalim : KakaoAlim): KakaoAlrimResponse {
+        return remoteDataSource.kakaoReportSend(kakaoalim)
+    }
 }

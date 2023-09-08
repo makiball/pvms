@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CarNumberSearchActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/back_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:text="@string/carinfototal_title"
+                style="@style/Bold"
+                android:textSize="20sp"
+                android:imeOptions="flagNoExtractUi|actionSearch"
+                android:inputType="textNoSuggestions" />
+
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <View
+        android:id = "@+id/linelayout"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/white"
+        android:backgroundTint="@color/material_on_surface_stroke"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/alldelte"
+        app:layout_constraintTop_toBottomOf="@id/back_bt"/>
+
+    <RadioGroup
+        android:id = "@+id/search_rdg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop = "10dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_bt"
+        >
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/carinfototal_check_1"
+            style="@style/Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "@string/carinfototal_check_1"
+            android:layout_margin = "5dp"
+            />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/carinfototal_check_2"
+            style="@style/Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "@string/carinfototal_check_2"
+            android:layout_margin = "5dp"
+            />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/carinfototal_check_3"
+            style="@style/Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "@string/carinfototal_check_3"
+            android:layout_margin = "5dp"
+            />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id = "@+id/carinfototal_check_4"
+            style="@style/Normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "@string/carinfototal_check_4"
+            android:layout_margin = "5dp"
+            />
+
+    </RadioGroup>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id = "@+id/search_inpt"
+        android:hint="@string/search_inpt_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin = "8dp"
+        app:startIconDrawable="@drawable/search_icon"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/search_bt"
+        app:layout_constraintTop_toBottomOf="@id/search_rdg"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id = "@+id/search_inpt_text"
+            style="@style/Normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id = "@+id/search_bt"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#009688"
+        android:layout_marginEnd = "8dp"
+        android:text = "@string/carnumbersearch_search_bt"
+        app:layout_constraintTop_toTopOf="@id/search_inpt"
+        app:layout_constraintBottom_toBottomOf="@id/search_inpt"
+        app:layout_constraintStart_toEndOf="@id/search_inpt"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <TableLayout
+        android:id = "@+id/tablelayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:collapseColumns="4"
+        android:layout_margin = "8dp"
+        android:layout_marginTop = "10dp"
+        android:stretchColumns="*"
+        app:layout_constraintTop_toBottomOf="@id/search_inpt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <!-- collapse the first column of the table row-->
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- first element of the row that is the part of table but it is invisible-->
+            <TextView
+                android:id="@+id/total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="총 차량 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/totalreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="등록 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+
+            <TextView
+                android:id="@+id/totalnotreg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="미등록 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/lawstop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:text="불법주차 : 0"
+                android:gravity="left"
+                android:textColor="#000"
+                android:textSize="15sp" />
+
+        </TableRow>
+
+        <!-- first row of the table layout-->
+        <TableRow
+            android:id="@+id/simpleTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TableRow>
+    </TableLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:transitionGroup="true"
+        android:layout_margin = "8dp"
+        android:layout_marginTop = "10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tablelayout"
+        app:layout_constraintBottom_toTopOf="@id/msg_txt"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id = "@+id/msg_txt"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin = "8dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf = "@id/recycler_view"
+        app:layout_constraintBottom_toTopOf = "@id/alldelte"
+        android:hint="전달 사항">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/msg_cont"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize = "18dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id = "@+id/alldelte"
+        android:layout_width="90dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#E91E63"
+        android:layout_marginStart = "8dp"
+        android:layout_marginTop = "10dp"
+        android:text = "@string/carnumbersearch_alldelte_bt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/kakaotalk"
+        android:layout_width="130dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#FFEB3B"
+        android:text = "보고서전송"
+        android:textColor = "#000000"
+        android:layout_marginEnd = "8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

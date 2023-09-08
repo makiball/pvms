@@ -49,4 +49,10 @@ class UserViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    fun kakaoReportSend(kakaoalim : KakaoAlim) {
+        viewModelScope.launch {
+            val kakaoReportSend = authRepository.kakaoReportSend(kakaoalim)
+            _kakaoalrimresponse.value = Event(kakaoReportSend)
+        }
+    }
 }

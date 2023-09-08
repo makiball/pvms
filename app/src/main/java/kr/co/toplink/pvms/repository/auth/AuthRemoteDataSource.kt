@@ -15,4 +15,8 @@ class AuthRemoteDataSource(private val apiClient : AuthApi) : AuthDataSource {
     override suspend fun kakaoAlimSend(kakaoalim : KakaoAlim): KakaoAlrimResponse {
         return apiClient.sendSmsMsg(kakaoalim)
     }
+
+    override suspend fun kakaoReportSend(kakaoalim : KakaoAlim): KakaoAlrimResponse {
+        return apiClient.reportMsg(kakaoalim)
+    }
 }

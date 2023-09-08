@@ -69,9 +69,40 @@ class ReportRepository(
         }
     }
 
+    suspend fun carInfoTotalDelteReportId(reportid: Int) {
+        withContext(ioDispatcher) {
+            localDataSource.reportDeleteById(reportid)
+        }
+    }
+
     suspend fun carInfoTotalList():  List<CarInfoTotal>  {
         return withContext(ioDispatcher) {
             localDataSource.carInfoTotalList()
+        }
+    }
+
+    suspend fun carInfoTotalListCarnum(carnum: String):  List<CarInfoTotal> {
+        return withContext(ioDispatcher) {
+            localDataSource.carInfoTotalListCarnum(carnum)
+        }
+    }
+
+    suspend fun carInfoTotalListId(reportid: Int, carnum: String):  List<CarInfoTotal> {
+        return withContext(ioDispatcher) {
+            localDataSource.carInfoTotalListId(reportid, carnum)
+        }
+    }
+
+
+    suspend fun carInfoTotalListType(reportid: Int, type: Int, carnum: String):  List<CarInfoTotal> {
+        return withContext(ioDispatcher) {
+            localDataSource.carInfoTotalListType(reportid, type, carnum)
+        }
+    }
+
+    suspend fun carInfoTotalListLaw(reportid: Int, carnum: String):  List<CarInfoTotal> {
+        return withContext(ioDispatcher) {
+            localDataSource.carInfoTotalListLaw(reportid, carnum)
         }
     }
 
