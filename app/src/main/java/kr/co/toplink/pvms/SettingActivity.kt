@@ -94,8 +94,7 @@ class SettingActivity : AppCompatActivity() {
             user = User(id, pw, fcm)
             userViewModel.signIn(user)
 
-            userViewModel.userResponse.observe(this, EventObserver{
-
+            userViewModel.userResponse.observe(this, EventObserver {
                 if(it.result == "ok") {
                     sp.addUser(user)
                     binding.subtitle2.text = "남은 알림톡 : ${it.smsPoint}개"

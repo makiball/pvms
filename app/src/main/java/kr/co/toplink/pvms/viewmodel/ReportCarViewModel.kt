@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kr.co.toplink.pvms.Event
 import kr.co.toplink.pvms.database.CarInfo
 import kr.co.toplink.pvms.database.CarInfoToday
@@ -123,6 +124,38 @@ class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewM
     fun carInfoTotalInsert(carInfoTotal: CarInfoTotal)  {
         viewModelScope.launch {
             reportRepository.carInfoTotalInsert(carInfoTotal)
+        }
+    }
+
+    fun carInfoTotalById(id: Int) {
+        viewModelScope.launch {
+           val carInfoTotal = reportRepository.carInfoTotalById(id)
+            _carInfoTotal.value = Event(carInfoTotal)
+        }
+    }
+
+    fun reportType_0_Increase(id: Int, type_0: Int) {
+        viewModelScope.launch {
+            reportRepository.reportType_0_Increase(id, type_0)
+        }
+    }
+
+    fun reportType_1_Increase(id: Int, type_1: Int) {
+        viewModelScope.launch {
+            reportRepository.reportType_1_Increase(id, type_1)
+        }
+    }
+
+    fun reportLawStopIncrease(id: Int, lawstop: Int) {
+        viewModelScope.launch {
+            reportRepository.reportLawStopIncrease(id, lawstop)
+        }
+    }
+
+
+    fun carInfoTotalDeleteById(carInfoTotal : CarInfoTotal) {
+        viewModelScope.launch {
+            reportRepository.carInfoTotalDeleteById(carInfoTotal)
         }
     }
 

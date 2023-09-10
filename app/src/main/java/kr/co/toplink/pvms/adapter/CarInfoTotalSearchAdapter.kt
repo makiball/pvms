@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.pvms.CamCarSearchDetailActivity
+import kr.co.toplink.pvms.CarInfoTotalActivity
+import kr.co.toplink.pvms.CarInfoTotalDetailActivity
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.database.CarInfoTotal
 import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
@@ -57,14 +59,16 @@ class CarInfoTotalSearchAdapter(private val viewModel: ReportCarViewModel) :
             binding.carnumberTxt.text = carInfoTotal.carnumber
             binding.phoneTxt.text = PhoneHidden(carInfoTotal.phone)
             binding.etcTxt.text = PhoneHidden(carInfoTotal.etc)
-            //binding.clickListener = clickListener
+            //binding.clickListener = clickListenerc
 
             binding.constraintLayout.setOnClickListener {
 
                 //Toast.makeText(context, " 테스트 ", Toast.LENGTH_SHORT).show()
-                val intent =
-                    Intent(context, CamCarSearchDetailActivity::class.java)
-                intent.putExtra("carnum",carInfoTotal.carnumber)
+                //val intent = Intent(context, CamCarSearchDetailActivity::class.java)
+                //intent.putExtra("carnum",carInfoTotal.carnumber)
+
+                val intent =  Intent(context, CarInfoTotalDetailActivity::class.java)
+                intent.putExtra("id",carInfoTotal.id)
                 ContextCompat.startActivity(context, intent, null)
             }
 

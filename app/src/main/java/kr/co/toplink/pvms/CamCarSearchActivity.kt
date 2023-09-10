@@ -1,47 +1,29 @@
 package kr.co.toplink.pvms
 
-import android.app.ActivityOptions
 import android.content.Context
-import android.content.Intent
-import android.graphics.Paint
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffXfermode
+import android.graphics.*
 import android.media.Image
 import android.os.Bundle
 import android.util.Log
-import android.util.Pair
 import android.view.OrientationEventListener
-import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.adapter.CamCarSearchAdapter
-import kr.co.toplink.pvms.adapter.CarNumberSearchAdapter
-import kr.co.toplink.pvms.adapter.SingleViewBinderListAdapter
 import kr.co.toplink.pvms.camerax.CameraManager
-import kr.co.toplink.pvms.data.CarInfoList
-import kr.co.toplink.pvms.data.CarInfoListToday
-import kr.co.toplink.pvms.data.CarInfoListTodayModel
 import kr.co.toplink.pvms.data.regSwitch
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.database.CarInfoTotal
 import kr.co.toplink.pvms.database.Report
 import kr.co.toplink.pvms.databinding.ActivityCamCarSearchBinding
-import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
-import kr.co.toplink.pvms.model.CarNumberSearchViewModel
-import kr.co.toplink.pvms.repository.report.ReportRepository
 import kr.co.toplink.pvms.util.*
-import kr.co.toplink.pvms.viewholder.CarInfoListTodayViewBinder
-import kr.co.toplink.pvms.viewholder.ItemBinder
 import kr.co.toplink.pvms.viewmodel.CamCarViewModel
 import kr.co.toplink.pvms.viewmodel.ReportCarViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
@@ -52,14 +34,8 @@ class CamCarSearchActivity: AppCompatActivity(){
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCamCarSearchBinding
     private lateinit var cameraManager: CameraManager
-
     private lateinit var camCarViewModel: CamCarViewModel
-    private lateinit var carViewModel: CamCarViewModel
-
-    private lateinit var listAdapter: SingleViewBinderListAdapter
     private lateinit var camcarsearchadapter : CamCarSearchAdapter
-    private lateinit var viewModel: CarNumberSearchViewModel
-
     private lateinit var reportCarViewModel: ReportCarViewModel
 
     private var lastid : Int = 0
@@ -72,6 +48,8 @@ class CamCarSearchActivity: AppCompatActivity(){
         setContentView(binding.root)
 
         init()
+        Log.d(TAG,"카메라 차량 입력 엑티비티 실행!!!")
+
 
         // 뒤로가기시 현재 엑티비티 닫기
         val callback = object: OnBackPressedCallback(true) {
@@ -121,11 +99,11 @@ class CamCarSearchActivity: AppCompatActivity(){
             //Log.d(TAG, "=====> $isChecked")
 
             if (isChecked) {
-                //RegSwitch.setSharedSwitch(regSwitch.ON)
-                camCarViewModel.regSwitch(regSwitch.ON)
+                RegSwitch.setSharedSwitch(regSwitch.ON)
+                //camCarViewModel.regSwitch(regSwitch.ON)
             } else {
-                camCarViewModel.regSwitch(regSwitch.OFF)
-                //RegSwitch.setSharedSwitch(regSwitch.OFF)
+                //camCarViewModel.regSwitch(regSwitch.OFF)
+                RegSwitch.setSharedSwitch(regSwitch.OFF)
                 // SwitchMaterial이 OFF 상태일 때 동작
                 // 여기에 필요한 코드 작성
             }
@@ -147,6 +125,7 @@ class CamCarSearchActivity: AppCompatActivity(){
 
                 //미등록 갯수, 등록 갯수
                 val total = CarInfoToday.size
+                var count = 0
                 val regSu = CarInfoToday.filter { it.type == 0 }.size
                 val regSuNo = CarInfoToday.filter { it.type == 1 }.size
                 val lowStop = CarInfoToday.filter { it.lawstop == 1 }.size
@@ -175,9 +154,15 @@ class CamCarSearchActivity: AppCompatActivity(){
                         lawstop = it.lawstop,
                         reportnum = lastid
                     )
+                    count += 1
                     reportCarViewModel.carInfoTotalInsert(carInfoTotal)
                 }
-                camCarViewModel.carInfoTodayDelete()
+
+
+                Log.d(TAG, "===========> $count -  $total ")
+                if(count == total) {
+                    camCarViewModel.carInfoTodayDelete()
+                }
             }
             dlg.show(msg)
         }
@@ -192,16 +177,17 @@ class CamCarSearchActivity: AppCompatActivity(){
 
             CarInfoToday = it
 
-            binding.total.text = "총 차량 : ${it.size}"
+            //binding.total.text = format("총 차량 : ${it.size}"
 
             //미등록 갯수, 등록 갯수
             val regSu = it.filter { it.type == 0 }.size
             val regSuNo = it.filter { it.type == 1 }.size
             val lowStop = it.filter { it.lawstop == 1 }.size
 
-            binding.totalreg.text = "등록 : $regSu"
-            binding.totalnotreg.text = "미등록 : $regSuNo"
-            binding.lawstop.text = "불법주차 : $lowStop"
+            binding.total.text = getString(R.string.camcarsearch_total_txt).format(it.size)
+            binding.totalreg.text = getString(R.string.camcarsearch_totalreg_txt).format(regSu)
+            binding.totalnotreg.text = getString(R.string.camcarsearch_totalnotreg_txt).format(regSuNo)
+            binding.lawstop.text = getString(R.string.camcarsearch_lawstop_txt).format(lowStop)
 
             binding.recyclerView.apply {
                 adapter = camcarsearchadapter
@@ -220,7 +206,7 @@ class CamCarSearchActivity: AppCompatActivity(){
         reportCarViewModel.lastid.observe(this, EventObserver {
             lastid = it + 1
 
-            Log.d(TAG, "=====> $lastid")
+            Log.d(TAG, "=====> 라스트 아이디 $lastid")
         })
 
         /*
@@ -243,6 +229,7 @@ class CamCarSearchActivity: AppCompatActivity(){
          */
     }
 
+    /*
     private fun generateMockCarinfo(carInfo: MutableList<CarInfoToday>): List<CarInfoListTodayModel> {
         val carInfoList = ArrayList<CarInfoListTodayModel>()
         carInfo.forEach{
@@ -273,6 +260,7 @@ class CamCarSearchActivity: AppCompatActivity(){
         // start the new activity
         startActivity(intent, options.toBundle())
     }
+     */
 
     private fun createCameraManager() {
         cameraManager = CameraManager(
@@ -302,6 +290,7 @@ class CamCarSearchActivity: AppCompatActivity(){
     }
 
     private fun imageToBitmapSaveGallery(image: Image) {
+
         image.imageToBitmap()
             ?.rotateFlipImage(
                 cameraManager.rotation,
@@ -312,16 +301,18 @@ class CamCarSearchActivity: AppCompatActivity(){
                 cameraManager.isHorizontalMode()
             )
             ?.let { bitmap ->
+                //val originalResizeBmp = Bitmap.createScaledBitmap(bitmap, 800, bitmap.height, false);
                 binding.graphicOverlayFinder.processCanvas.drawBitmap(
                     bitmap,
                     0f,
-                    bitmap.getBaseYByView(
+                    bitmap .getBaseYByView(
                         binding.graphicOverlayFinder,
                         cameraManager.isHorizontalMode()
                     ),
                     Paint().apply {
                         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
                     })
+
                 binding.graphicOverlayFinder.processBitmap.saveToGallery(this)
             }
     }
@@ -345,6 +336,8 @@ class CamCarSearchActivity: AppCompatActivity(){
     override fun onResume() {
         super.onResume()
         binding.isReg.isChecked = false
+        RegSwitch.setSharedSwitch(regSwitch.OFF)
+        RegSwitch.setRegClose()
         init()
     }
 }

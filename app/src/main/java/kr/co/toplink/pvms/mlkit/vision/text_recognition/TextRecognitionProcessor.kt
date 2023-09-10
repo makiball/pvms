@@ -55,6 +55,7 @@ class TextRecognitionProcessor(
     val tone = ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME)
 
     init {
+        /*
         camCarViewModel.regSwitch.observe(context){
             regswitch = when(it) {
                 regSwitch.ON -> "ON"
@@ -62,6 +63,7 @@ class TextRecognitionProcessor(
                 else -> { "OFF" }
             }
         }
+         */
     }
 
     /*
@@ -110,10 +112,15 @@ class TextRecognitionProcessor(
                 oldCarNum = ""
             }
 
+            val swtich = RegSwitch.getSharedSwitch()
             val openReg = RegSwitch.getRegIsOPen()
-            if((regex.matches(carnum) || regex01.matches(carnum)) && regswitch == "ON" && openReg == 0) {
+
+            Log.d(TAG, "=====> $swtich")
+
+            if((regex.matches(carnum) || regex01.matches(carnum)) && swtich == regSwitch.ON  && openReg == 0) {
                 RegSwitch.setRegOpen()
                 val intent = Intent(view.context, CamCarInputActivity::class.java)
+                //   this.stop()
                 intent.putExtra("carnum", carnum)
                 view.context.startActivity(intent)
             }

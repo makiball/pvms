@@ -114,6 +114,22 @@ interface CarInfoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun CarInfoTotalInsert(carInfoTotal: CarInfoTotal)
+
+    @Query("SELECT * FROM CarInfoTotal WHERE id = :id LIMIT 1")
+    fun CarInfoTotalById(id: Int): CarInfoTotal
+
+    @Query("UPDATE Report SET total_type_0 = total_type_0 - :type_0 WHERE id = :id ")
+    fun ReportType_0_Increase(id: Int, type_0: Int)
+
+    @Query("UPDATE Report SET total_type_1 = total_type_1 - :type_1 WHERE id = :id ")
+    fun ReportType_1_Increase(id: Int, type_1: Int)
+
+    @Query("UPDATE Report SET total_lawstop = total_lawstop - :lawstop WHERE id = :id ")
+    fun ReportLawStopIncrease(id: Int, lawstop: Int)
+
+    @Delete
+    fun CarInfoTotalDeleteById(carInfoTotal: CarInfoTotal)
+
     /* ------------------------------------------------- 주차보고서 -----------------------------------------------*/
 
 

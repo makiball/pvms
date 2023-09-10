@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.pvms.CamCarSearchDetailActivity
-import kr.co.toplink.pvms.CarNumberSearchDetailActivity
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.CarinfoItemTodayLayoutBinding
 import kr.co.toplink.pvms.util.PhoneHidden

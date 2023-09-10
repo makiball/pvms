@@ -111,4 +111,34 @@ class ReportRepository(
             localDataSource.carInfoTotalInsert(carInfoTotal)
         }
     }
+
+    suspend fun carInfoTotalById(id: Int): CarInfoTotal {
+       return withContext(ioDispatcher) {
+            localDataSource.carInfoTotalById(id)
+        }
+    }
+
+    suspend fun reportType_0_Increase(id: Int, type_0: Int) {
+        withContext(ioDispatcher) {
+            localDataSource.reportType_0_Increase(id, type_0)
+        }
+    }
+
+    suspend fun reportType_1_Increase(id: Int, type_1: Int) {
+        withContext(ioDispatcher) {
+            localDataSource.reportType_1_Increase(id, type_1)
+        }
+    }
+
+    suspend fun reportLawStopIncrease(id: Int, lawstop: Int) {
+        withContext(ioDispatcher) {
+            localDataSource.reportType_1_Increase(id, lawstop)
+        }
+    }
+
+    suspend fun carInfoTotalDeleteById(carInfoTotal : CarInfoTotal) {
+        withContext(ioDispatcher) {
+            localDataSource.carInfoTotalDeleteById(carInfoTotal)
+        }
+    }
 }

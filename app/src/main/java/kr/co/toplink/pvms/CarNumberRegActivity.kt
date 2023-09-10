@@ -14,14 +14,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kr.co.toplink.pvms.database.CarInfo
-import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.databinding.ActivityCarnumberregBinding
 import kr.co.toplink.pvms.model.ExcellReaderViewModel
 import kr.co.toplink.pvms.util.InputCheck
@@ -36,22 +35,18 @@ import java.util.Date
 
 class CarNumberRegActivity : AppCompatActivity() {
 
-    private var document :Uri? = null
+    /* private var document :Uri? = null */
 
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCarnumberregBinding
-
-    private lateinit var db: CarInfoDatabase
-
-//    private lateinit var viewModel: ExcellReaderViewModel
-
     private lateinit var viewModel: ExcellViewModel
+    //private lateinit var viewModel: ExcellReaderViewModel
     private lateinit var carInfoviewModel : CarInfoViewModel
 
 
     private var file: File? = null
     private var fileUri: Uri? = null
-    private var url: String? = null
+    /* private var url: String? = null  */
 
     private var inputcheck = InputCheck()
 
@@ -139,13 +134,13 @@ class CarNumberRegActivity : AppCompatActivity() {
                             TAG,
                             "ApachPOI Selected file mimeTypeExtension valid : " + mimeTypeExtension
                         )
+                        copyFileAndExtract(uri)
                     } else {
                         Toast.makeText(this, "invalid file selected", Toast.LENGTH_SHORT).show()
                         return@also
                     }
                 }
                 //copyFileAndExtract(uri, mimeTypeExtension.orEmpty())
-                copyFileAndExtract(uri)
             }
         }
     }
@@ -216,6 +211,8 @@ class CarNumberRegActivity : AppCompatActivity() {
 
     private fun init() {
         viewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ExcellViewModel::class.java)
+        //viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
+        //viewModel = ViewModelProvider(this).get(ExcellReaderViewModel::class.java)
         viewModel.fileDir = File(this.filesDir, AppConstant.doc)
         if (intent.extras?.containsKey("excellPath") == true) {
             val filePath = intent.extras?.getString("excellPath").orEmpty()
@@ -232,15 +229,15 @@ class CarNumberRegActivity : AppCompatActivity() {
         System.setProperty(
             "org.apache.poi.javax.xml.stream.XMLInputFactory",
             "com.fasterxml.aalto.stax.InputFactoryImpl"
-        );
+        )
         System.setProperty(
             "org.apache.poi.javax.xml.stream.XMLOutputFactory",
             "com.fasterxml.aalto.stax.OutputFactoryImpl"
-        );
+        )
         System.setProperty(
             "org.apache.poi.javax.xml.stream.XMLEventFactory",
             "com.fasterxml.aalto.stax.EventFactoryImpl"
-        );
+        )
     }
 
     private fun openDialog(path: String) {
@@ -248,19 +245,27 @@ class CarNumberRegActivity : AppCompatActivity() {
         dlg.setOnOKClickedListener{ password ->
 
             // text.text = content
-            viewModel.readExcelFileFromAssets(path, password)
+            //viewModel.readExcelFileFromAssets(path, password)
+            if(viewModel.checkPassword(password, path)) {
+                viewModel.readExcelFileFromAssets(path, password)
+            } else {
+                Toast.makeText(this, "비밀번호가 틀립니다.", Toast.LENGTH_SHORT).show()
+            }
+
         }
         dlg.show("패스워드를 입력하세요.")
     }
 
     private fun attachObserver() {
-        viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
+        viewModel.excelExceptionListData.observe(this) {
+        //viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
             it.apply {
                 /* 엑셀 읽는것 실패 */
                 checkForNoData(this.isEmpty())
             }
-        })
-        viewModel.excelDataListLiveData.observe(this, androidx.lifecycle.Observer {
+        }
+
+        viewModel.excelDataListLiveData.observe(this) {
             it?.apply {
 
                 var total = 0
@@ -299,7 +304,7 @@ class CarNumberRegActivity : AppCompatActivity() {
                 }
                 progress(total)
             }
-        })
+        }
     }
 
     private fun checkForNoData(check: Boolean) {
@@ -309,10 +314,32 @@ class CarNumberRegActivity : AppCompatActivity() {
     }
 
     private fun progress(total: Int) {
-        var progress = 0
-        var progress_size = 0.00
-        var div =  (total.toDouble() / 100)
 
+        //var progress = 0
+        var progress_size = 0.00
+        val div =  (total.toDouble() / 100)
+
+        val scope = CoroutineScope(Dispatchers.Main)
+        scope.launch {
+            try {
+
+                for (progress in 0..100) {
+                    // 작업 진행 상태를 업데이트하고 액티비티나 프래그먼트로 전달합니다.
+                    //progress += 1
+                    binding.fileUploadProgressbar.progress = progress
+                    binding.fileUploadText.text = floor(progress_size).toInt().toString()
+
+                    progress_size += div
+                    delay(50) // 작업을 가짜로 시뮬레이션하기 위해 100ms 대기
+                }
+
+            } catch (e: Exception) {
+                Log.d(TAG, "엑셀 입력오류!!!")
+            }
+        }
+
+        // 액티비티나 프래그먼트에서 코루틴 시작
+        /*
         Thread(Runnable {
             while (progress < 100) {
                 progress += 1
@@ -328,6 +355,16 @@ class CarNumberRegActivity : AppCompatActivity() {
                 Thread.sleep(50)
             }
         }).start()
+
+        CoroutineScope(Main).launch {
+            progress += 1
+            progress_size += div
+            binding.fileUploadProgressbar.progress = progress
+            binding.fileUploadText.text = floor(progress_size).toInt().toString()
+            delay(2000)
+        }
+        */
+
     }
 
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.

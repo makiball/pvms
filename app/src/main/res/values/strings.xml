@@ -53,4 +53,15 @@
     <string name = "carinfototal_check_4">불법주차</string>
 
     <string name= "default_notification_channel_id">101</string>
+
+
+    <!-- CamCarSearchActivity -->
+    <string name = "camcarsearch_total_txt">총 차량 : %d</string>
+    <string name = "camcarsearch_totalreg_txt">등록 : %d</string>
+    <string name = "camcarsearch_totalnotreg_txt">미등록 : %d</string>
+    <string name = "camcarsearch_lawstop_txt">불법주차 : %d</string>
+
+    <!-- CamCarSearchDetailActivity -->
+    <string name = "CamCarSearchDetail_date_txt">등록일 : %s</string>
+
 </resources>

@@ -64,4 +64,25 @@ class ReportLocalDataSource(
     override suspend fun carInfoTotalInsert(carInfoTotal: CarInfoTotal) {
         dao.CarInfoTotalInsert(carInfoTotal)
     }
+
+    override suspend fun carInfoTotalById(id: Int): CarInfoTotal {
+        return dao.CarInfoTotalById(id)
+    }
+
+    override suspend fun reportType_0_Increase(id: Int, type_0: Int) {
+        dao.ReportType_0_Increase(id, type_0)
+    }
+
+    override suspend fun reportType_1_Increase(id: Int, type_1: Int) {
+        dao.ReportType_1_Increase(id, type_1)
+    }
+
+    override suspend fun reportLawStopIncrease(id: Int, lawstop: Int) {
+        dao.ReportLawStopIncrease(id, lawstop)
+    }
+
+    override suspend fun carInfoTotalDeleteById(carInfoTotal: CarInfoTotal) {
+        dao.CarInfoTotalDeleteById(carInfoTotal)
+    }
+
 }

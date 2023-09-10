@@ -1,22 +1,13 @@
 package kr.co.toplink.pvms
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kr.co.toplink.pvms.adapter.CamCarSearchAdapter
-import kr.co.toplink.pvms.database.CarInfo
-import kr.co.toplink.pvms.database.CarInfoDatabase
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.databinding.ActivityCamCarInputBinding
-import kr.co.toplink.pvms.model.CarNumberSearchViewModel
-import kr.co.toplink.pvms.util.ComfirmDialog
-import kr.co.toplink.pvms.util.DeleteDialog
 import kr.co.toplink.pvms.util.InputCheck
 import kr.co.toplink.pvms.viewmodel.CamCarViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
@@ -25,8 +16,6 @@ import java.util.*
 class CamCarInputActivity: AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
     private lateinit var binding: ActivityCamCarInputBinding
-    private lateinit var viewModel: CarNumberSearchViewModel
-    private lateinit var db: CarInfoDatabase
     private lateinit var camCarViewModel: CamCarViewModel
     private var inputcheck = InputCheck()
 
@@ -34,6 +23,8 @@ class CamCarInputActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCamCarInputBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        Log.d(TAG,"차량입력 실행!!!")
+
 
         val value = intent.getStringExtra("carnum").toString()
         // db = CarInfoDatabase.getInstance(this)!!
@@ -62,7 +53,7 @@ class CamCarInputActivity: AppCompatActivity() {
 
             val datepatterned = Date()
 
-            val carnuminput = binding.carnumInpt.text.toString()
+            val carnuminput = binding.carnumInpt.text.toString().replace("\\s+".toRegex(), "")
             var phoneinput = binding.phoneInpt.text.toString().replace("\\s+".toRegex(), "")
             val etcinpt = binding.etcInpt.text.toString()
 
@@ -102,8 +93,13 @@ class CamCarInputActivity: AppCompatActivity() {
             /*
             insertDatabase(carnuminput, phoneinput, etcinpt)
              */
+            camCarViewModel.carInfoToday(carnuminput)
+            camCarViewModel.camcarinfo.observe(this, EventObserver {
+                if(it.carnumber == carnuminput) {
+                    finish()
+                }
+            })
 
-            finish()
         }
 
         init()
@@ -114,11 +110,9 @@ class CamCarInputActivity: AppCompatActivity() {
     }
 
     // 엑셀 값이 넘어오면 데이터베이스 처리를 한다.
+    /*
     private fun insertDatabase(carnuminput: String, phoneinput: String, etcinpt: String) {
-
-        /*
         val datepatterned = Date()
-
         CoroutineScope(Dispatchers.IO).launch {
             db.CarInfoDao().CarInfoInsertToday(
                 CarInfoToday(
@@ -130,7 +124,7 @@ class CamCarInputActivity: AppCompatActivity() {
                 )
             )
         }
-         */
     }
+    */
 
 }

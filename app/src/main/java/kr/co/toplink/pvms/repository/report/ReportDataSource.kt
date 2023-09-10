@@ -1,5 +1,6 @@
 package kr.co.toplink.pvms.repository.report
 
+import androidx.room.Query
 import kr.co.toplink.pvms.database.CarInfoTotal
 import kr.co.toplink.pvms.database.Report
 
@@ -32,4 +33,15 @@ interface ReportDataSource {
     suspend fun carInfoTotalListLaw(reportid: Int, carnum: String):  List<CarInfoTotal>
 
     suspend fun carInfoTotalInsert(carInfoTotal: CarInfoTotal)
+
+    suspend fun carInfoTotalById(id: Int): CarInfoTotal
+
+    suspend fun reportType_0_Increase(id: Int, type_0: Int)
+
+    suspend fun reportType_1_Increase(id: Int, type_1: Int)
+
+    suspend fun reportLawStopIncrease(id: Int, lawstop: Int)
+
+    suspend fun carInfoTotalDeleteById(carInfoTotal: CarInfoTotal)
+
 }

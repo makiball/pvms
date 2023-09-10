@@ -46,6 +46,7 @@
         <activity android:name=".SettingActivity" />
         <activity android:name=".ReportCarActivity" />
         <activity android:name=".CarInfoTotalActivity" />
+        <activity android:name=".CarInfoTotalDetailActivity" />
 
         <service
             android:name=".fcm.FirebaseMessagingService"
