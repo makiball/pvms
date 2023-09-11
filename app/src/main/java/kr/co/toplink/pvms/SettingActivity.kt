@@ -10,6 +10,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.messaging.FirebaseMessaging
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.talk.TalkApiClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,7 +69,6 @@ class SettingActivity : AppCompatActivity() {
         }
 
         binding.regBt.setOnClickListener {
-
 
             val connectivityManager = getSystemService(ConnectivityManager::class.java)
             val currentNetwork = connectivityManager.getActiveNetwork()
@@ -137,6 +138,13 @@ class SettingActivity : AppCompatActivity() {
              */
         }
 
+        binding.msg2.setOnClickListener {
+            // 카카오톡 채널 채팅 URL
+            val url = TalkApiClient.instance.channelChatUrl("_xhdLAG")
+
+            // CustomTabs 로 열기
+            KakaoCustomTabsClient.openWithDefault(this, url)
+        }
 
         binding.backBt.setOnClickListener{
             finish()
