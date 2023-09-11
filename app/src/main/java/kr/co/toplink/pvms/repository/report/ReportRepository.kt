@@ -35,6 +35,7 @@ class ReportRepository(
     suspend fun reportInsert(report: Report) {
         withContext(ioDispatcher) {
             val reportData = Report(
+                id = report.id,
                 date = report.date,
                 total_type_0 = report.total_type_0,
                 total_type_1 = report.total_type_1,
@@ -132,7 +133,7 @@ class ReportRepository(
 
     suspend fun reportLawStopIncrease(id: Int, lawstop: Int) {
         withContext(ioDispatcher) {
-            localDataSource.reportType_1_Increase(id, lawstop)
+            localDataSource.reportLawStopIncrease(id, lawstop)
         }
     }
 

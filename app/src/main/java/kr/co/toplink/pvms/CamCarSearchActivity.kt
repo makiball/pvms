@@ -292,10 +292,13 @@ class CamCarSearchActivity: AppCompatActivity(){
     private fun imageToBitmapSaveGallery(image: Image) {
 
         image.imageToBitmap()
+                /*
             ?.rotateFlipImage(
                 cameraManager.rotation,
                 cameraManager.isFrontMode()
             )
+
+                 */
             ?.scaleImage(
                 binding.previewViewFinder,
                 cameraManager.isHorizontalMode()

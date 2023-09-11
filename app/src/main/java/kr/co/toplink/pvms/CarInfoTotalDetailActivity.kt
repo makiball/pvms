@@ -207,6 +207,9 @@ class CarInfoTotalDetailActivity : AppCompatActivity() {
 
         reportCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ReportCarViewModel::class.java)
         reportCarViewModel.carInfoTotalById(id)
+
+        carInfoTotalAdapter = CarInfoTotalAdapter(reportCarViewModel)
+
         reportCarViewModel.carInfoTotal.observe(this, EventObserver {
 
             carInfoTotal = CarInfoTotal(
@@ -234,21 +237,19 @@ class CarInfoTotalDetailActivity : AppCompatActivity() {
             binding.carnumberTxt.text = it.carnumber
             binding.phone.text = PhoneHidden(phone)
             binding.etc.text = it.etc
+
+            reportCarViewModel.carInfoTotalListCarnum(carnum)
+            reportCarViewModel.carInfoTotals.observe(this) {
+                binding.recyclerView.apply {
+                    adapter = carInfoTotalAdapter
+                    layoutManager = GridLayoutManager(this@CarInfoTotalDetailActivity, 1)
+                    adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                }
+
+                carInfoTotalAdapter.apply {
+                    submitList(it)
+                }
+            }
         })
-
-        reportCarViewModel.carInfoTotalListCarnum(carnum)
-        carInfoTotalAdapter = CarInfoTotalAdapter(reportCarViewModel)
-        reportCarViewModel.carInfoTotals.observe(this) {
-            binding.recyclerView.apply {
-                adapter = carInfoTotalAdapter
-                layoutManager = GridLayoutManager(this@CarInfoTotalDetailActivity, 1)
-                adapter!!.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-            }
-
-            carInfoTotalAdapter.apply {
-                submitList(it)
-            }
-        }
-
     }
 }

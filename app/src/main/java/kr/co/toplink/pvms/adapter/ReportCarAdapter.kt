@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Build
+import android.provider.Settings.System.getString
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kr.co.toplink.pvms.CamCarSearchDetailActivity
 import kr.co.toplink.pvms.CarInfoTotalActivity
 import kr.co.toplink.pvms.EventObserver
+import kr.co.toplink.pvms.R
 import kr.co.toplink.pvms.data.KakaoAlim
 import kr.co.toplink.pvms.database.CarInfoToday
 import kr.co.toplink.pvms.database.CarInfoTotal
@@ -54,16 +56,22 @@ class ReportCarAdapter(private val viewModel: ReportCarViewModel, private val us
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(report: Report, context: Context) {
 
-
-
             val total = report.total_type_0 + report.total_type_1
             val formattedDate = DateToYmdhis(report.date)
 
+            /*
             binding.totalTxt.text = "총 차량 수 : ${total.toString()}대"
             binding.totalRegTxt.text = "등        록  : ${report.total_type_0.toString()}대"
             binding.totalRegNoTxt.text = "미  등  록  : ${report.total_type_1.toString()}대"
             binding.lawstopTxt.text = "불법 주차 : ${report.total_lawstop.toString()}대"
             binding.dateTxt.text = "작  성  일  : $formattedDate"
+            */
+
+            binding.totalTxt.text = context.getString(R.string.camcarsearch_total_txt).format(total)
+            binding.totalRegTxt.text = context.getString(R.string.camcarsearch_totalreg_txt).format(report.total_type_0)
+            binding.totalRegNoTxt.text = context.getString(R.string.camcarsearch_totalnotreg_txt).format(report.total_type_1)
+            binding.lawstopTxt.text = context.getString(R.string.camcarsearch_lawstop_txt).format(report.total_lawstop)
+            binding.dateTxt.text = context.getString(R.string.CamCarSearchDetail_date_txt).format(formattedDate)
 
             binding.constraintLayout.setOnClickListener {
                 //Toast.makeText(context, " 테스트 ", Toast.LENGTH_SHORT).show()
