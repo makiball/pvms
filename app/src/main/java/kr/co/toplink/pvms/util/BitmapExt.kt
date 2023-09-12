@@ -66,30 +66,46 @@ fun Bitmap.saveToGallery(context: Context) {
     val mimeType = "image/png"
 
     // 이미지를 저장할 내부 저장소 URI 생성
+    /*
     val imageUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
     } else {
         TODO("VERSION.SDK_INT < Q")
     }
+     */
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val imageUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
 
-    // ContentResolver를 사용하여 이미지를 저장할 ContentValues 객체 생성
-    val contentValues = ContentValues().apply {
-        put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
-        put(MediaStore.Images.Media.MIME_TYPE, mimeType)
-    }
+        // ContentResolver를 사용하여 이미지를 저장할 ContentValues 객체 생성
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            put(MediaStore.Images.Media.MIME_TYPE, mimeType)
+        }
 
-    // ContentResolver를 사용하여 이미지를 저장
-    val resolver: ContentResolver = context.contentResolver
-    val imageUriResult = resolver.insert(imageUri, contentValues)
+        // ContentResolver를 사용하여 이미지를 저장
+        val resolver: ContentResolver = context.contentResolver
+        val imageUriResult = resolver.insert(imageUri, contentValues)
 
-    // 이미지 데이터를 OutputStream으로 가져와서 저장
-    imageUriResult?.let { uri ->
-        val outputStream = resolver.openOutputStream(uri)
-        outputStream?.use { stream ->
-            this.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        // 이미지 데이터를 OutputStream으로 가져와서 저장
+        imageUriResult?.let { uri ->
+            val outputStream = resolver.openOutputStream(uri)
+            outputStream?.use { stream ->
+                this.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            }
+        }
+    } else {
+        makeTempFile().apply {
+            FileOutputStream(this).run {
+                this@saveToGallery.compress(Bitmap.CompressFormat.JPEG, 100, this)
+                flush()
+                close()
+            }
+            Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also {
+                it.data = Uri.fromFile(this)
+                context.sendBroadcast(it)
+            }
         }
     }
-
 /*
 // Scan the temporary file to make it available in the media library
 //scanMediaFile(context, imageFile)

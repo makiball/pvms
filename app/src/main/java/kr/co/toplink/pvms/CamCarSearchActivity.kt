@@ -3,6 +3,7 @@ package kr.co.toplink.pvms
 import android.content.Context
 import android.graphics.*
 import android.media.Image
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.OrientationEventListener
@@ -273,20 +274,21 @@ class CamCarSearchActivity: AppCompatActivity(){
     }
 
     private fun takePicture() {
-        // shutter effect
-        Toast.makeText(this, "캡처 화면 저장 !!!", Toast.LENGTH_SHORT).show()
-        setOrientationEvent()
 
-        cameraManager.imageCapture.takePicture(
-            cameraManager.cameraExecutor,
-            object : ImageCapture.OnImageCapturedCallback() {
-                override fun onCaptureSuccess(image: ImageProxy) {
-                    image.image?.let {
-                        imageToBitmapSaveGallery(it)
+            // shutter effect
+            Toast.makeText(this, "캡처 화면 저장 !!!", Toast.LENGTH_SHORT).show()
+            setOrientationEvent()
+
+                cameraManager.imageCapture.takePicture(
+                    cameraManager.cameraExecutor,
+                    object : ImageCapture.OnImageCapturedCallback() {
+                        override fun onCaptureSuccess(image: ImageProxy) {
+                            image.image?.let {
+                                imageToBitmapSaveGallery(it)
+                            }
+                        super.onCaptureSuccess(image)
                     }
-                    super.onCaptureSuccess(image)
-                }
-            })
+                })
     }
 
     private fun imageToBitmapSaveGallery(image: Image) {
@@ -316,7 +318,8 @@ class CamCarSearchActivity: AppCompatActivity(){
                         xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
                     })
 
-                binding.graphicOverlayFinder.processBitmap.saveToGallery(this)
+
+                   binding.graphicOverlayFinder.processBitmap.saveToGallery(this)
             }
     }
 
