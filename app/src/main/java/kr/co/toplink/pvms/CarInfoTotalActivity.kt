@@ -9,13 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kr.co.toplink.pvms.adapter.CamCarSearchAdapter
 import kr.co.toplink.pvms.adapter.CarInfoTotalSearchAdapter
 import kr.co.toplink.pvms.data.KakaoAlim
 import kr.co.toplink.pvms.databinding.ActivityCarinfoTotalBinding
 import kr.co.toplink.pvms.util.*
+import kr.co.toplink.pvms.viewmodel.CamCarViewModel
 import kr.co.toplink.pvms.viewmodel.ReportCarViewModel
 import kr.co.toplink.pvms.viewmodel.UserViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
+private lateinit var camcarsearchadapter : CamCarSearchAdapter
 
 class CarInfoTotalActivity: AppCompatActivity() {
 
@@ -60,6 +63,8 @@ class CarInfoTotalActivity: AppCompatActivity() {
         } else {
             finish()
         }
+
+        Log.d(TAG,"-----> $reportid")
 
         init()
 
@@ -116,13 +121,19 @@ class CarInfoTotalActivity: AppCompatActivity() {
 
             val kakaoalim = KakaoAlim(id, cont, "01099999999")
             userViewModel.kakaoReportSend(kakaoalim)
-
+            userViewModel.userResponse.observe(this, EventObserver{
+                val msg = it.msg
+                val dlg = ComfirmDialog(this)
+                dlg.setOnOKClickedListener{}
+                dlg.show(msg)
+            })
         }
     }
 
     private fun init() {
         reportCarViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(ReportCarViewModel::class.java)
         userViewModel = ViewModelProvider(this, ViewModelFactory(this)).get(UserViewModel::class.java)
+        carInfoTotalSearchAdapter = CarInfoTotalSearchAdapter(reportCarViewModel)
         reportCarViewModel.carInfoTotalListId(reportid, "")
         reportCarViewModel.report(reportid)
         attachObserver()
@@ -139,22 +150,29 @@ class CarInfoTotalActivity: AppCompatActivity() {
             lowStop = it.total_lawstop
             formattedDate = DateToYmdhis(it.date)
 
-            /*
-            binding.total.text = getString(R.string.camcarsearch_total_txt).format(it.size)
-            binding.totalreg.text = getString(R.string.camcarsearch_totalreg_txt).format(regSu)
-            binding.totalnotreg.text = getString(R.string.camcarsearch_totalnotreg_txt).format(regSuNo)
-            binding.lawstop.text = getString(R.string.camcarsearch_lawstop_txt).format(lowStop)
-            */
-
-            binding.total.text = getString(R.string.camcarsearch_total_txt).format(regSu)
+            binding.total.text = getString(R.string.camcarsearch_total_txt).format(total)
             binding.totalreg.text = getString(R.string.camcarsearch_totalreg_txt).format(regSu)
             binding.totalnotreg.text = getString(R.string.camcarsearch_totalnotreg_txt).format(regSuNo)
             binding.lawstop.text = getString(R.string.camcarsearch_lawstop_txt).format(lowStop)
 
         })
 
-        carInfoTotalSearchAdapter = CarInfoTotalSearchAdapter(reportCarViewModel)
+
         reportCarViewModel.carInfoTotals.observe(this) {
+
+
+            /*
+            binding.total.text = "총 차량 : ${it.size}"
+            //미등록 갯수, 등록 갯수
+            total = it.size
+            regSu = it.filter { it.type == 0 }.size
+            regSuNo = it.filter { it.type == 1 }.size
+            lowStop = it.filter { it.lawstop == 1 }.size
+
+            binding.totalreg.text = "등록 : $regSu"
+            binding.totalnotreg.text = "미등록 : $regSuNo"
+            binding.lawstop.text = "불법주차 : $lowStop"
+             */
 
             binding.recyclerView.apply {
                 adapter = carInfoTotalSearchAdapter
@@ -166,21 +184,14 @@ class CarInfoTotalActivity: AppCompatActivity() {
                 submitList(it)
             }
         }
-
-        userViewModel.kakaoalrimresponse.observe(this, EventObserver {
-
-            Log.d(TAG,"=====> $it.msg")
-
-            val msg = it.msg
-            val dlg = ComfirmDialog(this)
-            dlg.setOnOKClickedListener{
-            }
-            dlg.show(msg)
-        })
     }
 
     override fun onResume() {
         super.onResume()
+
         init()
+
+        //Toast.makeText(this, " 화면활성화 ", Toast.LENGTH_SHORT).show()
+        //init()
     }
 }

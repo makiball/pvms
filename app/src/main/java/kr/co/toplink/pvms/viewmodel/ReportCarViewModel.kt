@@ -32,9 +32,9 @@ class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewM
     val lastid: LiveData<Event<Int>> = _lastid
 
     fun reportList() {
-       viewModelScope.launch {
-           val reports = reportRepository.reportList()
-           _reports.value = reports
+        viewModelScope.launch {
+            val reports = reportRepository.reportList()
+            _reports.value = reports
         }
     }
 
@@ -129,7 +129,7 @@ class ReportCarViewModel(private val reportRepository: ReportRepository) : ViewM
 
     fun carInfoTotalById(id: Int) {
         viewModelScope.launch {
-           val carInfoTotal = reportRepository.carInfoTotalById(id)
+            val carInfoTotal = reportRepository.carInfoTotalById(id)
             _carInfoTotal.value = Event(carInfoTotal)
         }
     }

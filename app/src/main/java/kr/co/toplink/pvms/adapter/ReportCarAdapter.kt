@@ -60,7 +60,8 @@ class ReportCarAdapter(private val viewModel: ReportCarViewModel, private val us
             val formattedDate = DateToYmdhis(report.date)
 
             /*
-            binding.totalTxt.text = "총 차량 수 : ${total.toString()}대"
+
+            binding.totalTxt.text = "총 차량 수 : ${total.toString()}대 " + "${report.id}"
             binding.totalRegTxt.text = "등        록  : ${report.total_type_0.toString()}대"
             binding.totalRegNoTxt.text = "미  등  록  : ${report.total_type_1.toString()}대"
             binding.lawstopTxt.text = "불법 주차 : ${report.total_lawstop.toString()}대"

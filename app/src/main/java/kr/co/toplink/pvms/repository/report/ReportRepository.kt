@@ -114,7 +114,7 @@ class ReportRepository(
     }
 
     suspend fun carInfoTotalById(id: Int): CarInfoTotal {
-       return withContext(ioDispatcher) {
+        return withContext(ioDispatcher) {
             localDataSource.carInfoTotalById(id)
         }
     }

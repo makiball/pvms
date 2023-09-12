@@ -87,16 +87,23 @@ class CarInfoTotalDetailActivity : AppCompatActivity() {
                 //viewModel.idDeteData(this, id)
                 //reportCarViewModel.reportDeleteById(id)
 
+                /*
                 when(type) {
                     0 -> reportCarViewModel.reportType_0_Increase(reportid, 1)
                     1 -> reportCarViewModel.reportType_1_Increase(reportid, 1)
                 }
+                */
 
-                reportCarViewModel.reportLawStopIncrease(reportid, lawstop)
+
+                if(carInfoTotal.type == 0) { reportCarViewModel.reportType_0_Increase(carInfoTotal.reportnum, 1) }
+                if(carInfoTotal.type == 1) { reportCarViewModel.reportType_1_Increase(carInfoTotal.reportnum, 1) }
+                if(carInfoTotal.lawstop == 1) { reportCarViewModel.reportLawStopIncrease(carInfoTotal.reportnum, 1) }
 
                 reportCarViewModel.carInfoTotalDeleteById(carInfoTotal)
 
                 finish()
+
+                Log.d(TAG,"===========>  $type $lawstop $reportid")
             }
             dlg.show(msg)
         }
@@ -222,6 +229,8 @@ class CarInfoTotalDetailActivity : AppCompatActivity() {
                 lawstop = it.lawstop,
                 reportnum = it.reportnum
             )
+
+            Log.d(TAG,"===========> $carInfoTotal")
 
             carnum = it.carnumber.toString()
             phone = it.phone

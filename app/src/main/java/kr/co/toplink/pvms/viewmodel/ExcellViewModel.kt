@@ -4,14 +4,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kr.co.toplink.pvms.AppConstant
 import kr.co.toplink.pvms.model.ListItems
 import kr.co.toplink.pvms.model.SingleRow
 import org.apache.poi.EncryptedDocumentException
-import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.poifs.crypt.Decryptor
 import org.apache.poi.poifs.crypt.EncryptionInfo
@@ -24,6 +21,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ExcellViewModel() : ViewModel() {
 
@@ -50,78 +48,76 @@ class ExcellViewModel() : ViewModel() {
                 excelExceptionListData.postValue("File too big")
             }
             viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    val myInput = FileInputStream(file)
-                    val firstRow: MutableList<String> = arrayListOf()
-                    if (password.isNotEmpty()) {
-                        workbook = WorkbookFactory.create(file, password)
-                        val posFile = POIFSFileSystem(file, true)
-                        if (file.name.endsWith("xlsx")) {
-                            val info = EncryptionInfo(posFile)
-                            val d = Decryptor.getInstance((info))
-                            if (!d.verifyPassword(password)) {
-                                excelExceptionListData.postValue("Wrong password! ")
-                                return@withContext
-                            }
-                            workbook = XSSFWorkbook(d.getDataStream(posFile))
-                        } else {
-                            Biff8EncryptionKey.setCurrentUserPassword(
-                                password
-                            )
-                            workbook = HSSFWorkbook(posFile.root, true)
+                val myInput = FileInputStream(file)
+                val firstRow: MutableList<String> = arrayListOf()
+                if (password.isNotEmpty()) {
+                    workbook = WorkbookFactory.create(file, password)
+                    val posFile = POIFSFileSystem(file, true)
+                    if (file.name.endsWith("xlsx")) {
+                        val info = EncryptionInfo(posFile)
+                        val d = Decryptor.getInstance((info))
+                        if (!d.verifyPassword(password)) {
+                            excelExceptionListData.postValue("Wrong password! ")
+                            return@launch
                         }
+                        workbook = XSSFWorkbook(d.getDataStream(posFile))
                     } else {
-                        if (file.name.endsWith("xlsx")) {
-                            workbook = XSSFWorkbook(myInput)
-                        } else {
-                            workbook = HSSFWorkbook(myInput)
-                        }
+                        org.apache.poi.hssf.record.crypto.Biff8EncryptionKey.setCurrentUserPassword(
+                            password
+                        )
+                        workbook = HSSFWorkbook(posFile.root, true)
                     }
-                    workbook = addColumnIfNotAdded(workbook)
-                    val mySheet = workbook.getSheetAt(0)
-                    val rowIter: Iterator<Row> = mySheet.iterator()
-                    while (rowIter.hasNext()) {
-                        val row: Row = rowIter.next()
-                        val cellIter1: Iterator<Cell> = row.cellIterator()
-                        if (row.rowNum == 0) {
-                            while (cellIter1.hasNext()) {
-                                val firstCell: Cell = cellIter1.next()
-                                firstRow.add(firstCell.toString())
-                            }
-                        }
-                        val cellIter: Iterator<Cell> = row.cellIterator()
-                        val singleRowList: MutableList<SingleRow> = arrayListOf()
-                        if (row.rowNum > 0) {
-                            while (cellIter.hasNext()) {
-                                for (i in firstRow) {
-                                    if (cellIter.hasNext()) {
-                                        val cell: Cell = cellIter.next()
-                                        singleRowList.add(SingleRow(i.toString(), cell.toString()))
-                                    }
-                                }
-                            }
-                            if (singleRowList.isEmpty() == false) {
-                                try {
-                                    if (singleRowList.get(singleRowList.size - 1).value?.isNotEmpty() == true) {
-                                        if (singleRowList.get(singleRowList.size - 1).value?.equals(
-                                                AppConstant.Completed
-                                            ) == false
-                                        ) {
-                                            singleRowList.get(singleRowList.size - 1).value =
-                                                AppConstant.Pending
-                                        }
-                                    }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                            }
-                            list.add(ListItems(singleRowList))
-                        }
+                } else {
+                    if (file.name.endsWith("xlsx")) {
+                        workbook = XSSFWorkbook(myInput)
+                    } else {
+                        workbook = HSSFWorkbook(myInput)
                     }
-                    excelDataListLiveData.postValue(list)
-                    excellFirstRowData.postValue(firstRow)
-
                 }
+                workbook = addColumnIfNotAdded(workbook)
+                val mySheet = workbook.getSheetAt(0)
+                val rowIter: Iterator<Row> = mySheet.iterator()
+                while (rowIter.hasNext()) {
+                    val row: Row = rowIter.next()
+                    val cellIter1: Iterator<Cell> = row.cellIterator()
+                    if (row.rowNum == 0) {
+                        while (cellIter1.hasNext()) {
+                            val firstCell: Cell = cellIter1.next()
+                            firstRow.add(firstCell.toString())
+                        }
+                    }
+                    val cellIter: Iterator<Cell> = row.cellIterator()
+                    val singleRowList: MutableList<SingleRow> = arrayListOf()
+                    if (row.rowNum > 0) {
+                        while (cellIter.hasNext()) {
+                            for (i in firstRow) {
+                                if (cellIter.hasNext()) {
+                                    val cell: Cell = cellIter.next()
+                                    singleRowList.add(SingleRow(i.toString(), cell.toString()))
+                                }
+                            }
+                        }
+                        if (singleRowList.isEmpty() == false) {
+                            try {
+                                if (singleRowList.get(singleRowList.size - 1).value?.isNotEmpty() == true) {
+                                    if (singleRowList.get(singleRowList.size - 1).value?.equals(
+                                            AppConstant.Completed
+                                        ) == false
+                                    ) {
+                                        singleRowList.get(singleRowList.size - 1).value =
+                                            AppConstant.Pending
+                                    }
+                                }
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+                        list.add(ListItems(singleRowList))
+                    }
+                }
+                excelDataListLiveData.postValue(list)
+                excellFirstRowData.postValue(firstRow)
+
             }
         } catch (e: Exception) {
             e.printStackTrace()

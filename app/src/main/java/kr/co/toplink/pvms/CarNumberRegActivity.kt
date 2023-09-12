@@ -258,7 +258,7 @@ class CarNumberRegActivity : AppCompatActivity() {
 
     private fun attachObserver() {
         viewModel.excelExceptionListData.observe(this) {
-        //viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
+            //viewModel.excelExceptionListData.observe(this, androidx.lifecycle.Observer {
             it.apply {
                 /* 엑셀 읽는것 실패 */
                 checkForNoData(this.isEmpty())
@@ -300,7 +300,7 @@ class CarNumberRegActivity : AppCompatActivity() {
                         total += 1
                     }
 
-                  //  Log.d(TAG, "carnum -> $carnum")
+                    //  Log.d(TAG, "carnum -> $carnum")
                 }
                 progress(total)
             }
@@ -330,7 +330,7 @@ class CarNumberRegActivity : AppCompatActivity() {
                     binding.fileUploadText.text = floor(progress_size).toInt().toString()
 
                     progress_size += div
-                    delay(50) // 작업을 가짜로 시뮬레이션하기 위해 100ms 대기
+                    delay(200) // 작업을 가짜로 시뮬레이션하기 위해 100ms 대기
                 }
 
             } catch (e: Exception) {
@@ -376,18 +376,18 @@ class CarNumberRegActivity : AppCompatActivity() {
         val carnumberdigit = inputcheck.getCarNumberDigit(carnuminput)
         val datepatterned = Date()
 
-            /*
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val currentTime =  LocalDateTime.now()
-                val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                datepatterned = currentTime.format(datepattern)
-            } else {
-                val date = org.joda.time.LocalDateTime.now()
-                val datepattern = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
-                val jodatime = datepattern.parseDateTime(date.toString())
-                datepatterned = datepattern.print(jodatime)
-            }
-             */
+        /*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val currentTime =  LocalDateTime.now()
+            val datepattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            datepatterned = currentTime.format(datepattern)
+        } else {
+            val date = org.joda.time.LocalDateTime.now()
+            val datepattern = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss")
+            val jodatime = datepattern.parseDateTime(date.toString())
+            datepatterned = datepattern.print(jodatime)
+        }
+         */
 
         carInfoviewModel = ViewModelProvider(this, ViewModelFactory(this)).get(CarInfoViewModel::class.java)
         carInfoviewModel.addCarInfo(
