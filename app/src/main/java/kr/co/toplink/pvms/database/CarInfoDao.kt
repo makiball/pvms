@@ -82,7 +82,7 @@ interface CarInfoDao {
     @Query("SELECT id FROM Report ORDER BY id DESC limit 1")
     fun ReportLastId(): Int
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun ReportInsert(report: Report)
 
     @Query("DELETE FROM Report")

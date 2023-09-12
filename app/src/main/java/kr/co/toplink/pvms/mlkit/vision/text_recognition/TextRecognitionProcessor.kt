@@ -115,7 +115,7 @@ class TextRecognitionProcessor(
             val swtich = RegSwitch.getSharedSwitch()
             val openReg = RegSwitch.getRegIsOPen()
 
-            Log.d(TAG, "=====> $swtich")
+            //Log.d(TAG, "=====> $swtich")
 
             if((regex.matches(carnum) || regex01.matches(carnum)) && swtich == regSwitch.ON  && openReg == 0) {
                 RegSwitch.setRegOpen()

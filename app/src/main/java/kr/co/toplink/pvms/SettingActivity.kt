@@ -1,32 +1,22 @@
 package kr.co.toplink.pvms
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.content.Intent
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.messaging.FirebaseMessaging
-import com.kakao.sdk.common.util.KakaoCustomTabsClient
-import com.kakao.sdk.talk.TalkApiClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kr.co.toplink.pvms.config.ApplicationClass
 import kr.co.toplink.pvms.databinding.ActivitySettingBinding
 import kr.co.toplink.pvms.dto.User
 import kr.co.toplink.pvms.dto.UserResponse
-import kr.co.toplink.pvms.repository.auth.AuthRemoteDataSource
-import kr.co.toplink.pvms.repository.auth.AuthRepository
 import kr.co.toplink.pvms.util.ComfirmDialog
-import kr.co.toplink.pvms.util.RetrofitUtil
 import kr.co.toplink.pvms.util.SharedPreferencesUtil
 import kr.co.toplink.pvms.viewmodel.UserViewModel
 import kr.co.toplink.pvms.viewmodel.ViewModelFactory
+
 
 class SettingActivity : AppCompatActivity() {
 
@@ -95,7 +85,8 @@ class SettingActivity : AppCompatActivity() {
             user = User(id, pw, fcm)
             userViewModel.signIn(user)
 
-            userViewModel.userResponse.observe(this, EventObserver {
+            userViewModel.userResponse.observe(this, EventObserver{
+
                 if(it.result == "ok") {
                     sp.addUser(user)
                     binding.subtitle2.text = "남은 알림톡 : ${it.smsPoint}개"
@@ -139,11 +130,18 @@ class SettingActivity : AppCompatActivity() {
         }
 
         binding.msg2.setOnClickListener {
+
+            /*
             // 카카오톡 채널 채팅 URL
             val url = TalkApiClient.instance.channelChatUrl("_xhdLAG")
 
             // CustomTabs 로 열기
             KakaoCustomTabsClient.openWithDefault(this, url)
+             */
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("" +
+                        "http://pf.kakao.com/_xhdLAG/chat"))
+            startActivity(browserIntent)
         }
 
         binding.backBt.setOnClickListener{
